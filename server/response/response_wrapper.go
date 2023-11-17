@@ -4,6 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
+type Error struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
 type Success struct {
 	Status  string      `json:"status"`
 	Code    int64       `json:"code"`
@@ -26,4 +32,8 @@ func ShowResponse(message string, statusCode int64, status string, data interfac
 	}
 
 	Response(context, int(statusCode), response)
+}
+
+func ErrorResponse(context *gin.Context, statusCode int, message string) {
+	Response(context, statusCode, Error{Code: statusCode, Message: message})
 }

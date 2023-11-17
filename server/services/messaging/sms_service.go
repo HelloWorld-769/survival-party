@@ -3,7 +3,8 @@ package messaging
 import (
 	"errors"
 	"fmt"
-	"main/server/services/twilio"
+	"main/server/services/alert_service/twilio"
+
 	"math/rand"
 	"net/http"
 	"strconv"

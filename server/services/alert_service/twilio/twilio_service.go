@@ -1,6 +1,7 @@
 package twilio
 
 import (
+	"main/server/request"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -17,10 +18,10 @@ func TwilioInit(password string) {
 	})
 }
 
-func SendOtpService(ctx *gin.Context, contact string) (bool, *string) {
+func SendOtpService(ctx *gin.Context, req request.TwilioSmsRequest) (bool, *string) {
 	params := &openapi.CreateVerificationParams{}
 
-	params.SetTo(contact)
+	params.SetTo(req.Contact)
 
 	params.SetChannel("sms")
 
@@ -51,3 +52,26 @@ func VerifyOtpService(ctx *gin.Context, number string, otp string) (*string, err
 	return nil, nil
 
 }
+
+//function to send normal sms
+
+// func SendSms(ctx *gin.Context, contact string) {
+
+// 	client := twilio.NewRestClient()
+
+// 	params := &api.CreateMessageParams{}
+// 	params.SetFrom("+15557771212")
+// 	params.SetBody("Ahoy! This message was sent from my Twilio phone number!")
+// 	params.SetTo("+15559991111")
+
+// 	resp, err := client.Api.CreateMessage(params)
+// 	if err != nil {
+// 		fmt.Println(err.Error())
+// 	} else {
+// 		if resp.Body != nil {
+// 			fmt.Println(*resp.Body)
+// 		} else {
+// 			fmt.Println(resp.Body)
+// 		}
+// 	}
+// }

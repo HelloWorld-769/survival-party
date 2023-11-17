@@ -4,6 +4,7 @@ import (
 	"log"
 	"main/server"
 	"main/server/db"
+	"main/server/services/alert_service/twilio"
 	"main/server/socket"
 	"os"
 
@@ -21,6 +22,7 @@ func main() {
 
 	connection := db.InitDB()
 	db.Transfer(connection)
+	twilio.TwilioInit()
 	socketServer := socket.SocketInit()
 	defer socketServer.Close()
 	app := server.NewServer(connection)
