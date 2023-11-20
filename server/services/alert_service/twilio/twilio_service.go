@@ -1,7 +1,9 @@
 package twilio
 
 import (
+	"fmt"
 	"main/server/request"
+	"main/server/response"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +20,9 @@ func TwilioInit(password string) {
 	})
 }
 
-func SendOtpService(ctx *gin.Context, req request.TwilioSmsRequest) (bool, *string) {
+func SendOtpService(ctx *gin.Context, req request.TwilioSmsRequest) {
+
+	fmt.Println("inside send sms")
 	params := &openapi.CreateVerificationParams{}
 
 	params.SetTo(req.Contact)
@@ -28,10 +32,15 @@ func SendOtpService(ctx *gin.Context, req request.TwilioSmsRequest) (bool, *stri
 	resp, err := TwilioClient.VerifyV2.CreateVerification(os.Getenv("VERIFY_SERVICE_SID"), params)
 
 	if err != nil {
-		return false, nil
+		fmt.Println("error", err.Error())
+		return
+
 	} else {
-		return true, resp.Sid
+		fmt.Println("res", resp)
+
 	}
+
+	response.ShowResponse("message sent successfully", 200, "Success", "", ctx)
 }
 
 func VerifyOtpService(ctx *gin.Context, number string, otp string) (*string, error) {
@@ -59,19 +68,25 @@ func VerifyOtpService(ctx *gin.Context, number string, otp string) (*string, err
 
 // 	client := twilio.NewRestClient()
 
-// 	params := &api.CreateMessageParams{}
+// 	params := &openapi.CreateVerificationParams{}
+
+// 	params.SetTo(req.Contact)
+
+// 	params.SetChannel("sms")
+
 // 	params.SetFrom("+15557771212")
 // 	params.SetBody("Ahoy! This message was sent from my Twilio phone number!")
 // 	params.SetTo("+15559991111")
+// 	resp, err := TwilioClient.VerifyV2.CreateVerification(os.Getenv("VERIFY_SERVICE_SID"), params)
 
-// 	resp, err := client.Api.CreateMessage(params)
-// 	if err != nil {
-// 		fmt.Println(err.Error())
-// 	} else {
-// 		if resp.Body != nil {
-// 			fmt.Println(*resp.Body)
-// 		} else {
-// 			fmt.Println(resp.Body)
-// 		}
-// 	}
+// 	// resp, err := client.Api.CreateMessage(params)
+// 	// if err != nil {
+// 	// 	fmt.Println(err.Error())
+// 	// } else {
+// 	// 	if resp.Body != nil {
+// 	// 		fmt.Println(*resp.Body)
+// 	// 	} else {
+// 	// 		fmt.Println(resp.Body)
+// 	// 	}
+// 	// }
 // }

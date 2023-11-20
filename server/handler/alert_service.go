@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"main/server/request"
 	"main/server/response"
 	"main/server/services/alert_service/twilio"
@@ -17,6 +18,7 @@ func TwilioServiceHnadler(ctx *gin.Context) {
 	var req request.TwilioSmsRequest
 
 	utils.RequestDecoding(ctx, &req)
+	fmt.Println("req", req)
 
 	//validation Check on request body fields
 	err := validation.CheckValidation(&req)
@@ -25,5 +27,5 @@ func TwilioServiceHnadler(ctx *gin.Context) {
 		return
 	}
 	twilio.SendOtpService(ctx, req)
-	
+
 }

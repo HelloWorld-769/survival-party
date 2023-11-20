@@ -22,7 +22,7 @@ func main() {
 
 	connection := db.InitDB()
 	db.Transfer(connection)
-	twilio.TwilioInit()
+	twilio.TwilioInit(os.Getenv("TWILIO_AUTH_TOKEN"))
 	socketServer := socket.SocketInit()
 	defer socketServer.Close()
 	app := server.NewServer(connection)

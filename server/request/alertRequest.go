@@ -18,5 +18,5 @@ type Attachment struct {
 
 type TwilioSmsRequest struct {
 
-	Contact string `json:"contact"`
+	Contact string `json:"contact" validate:"required`
 }
