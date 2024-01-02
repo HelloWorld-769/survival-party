@@ -145,6 +145,7 @@ func SendEmailOtpService(context *gin.Context) {
 	// Set E-Mail body. You can set plain text or html with text/html
 
 	m.SetBody(req.ContentType, req.Content)
+	m.Attach("/home/chicmic/Downloads/image.png")
 
 	// Settings for SMTP server
 	d := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("FROM_EMAIL"), os.Getenv("EMAIL_PASS"))

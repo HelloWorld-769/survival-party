@@ -1,9 +1,10 @@
 package model
 
+import "github.com/jinzhu/gorm"
+
 type User struct {
-	// Id       string ` gorm:"default:uuid_generate_v4();unique" json:"id"`
-	UserId       string `gorm:"type:uuid;default:uuid_generate_v4();unique" json:"user_id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	FullName string `json:"fullName"`
+	gorm.Model
+	Email    string `gorm:"type:varchar(200);UNIQUE"`
+	Password string `gorm:"type:varchar(200);"`
+	FullName string `gorm:"type:varchar(200);"`
 }
