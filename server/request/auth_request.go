@@ -1,16 +1,31 @@
 package request
 
-import validation "github.com/go-ozzo/ozzo-validation"
+import (
+	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
+)
 
-type AuthRequest struct {
-	FullName    string `json:"fullName"`
-	Email       string `json:"email"`
-	NewPassword string `json:"newPassword" binding:"required" example:"11111111"`
-	Password    string `json:"password" binding:"required" example:"11111111"`
+type SigupRequest struct {
+	User struct {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Avatar   int64  `json:"avatar"`
+	} `json:"user"`
 }
 
-func (a *AuthRequest) Validate() error {
+func (a *SigupRequest) Validate() error {
 	return validation.ValidateStruct(&a,
-		validation.Field(a.FullName, validation.Required),
+		validation.Field(a.User.Username, validation.Required),
+		validation.Field(a.User.Password, validation.Required),
+		validation.Field(a.User.Email, validation.Required, is.Email),
+		validation.Field(a.User.Avatar, validation.Required),
 	)
+}
+
+type LoginRequest struct {
+	User struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	} `json:"user"`
 }

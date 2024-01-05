@@ -9,21 +9,7 @@ import (
 
 func RequestDecoding(ctx *gin.Context, data interface{}) error {
 
-// 	reqBody, err := ioutil.ReadAll(ctx.Request.Body)
-// 	if err != nil {
-// 		response.ShowResponse(err.Error(), HTTP_BAD_REQUEST, "Failure", nil, ctx)
-// 		return
-// 	}
-// 	err = json.Unmarshal(reqBody, &data)
-// 	if err != nil {
-// 		response.ShowResponse(err.Error(), HTTP_BAD_REQUEST, "Failure", nil, ctx)
-// 		return
-// 	}
-// }
-
-func RequestDecoding(context *gin.Context, data interface{}) {
-
-	reqBody, err := ioutil.ReadAll(context.Request.Body)
+	reqBody, err := ioutil.ReadAll(ctx.Request.Body)
 	if err != nil {
 		return err
 	}

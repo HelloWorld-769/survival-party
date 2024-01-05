@@ -11,9 +11,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// @title Gin Demo App
+// @title Survival Party
 // @version 1.0
-// @description This is a demo version of Gin app.
+// @description This is the api documentation of survival party game
 // @BasePath /
 func main() {
 	if err := godotenv.Load(); err != nil {

@@ -10,7 +10,7 @@ import (
 )
 
 func SignupHandler(ctx *gin.Context) {
-	var input request.AuthRequest
+	var input request.SigupRequest
 	err := utils.RequestDecoding(ctx, &input)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
@@ -24,7 +24,7 @@ func SignupHandler(ctx *gin.Context) {
 
 func LoginHandler(ctx *gin.Context) {
 
-	var input request.AuthRequest
+	var input request.LoginRequest
 	err := utils.RequestDecoding(ctx, &input)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)

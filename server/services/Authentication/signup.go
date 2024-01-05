@@ -1,16 +1,16 @@
 package authentication
 
 import (
-	"fmt"
 	"main/server/db"
 	"main/server/model"
 	"main/server/request"
 	"main/server/response"
 	"main/server/services/token"
 	"main/server/utils"
-	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func AlreadyExists(data string) bool {
@@ -19,86 +19,79 @@ func AlreadyExists(data string) bool {
 
 }
 
-func SignupService(ctx *gin.Context, input *request.AuthRequest) {
+func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 
-	var user model.User
-
-	//check if the newPassword and password are the same
-	if input.NewPassword != input.Password {
-		response.ShowResponse(utils.PASSWORD_NOT_MATCH, utils.HTTP_BAD_REQUEST, utils.FAILURE, "", ctx)
-		return
-	}
-	//check the credentials if already exists
-	if AlreadyExists(input.Email) {
-
-		fmt.Println("email already exists", input.Email)
-		response.ShowResponse(utils.EMAIL_EXISTS, utils.HTTP_BAD_REQUEST, utils.FAILURE, "", ctx)
-		return
-	}
-
-	user.Email = input.Email
-	user.FullName = input.FullName
-	//encrypt the password then store in db
-
-	encryptedPassword, err := utils.HashPassword(input.Password)
+	encryptedPassword, err := utils.HashPassword(input.User.Password)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
 	}
 
-	user.Password = *encryptedPassword
+	userRecord := model.User{
+		Email:    input.User.Email,
+		Password: *encryptedPassword,
+		Username: input.User.Username,
+		Avatar:   input.User.Avatar,
+	}
 
-	err = db.CreateRecord(&user)
+	err = db.CreateRecord(&userRecord)
 	if err != nil {
-
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, "", ctx)
 		return
-	} else {
-
-		response.ShowResponse(utils.SIGNUP_SUCCESS, utils.HTTP_OK, utils.SUCCESS, "", ctx)
 	}
+
+	userGameStats := model.UseGameStats{
+		UserId:         userRecord.Id,
+		MatchesPlayed:  0,
+		MatchesWon:     0,
+		TotalTimeSpent: time.Now(),
+		TotalKills:     0,
+	}
+
+	err = db.CreateRecord(&userGameStats)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, "", ctx)
+		return
+	}
+
+	response.ShowResponse(utils.SIGNUP_SUCCESS, utils.HTTP_OK, utils.SUCCESS, "", ctx)
+
 }
 
-func LoginService(ctx *gin.Context, input *request.AuthRequest) {
+func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 
 	var user *model.User
-	var userClaims model.Claims
-
-	//check if the user exists in db or not
-	if !(db.RecordExist("users", input.Email, "email")) {
-		//return
-
+	//check if the user exists or not in the database
+	if !(db.RecordExist("users", input.User.Email, "email")) {
 		response.ShowResponse(utils.USER_NOT_FOUND, utils.HTTP_BAD_REQUEST, utils.FAILURE, "", ctx)
 		return
 	}
 
-	//get the encrypted password from the db and then compare
-	db.FindById(&user, input.Email, "email")
-	fmt.Println("user:", user)
-
-	if !utils.CheckPasswordHash(input.Password, user.Password) {
-		//RETURN
-
-		response.ShowResponse(utils.UNAUTHORIZED, utils.HTTP_UNAUTHORIZED, utils.FAILURE, "", ctx)
-		return
-	}
-
-	//if password is correct ,provide a token to the user
-
-	userClaims.Id = user.UserId
-	Token, err := token.GenerateToken(userClaims)
+	err := db.FindById(&user, input.User.Email, "email")
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
 
-	//create a cookie, store the value of the token in the http cookie
-	cookie := &http.Cookie{Name: "Auth", Value: *Token}
+	if !utils.CheckPasswordHash(input.User.Password, user.Password) {
+		response.ShowResponse(utils.UNAUTHORIZED, utils.HTTP_UNAUTHORIZED, utils.FAILURE, "", ctx)
+		return
+	}
 
-	http.SetCookie(ctx.Writer, cookie)
+	accessTokenExpirationTime := time.Now().Add(48 * time.Hour)
+	accessTokenClaims := model.Claims{
+		Id:   user.Id,
+		Role: "player",
+		RegisteredClaims: jwt.RegisteredClaims{
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(accessTokenExpirationTime),
+		},
+	}
 
-	//show a success response to login attempt
-
-	response.ShowResponse(utils.LOGIN_SUCCESS, utils.HTTP_OK, utils.SUCCESS, "", ctx)
+	accessToken, err := token.GenerateToken(accessTokenClaims)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
 
 }
