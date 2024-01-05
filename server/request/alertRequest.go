@@ -2,15 +2,40 @@ package request
 
 import (
 	"encoding/json"
+
+	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 )
 
 type EmailRequest struct {
-	ToEmail     string       `json:"toEmail" validate:"required"`
-	Content     string       `json:"content" validate:"required"`
-	Subject     string       `json:"subject" validate:"omitempty"`
-	ContentType string       `json:"contentType" validate:"required"`
-	Attachments []Attachment `json:"attachments,omitempty" validate:"omitempty"`
+	Users struct {
+		Email string `json:"email" validate:"required"`
+	} `json:"user"`
+	// Content     string `json:"content"`
+	// Subject     string `json:"subject" omitempty`
+	// ContentType string `json:"contentType"`
 }
+
+func (a *EmailRequest) Validate() error {
+	return validation.ValidateStruct(&a,
+		validation.Field(a.Users.Email, validation.Required, is.Email),
+	)
+}
+
+type RestPasswordRequest struct {
+	Email    string `json:"email" validate:"required"`
+	Otp      int64  `json:"otp" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+func (a *RestPasswordRequest) Validate() error {
+	return validation.ValidateStruct(&a,
+		validation.Field(a.Email, validation.Required, is.Email),
+		validation.Field(a.Otp, validation.Required),
+		validation.Field(a.Password, validation.Required),
+	)
+}
+
 type CreateUser struct {
 	Name string          `json:"name" validate:"required"`
 	Age  int             `json:"age" validate:"required"`

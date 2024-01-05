@@ -1,6 +1,7 @@
 package authentication
 
 import (
+	"fmt"
 	"main/server/db"
 	"main/server/model"
 	"main/server/request"
@@ -93,5 +94,6 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
 	}
+	fmt.Println("accessToken", accessToken)
 
 }

@@ -21,6 +21,9 @@ func ConfigureRoutes(server *Server) {
 
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	server.engine.POST("/send-otp", handler.SendOtpHandler)
+	server.engine.POST("/reset-password", handler.ResetPasswordHandler)
+
 	// server.engine.POST("/send-email", gomail.SendEmailOtpService)
 
 }

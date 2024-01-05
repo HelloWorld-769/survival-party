@@ -1,10 +1,13 @@
 package handler
 
 import (
+	"fmt"
 	"main/server/request"
 	"main/server/response"
 	authentication "main/server/services/Authentication"
+	"main/server/services/alert_service/Gomail"
 	"main/server/utils"
+	"main/server/validation"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,5 +35,50 @@ func LoginHandler(ctx *gin.Context) {
 	}
 
 	authentication.LoginService(ctx, &input)
+
+}
+
+func SendOtpHandler(ctx *gin.Context) {
+
+	utils.SetHeader(ctx)
+
+	var req request.EmailRequest
+	fmt.Println("request", ctx.Request.Body)
+
+	utils.RequestDecoding(ctx, &req)
+	fmt.Println("req", req)
+
+	//validation Check on request body fields
+	err := validation.CheckValidation(&req)
+	if err != nil {
+		response.ShowResponse(err.Error(), 400, "Failure", "", ctx)
+		return
+	}
+
+	//call the service
+
+	Gomail.SendEmailOtpService(ctx, req)
+
+}
+
+func ResetPasswordHandler(ctx *gin.Context) {
+
+	utils.SetHeader(ctx)
+
+	var req request.RestPasswordRequest
+	fmt.Println("request", ctx.Request.Body)
+
+	utils.RequestDecoding(ctx, &req)
+	fmt.Println("req", req)
+
+	//validation Check on request body fields
+	err := validation.CheckValidation(&req)
+	if err != nil {
+		response.ShowResponse(err.Error(), 400, "Failure", "", ctx)
+		return
+	}
+
+	//call the service
+	// Gomail.SendEmailOtpService(ctx, req)
 
 }
