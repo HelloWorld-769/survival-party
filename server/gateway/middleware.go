@@ -17,10 +17,16 @@ import (
 func UserAuthorization(ctx *gin.Context) {
 
 	fmt.Println("inside middleware")
-	bearerToken := ctx.Request.Header.Get("Authorization")
 
-	//getting bearer token after space
-	tokenString := strings.Split(bearerToken, " ")[1]
+	var tokenString string
+	if ctx.Query("token") != "" {
+		tokenString = ctx.Query("token")
+	} else if ctx.Request.Header.Get("Authorization") != "" {
+
+		bearerToken := ctx.Request.Header.Get("Authorization")
+
+		tokenString = strings.Split(bearerToken, " ")[1]
+	}
 
 	var exists bool
 	//first check if the session is valid or not

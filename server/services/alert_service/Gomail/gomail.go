@@ -116,7 +116,7 @@ func SendEmailService(context *gin.Context, link string, toEmail string) {
 	m.SetHeader("To", toEmail)
 
 	// Set E-Mail subject
-	m.SetHeader("Subject", "SURVIVAL RESET PASSWORD OTP")
+	m.SetHeader("Subject", "SURVIVAL Verify Email")
 
 	// Set E-Mail body. You can set plain text or html with text/html
 

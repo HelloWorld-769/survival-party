@@ -7,14 +7,14 @@ type UpdatePlayer struct {
 	Avatar   int64  `json:"avatar"`
 }
 
-// {
-// 	"setting":{
-// 		"sound": 0.7,
-// 		"music": 1.0,
-// 		"joystick_size": 0.8,
-// 		"vibration": false
-// 	}
-// }
+//	{
+//		"setting":{
+//			"sound": 0.7,
+//			"music": 1.0,
+//			"joystick_size": 0.8,
+//			"vibration": false
+//		}
+//	}
 type UpdatePlayerSettingsRequest struct {
 	Settings struct {
 		Sound        int64   `json:"sound"`

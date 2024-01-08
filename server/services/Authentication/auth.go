@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"errors"
+	"fmt"
 	"main/server/db"
 	"main/server/model"
 	"main/server/request"
@@ -92,7 +93,10 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 		return
 	}
 
-	link := ctx.Request.Header.Get("Origin") + "/email-verify?token=" + *tokenString
+	fmt.Println(ctx.Request.Header.Get("Origin"))
+	link := ctx.Request.Header.Get("Origin") + "/users/email-verify?token=" + *tokenString
+
+	fmt.Println("link is", link)
 
 	Gomail.SendEmailService(ctx, link, userRecord.Email)
 
@@ -100,12 +104,26 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 
 }
 
-func VerifyEmail(ctx *gin.Context, userId string) {
+func VerifyEmail(ctx *gin.Context, tokenString string) {
+
+	//Decoding the token
+	claims, err := token.DecodeToken(tokenString)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		return
+	}
+	fmt.Println("claims:", claims)
+	err = claims.Valid()
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		return
+	}
+
 	//check if the email is already verifed or not
 	var emailStatus bool
 	query := "SELECT emailverified FROM users WHERE id=?"
 
-	err := db.QueryExecutor(query, &emailStatus, userId)
+	err = db.QueryExecutor(query, &emailStatus, claims.Id)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
@@ -113,9 +131,17 @@ func VerifyEmail(ctx *gin.Context, userId string) {
 
 	if emailStatus {
 		response.ShowResponse("Email already verified", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
-
 		return
 	}
+
+	query = "UPDATE users SET emailverified=true WHERE id=?"
+	err = db.RawExecutor(query, claims.Id)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	response.ShowResponse("Email verified succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 
 }
 

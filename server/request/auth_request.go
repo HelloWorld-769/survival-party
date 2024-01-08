@@ -14,12 +14,12 @@ type SigupRequest struct {
 	} `json:"user"`
 }
 
-func (a *SigupRequest) Validate() error {
-	return validation.ValidateStruct(&a,
-		validation.Field(a.User.Username, validation.Required),
-		validation.Field(a.User.Password, validation.Required),
-		validation.Field(a.User.Email, validation.Required, is.Email),
-		validation.Field(a.User.Avatar, validation.Required),
+func (a SigupRequest) Validate() error {
+	return validation.ValidateStruct(&a.User,
+		validation.Field(&a.User.Username, validation.Required),
+		validation.Field(&a.User.Password, validation.Required),
+		validation.Field(&a.User.Email, validation.Required, is.Email),
+		validation.Field(&a.User.Avatar, validation.Required),
 	)
 }
 
@@ -30,10 +30,10 @@ type LoginRequest struct {
 	} `json:"user"`
 }
 
-func (a *LoginRequest) Validate() error {
-	return validation.ValidateStruct(&a,
-		validation.Field(a.User.Email, validation.Required),
-		validation.Field(a.User.Password, validation.Required),
+func (a LoginRequest) Validate() error {
+	return validation.ValidateStruct(&a.User,
+		validation.Field(&a.User.Email, validation.Required),
+		validation.Field(&a.User.Password, validation.Required),
 	)
 }
 
@@ -43,10 +43,10 @@ type SocialLoginReq struct {
 	Uid    string `json:"uid"`
 }
 
-func (a *SocialLoginReq) Validate() error {
+func (a SocialLoginReq) Validate() error {
 	return validation.ValidateStruct(&a,
-		validation.Field(a.Email, validation.Required),
-		validation.Field(a.Avatar, validation.Required),
-		validation.Field(a.Uid, validation.Required),
+		validation.Field(&a.Email, validation.Required),
+		validation.Field(&a.Avatar, validation.Required),
+		validation.Field(&a.Uid, validation.Required),
 	)
 }

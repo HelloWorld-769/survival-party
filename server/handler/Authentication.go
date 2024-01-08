@@ -20,6 +20,11 @@ func SignupHandler(ctx *gin.Context) {
 		return
 	}
 
+	err = input.Validate()
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
 	//call the service with the inputRequest credentials
 	authentication.SignupService(ctx, &input)
 
@@ -34,6 +39,11 @@ func LoginHandler(ctx *gin.Context) {
 		return
 	}
 
+	err = input.Validate()
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
 	authentication.LoginService(ctx, &input)
 
 }
@@ -115,13 +125,32 @@ func SignoutHandler(ctx *gin.Context) {
 		response.ShowResponse(utils.UNAUTHORIZED, utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
 		return
 	}
+
 	authentication.SignoutService(ctx, userId.(string))
+
+}
+
+func VerifyEmailHandler(ctx *gin.Context) {
+
+	var tokenString string
+	if ctx.Query("token") != "" {
+		tokenString = ctx.Query("token")
+	}
+
+	authentication.VerifyEmail(ctx, tokenString)
 
 }
 
 func SocialLoginHandler(ctx *gin.Context) {
 	var input request.SocialLoginReq
 	err := utils.RequestDecoding(ctx, &input)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+
+	}
+
+	err = input.Validate()
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
