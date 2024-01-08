@@ -4,73 +4,55 @@ import (
 	// "fmt"
 	// "gym/server/response"
 
+	"fmt"
+	"main/server/db"
+	"main/server/response"
+	"main/server/services/token"
+	"main/server/utils"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 )
 
-func UserAuthorization(c *gin.Context) {
+func AdminAuthorization(ctx *gin.Context) {
 
-	// fmt.Println("inside middleware")
-	// token, err := c.Request.Cookie("cookie")
-	// if err != nil {
-	// 	response.ErrorResponse(c, 400, err.Error())
-	// 	c.Abort()
-	// 	return
-	// }
+	fmt.Println("inside middleware")
+	bearerToken := ctx.Request.Header.Get("Authorization")
 
-	// claims, err := DecodeToken(token.Value)
-	// if err != nil {
-	// 	response.ErrorResponse(c, 401, err.Error())
-	// 	c.Abort()
-	// 	return
-	// }
-	// err = claims.Valid()
-	// if err != nil {
-	// 	response.ErrorResponse(c, 401, err.Error())
-	// 	c.Abort()
-	// 	return
-	// }
-	// if claims.Role == "user" {
-	// 	c.Next()
-	// } else {
-	// 	response.ErrorResponse(c, 403, "Access Denied")
-	// 	c.Abort()
-	// 	return
-	// }
+	tokenString := strings.Split(bearerToken, " ")[1]
 
-}
+	var exists bool
+	//first check if the session is valid or not
+	query := "SELECT EXISTS(SELECT 1 FROM sessions WHERE token=?)"
+	err := db.QueryExecutor(query, &exists, tokenString)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		ctx.Abort()
+		return
+	}
+	if !exists {
+		response.ShowResponse("Invalid session", utils.HTTP_FORBIDDEN, utils.FAILURE, nil, ctx)
+		ctx.Abort()
+		return
+	}
 
-func AdminAuthorization(c *gin.Context) {
+	claims, err := token.DecodeToken(tokenString)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		ctx.Abort()
+		return
+	}
+	fmt.Println("claims:", claims)
+	err = claims.Valid()
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		ctx.Abort()
+		return
+	}
 
-	// fmt.Println("inside middleware")
-	// token, err := c.Request.Cookie("cookie")
-	// if err != nil {
+	ctx.Set("userId", claims.Id)
 
-	// 	response.ErrorResponse(c, 400, err.Error())
-	// 	c.Abort()
-	// 	return
-
-	// }
-
-	// claims, err := DecodeToken(token.Value)
-	// if err != nil {
-	// 	response.ErrorResponse(c, 401, err.Error())
-	// 	c.Abort()
-	// 	return
-	// }
-	// err = claims.Valid()
-	// if err != nil {
-	// 	response.ErrorResponse(c, 401, err.Error())
-	// 	c.Abort()
-	// 	return
-	// }
-	// if claims.Role == "admin" {
-	// 	c.Next()
-	// } else {
-	// 	response.ErrorResponse(c, 403, "Access Denied")
-	// 	c.Abort()
-	// 	return
-
-	// }
+	ctx.Next()
 
 }
 

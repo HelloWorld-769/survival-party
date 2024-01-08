@@ -26,6 +26,7 @@ func generateOTP() int {
 
 	return otp
 }
+
 func SendEmailOtpService(context *gin.Context, req request.EmailRequest) {
 
 	utils.SetHeader(context)

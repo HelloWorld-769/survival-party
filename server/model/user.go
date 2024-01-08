@@ -9,6 +9,7 @@ import (
 type User struct {
 	Id              string    `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
 	Email           string    `json:"email"  gorm:"unique"`
+	Emailverified   bool      `json:"emailverified"`
 	Password        string    `json:"password"`
 	Username        string    `json:"username"  gorm:"unique"`
 	Avatar          int64     `json:"avatar"`

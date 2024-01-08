@@ -18,6 +18,7 @@ func ConfigureRoutes(server *Server) {
 	//Auth routes
 	server.engine.POST("/users", handler.SignupHandler)
 	server.engine.POST("/users/sign_in", handler.LoginHandler)
+	server.engine.DELETE("/users/sign_out", gateway.AdminAuthorization, handler.SignoutHandler)
 
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

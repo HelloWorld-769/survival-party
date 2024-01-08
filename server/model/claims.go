@@ -5,7 +5,6 @@ import (
 )
 
 type Claims struct {
-	Id   string
-	Role string
+	Id string
 	jwt.RegisteredClaims
 }

@@ -54,6 +54,7 @@ const (
 
 const (
 	LOGIN_SUCCESS      string = "Login Success"
+	LOGOUT_SUCCESS     string = "Logout successfully"
 	SIGNUP_SUCCESS     string = "Signup Success"
 	EMAIL_EXISTS       string = "Email already exists"
 	USER_NOT_FOUND     string = "User not found"

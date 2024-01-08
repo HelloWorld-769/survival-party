@@ -82,3 +82,13 @@ func ResetPasswordHandler(ctx *gin.Context) {
 	// Gomail.SendEmailOtpService(ctx, req)
 
 }
+
+func SignoutHandler(ctx *gin.Context) {
+	userId, exists := ctx.Get("user_id")
+	if !exists {
+		response.ShowResponse(utils.UNAUTHORIZED, utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		return
+	}
+	authentication.SignoutService(ctx, userId.(string))
+
+}
