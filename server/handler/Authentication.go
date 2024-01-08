@@ -92,3 +92,15 @@ func SignoutHandler(ctx *gin.Context) {
 	authentication.SignoutService(ctx, userId.(string))
 
 }
+
+func SocialLoginHandler(ctx *gin.Context) {
+	var input request.SocialLoginReq
+	err := utils.RequestDecoding(ctx, &input)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	authentication.SocialLoginService(ctx, &input)
+
+}

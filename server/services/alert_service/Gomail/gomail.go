@@ -67,3 +67,42 @@ func SendEmailOtpService(context *gin.Context, req request.EmailRequest) {
 
 	response.ShowResponse("email sent successfully", 200, "Success", "", context)
 }
+
+func SendEmailService(context *gin.Context, link string, toEmail string) {
+
+	utils.SetHeader(context)
+
+	// Create a new message
+	m := gomail.NewMessage()
+
+	// Set E-Mail sender
+	m.SetHeader("From", os.Getenv("FROM_EMAIL"))
+
+	// contentType := context.Request.Header.Get("Content-Type")
+
+	// Set E-Mail receivers
+	m.SetHeader("To", toEmail)
+
+	// Set E-Mail subject
+	m.SetHeader("Subject", "SURVIVAL RESET PASSWORD OTP")
+
+	// Set E-Mail body. You can set plain text or html with text/html
+
+	m.SetBody("text/plain", link)
+	// m.Attach("/home/chicmic/Downloads/image.png")
+
+	// Settings for SMTP server
+	d := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("FROM_EMAIL"), os.Getenv("EMAIL_PASS"))
+
+	// This is only needed when SSL/TLS certificate is not valid on the server.
+	// In production, this should be set to false.
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Now send E-Mail
+	if err := d.DialAndSend(m); err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+	response.ShowResponse("email sent successfully", 200, "Success", "", context)
+}

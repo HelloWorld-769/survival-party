@@ -30,11 +30,14 @@ type User struct {
 	DeletedAt       gorm.DeletedAt
 }
 
-type UseGameStats struct {
+type UserGameStats struct {
 	UserId         string    `json:"userId"`
-	User           User      `json:"-" gorm:"refrences:UserId;constraint:OnDelete:CASCADE"`
+	User           User      `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
 	MatchesPlayed  int64     `json:"matchesPlayed"`
 	MatchesWon     int64     `json:"matchesWon"`
 	TotalTimeSpent time.Time `json:"totalTimeSpent"`
 	TotalKills     int64     `json:"totalKills"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	DeletedAt      gorm.DeletedAt
 }

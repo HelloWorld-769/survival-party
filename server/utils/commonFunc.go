@@ -3,10 +3,16 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"regexp"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
+func IsEmail(e string) bool {
+	//e = strings.ToLower(e)
+	emailRegex := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+	return emailRegex.MatchString(e)
+}
 func IsPassValid(password string) error {
 
 	if len(password) < 8 {
