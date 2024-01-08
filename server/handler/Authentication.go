@@ -70,6 +70,32 @@ func ResetPasswordHandler(ctx *gin.Context) {
 
 	utils.RequestDecoding(ctx, &req)
 	fmt.Println("req", req)
+	err := utils.IsPassValid(req.Password)
+	if err != nil {
+		response.ShowResponse(err.Error(), 400, "Failure", "", ctx)
+		return
+	}
+
+	//validation Check on request body fields
+	err = validation.CheckValidation(&req)
+	if err != nil {
+		response.ShowResponse(err.Error(), 400, "Failure", "", ctx)
+		return
+	}
+
+	//call the service
+	authentication.ResetPasswordService(ctx, req)
+}
+
+func CheckOtpHandler(ctx *gin.Context) {
+
+	utils.SetHeader(ctx)
+
+	var req request.OtpRequest
+	fmt.Println("request", ctx.Request.Body)
+
+	utils.RequestDecoding(ctx, &req)
+	fmt.Println("req", req)
 
 	//validation Check on request body fields
 	err := validation.CheckValidation(&req)
@@ -79,7 +105,7 @@ func ResetPasswordHandler(ctx *gin.Context) {
 	}
 
 	//call the service
-	// Gomail.SendEmailOtpService(ctx, req)
+	authentication.CheckOtpService(ctx, req)
 
 }
 

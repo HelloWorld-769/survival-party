@@ -14,11 +14,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AdminAuthorization(ctx *gin.Context) {
+func UserAuthorization(ctx *gin.Context) {
 
 	fmt.Println("inside middleware")
 	bearerToken := ctx.Request.Header.Get("Authorization")
 
+	//getting bearer token after space
 	tokenString := strings.Split(bearerToken, " ")[1]
 
 	var exists bool

@@ -24,14 +24,24 @@ func (a *EmailRequest) Validate() error {
 
 type RestPasswordRequest struct {
 	Email    string `json:"email" validate:"required"`
-	Otp      int64  `json:"otp" validate:"required"`
 	Password string `json:"password" validate:"required"`
+}
+
+type OtpRequest struct {
+	Email string `json:"email" validate:"required"`
+	Otp   int64  `json:"otp" validate:"required"`
+}
+
+func (a *OtpRequest) Validate() error {
+	return validation.ValidateStruct(&a,
+		validation.Field(a.Email, validation.Required, is.Email),
+		validation.Field(a.Otp, validation.Required),
+	)
 }
 
 func (a *RestPasswordRequest) Validate() error {
 	return validation.ValidateStruct(&a,
 		validation.Field(a.Email, validation.Required, is.Email),
-		validation.Field(a.Otp, validation.Required),
 		validation.Field(a.Password, validation.Required),
 	)
 }

@@ -18,13 +18,17 @@ func ConfigureRoutes(server *Server) {
 	//Auth routes
 	server.engine.POST("/users", handler.SignupHandler)
 	server.engine.POST("/users/sign_in", handler.LoginHandler)
-	server.engine.DELETE("/users/sign_out", gateway.AdminAuthorization, handler.SignoutHandler)
+	server.engine.DELETE("/users/sign_out", gateway.UserAuthorization, handler.SignoutHandler)
 	server.engine.POST("/users/social_login", handler.SocialLoginHandler)
 
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	server.engine.POST("/send-otp", handler.SendOtpHandler)
-	server.engine.POST("/reset-password", handler.ResetPasswordHandler)
+	server.engine.POST("/send_otp", handler.SendOtpHandler)
+	server.engine.POST("/check_otp", handler.CheckOtpHandler)
+
+	server.engine.POST("/reset_password", handler.ResetPasswordHandler)
+
+	server.engine.GET("/get_settings", gateway.UserAuthorization, handler.GetSettingsHandler)
 
 	// server.engine.POST("/send-email", gomail.SendEmailOtpService)
 

@@ -328,5 +328,47 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 	response.ShowResponse(utils.LOGIN_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
 		Token string `json:"token"`
 	}{Token: "Bearer " + *accessToken}, ctx)
+}
+func CheckOtpService(ctx *gin.Context, req request.OtpRequest) {
+
+	//check otp from restSession table corresponding to user email
+	var usersRestSession model.ResetSession
+	query := "select * from reset_sessions where user_email=?"
+	err := db.QueryExecutor(query, &usersRestSession, req.Email)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	if usersRestSession.Otp == req.Otp {
+		response.ShowResponse("OTP correct", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+		return
+	}
+
+	response.ShowResponse("OTP Incorrect", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+
+}
+
+func ResetPasswordService(ctx *gin.Context, req request.RestPasswordRequest) {
+
+	//hash the pasword before updating the password in the table
+
+	passwordHash, err := utils.HashPassword(req.Password)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+	var user model.User
+	user.Password = *passwordHash
+	err = db.UpdateRecord(&user, req.Email, "email").Error
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	response.ShowResponse("Password Updated Successfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+
+	// query := "UPDATE users SET password =? WHERE email = ?;"
+	// db.QueryExecutor(query, &user, passwordHash, req.Email)
 
 }

@@ -3,6 +3,8 @@ package Gomail
 import (
 	"crypto/tls"
 	"fmt"
+	"main/server/db"
+	"main/server/model"
 	"main/server/request"
 	"main/server/response"
 	"main/server/utils"
@@ -65,6 +67,36 @@ func SendEmailOtpService(context *gin.Context, req request.EmailRequest) {
 		panic(err)
 	}
 
+	//store this otp in RestSessions of user in databsae
+	var userResetRession model.ResetSession
+
+	//check if reset Session is already present for the user ,then update OTP only
+	exists, err := ResetSessionAlreadyPresent(req.Users.Email)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, context)
+		return
+	}
+	if exists {
+		//update the otp in reset session only
+		userResetRession.Otp = int64(otp)
+		err := db.UpdateRecord(&userResetRession, req.Users.Email, "user_email").Error
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, context)
+			return
+		}
+
+		response.ShowResponse("email sent successfully", 200, "Success", "", context)
+		return
+
+	}
+	userResetRession.UserEmail = req.Users.Email
+	userResetRession.Otp = int64(otp)
+	err = db.CreateRecord(&userResetRession)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, context)
+		return
+	}
+
 	response.ShowResponse("email sent successfully", 200, "Success", "", context)
 }
 
@@ -104,5 +136,15 @@ func SendEmailService(context *gin.Context, link string, toEmail string) {
 		panic(err)
 	}
 
-	response.ShowResponse("email sent successfully", 200, "Success", "", context)
+}
+func ResetSessionAlreadyPresent(email string) (bool, error) {
+
+	var exists bool = false
+	query := "select exists(select * from reset_sessions where user_email=?)"
+	err := db.QueryExecutor(query, &exists, email)
+	if err != nil {
+		return false, err
+	}
+	return exists, nil
+
 }
