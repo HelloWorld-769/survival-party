@@ -20,6 +20,10 @@ func ConfigureRoutes(server *Server) {
 	server.engine.POST("/users/sign_in", handler.LoginHandler)
 	server.engine.DELETE("/users/sign_out", gateway.UserAuthorization, handler.SignoutHandler)
 	server.engine.POST("/users/social_login", handler.SocialLoginHandler)
+	// server.engine.PUT("/users/email-verify", handler.VerifyEmailHandler)
+
+	//Player Routes
+	// server.engine.PUT("/userData", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
 
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -29,6 +33,7 @@ func ConfigureRoutes(server *Server) {
 	server.engine.POST("/reset_password", handler.ResetPasswordHandler)
 
 	server.engine.GET("/get_settings", gateway.UserAuthorization, handler.GetSettingsHandler)
+	server.engine.PUT("/update_settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 
 	// server.engine.POST("/send-email", gomail.SendEmailOtpService)
 

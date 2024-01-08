@@ -16,7 +16,7 @@ type UserSettings struct {
 	VoicePack      bool      `json:"voicePack"`
 	Notifications  bool      `json:"notifications"`
 	FriendRequests bool      `json:"friendRequests"`
-	JoystickSize   int64     `json:"joystickSize"`
+	JoystickSize   float64   `json:"joystickSize"`
 	Language       string    `json:"language"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
