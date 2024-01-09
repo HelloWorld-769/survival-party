@@ -16,14 +16,14 @@ func AutoMigrateDatabase(db *gorm.DB) {
 	}
 	fmt.Println("db version is:", dbVersion.Version)
 	if dbVersion.Version < 1 {
-		err := db.AutoMigrate(&model.User{}, &model.UserGameStats{}, &model.ResetSession{}, &model.UserSettings{}, &model.Session{})
+		err := db.AutoMigrate(&model.User{}, &model.UserGameStats{}, &model.ResetSession{}, &model.UserSettings{}, &model.Session{}, &model.UserBadges{})
 		if err != nil {
 			panic(err)
 		}
-		// db.Create(&model.DbVersion{
-		// 	Version: 1,
-		// })
-		// dbVersion.Version = 1
+		db.Create(&model.DbVersion{
+			Version: 1,
+		})
+		dbVersion.Version = 1
 	}
 	// if dbVersion.Version < 2 {
 	// 	err := db.AutoMigrate(&model.Slot{})

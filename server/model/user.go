@@ -26,7 +26,6 @@ type UserGameStats struct {
 	User            User      `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
 	XP              int64     `json:"xp"`
 	Coins           int64     `json:"coins"`
-	Badges          IntArray  `json:"bages" gorm:"type:integer[]"`
 	Gems            int64     `json:"gems"`
 	Energy          int64     `json:"energy"`
 	TotalCoins      int64     `json:"totalCoins"`
@@ -42,4 +41,13 @@ type UserGameStats struct {
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
 	DeletedAt       gorm.DeletedAt
+}
+
+type UserBadges struct {
+	UserId    string
+	User      User `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
+	Badge     int64
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt gorm.DeletedAt
 }

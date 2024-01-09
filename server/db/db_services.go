@@ -1,12 +1,6 @@
 package db
 
 import (
-	"database/sql/driver"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"main/server/model"
-
 	"gorm.io/gorm"
 )
 
@@ -73,22 +67,3 @@ func RawExecutor(querry string, args ...interface{}) error {
 	}
 	return nil
 }
-
-// func (ia *model.IntArray) Scan(value interface{}) error {
-// 	bytes, ok := value.([]byte)
-// 	if !ok {
-// 		return errors.New(fmt.Sprint("Failed to unmarshal IntArr value:", value))
-// 	}
-
-// 	var result []int
-// 	err := json.Unmarshal(bytes, &result)
-// 	*ia = IntArray(result)
-// 	return err
-// }
-
-// func (ia model.IntArray) Value() (driver.Value, error) {
-// 	if len(ia) == 0 {
-// 		return nil, nil
-// 	}
-// 	return json.Marshal(ia)
-// }

@@ -188,7 +188,7 @@ func CheckOtpHandler(ctx *gin.Context) {
 // @Tags			Authentication
 // @Router			/users/sign_out [delete]
 func SignoutHandler(ctx *gin.Context) {
-	userId, exists := ctx.Get("user_id")
+	userId, exists := ctx.Get("userId")
 	if !exists {
 		response.ShowResponse(utils.UNAUTHORIZED, utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
 		return
