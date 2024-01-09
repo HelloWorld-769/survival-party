@@ -12,6 +12,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Sign Up
+// @Description Perform signup and sends email for verification
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param guestLoginRequest body request.SigupRequest true "Signup Request"
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /users [post]
 func SignupHandler(ctx *gin.Context) {
 	var input request.SigupRequest
 	err := utils.RequestDecoding(ctx, &input)
@@ -30,6 +40,18 @@ func SignupHandler(ctx *gin.Context) {
 
 }
 
+// LoginService handles user login and token generation.
+//
+// @Summary User Login
+// @Description Perform Users login and generate access token
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param loginDetails body request.LoginRequest true "Login Details"
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /users/sign_in [post]
 func LoginHandler(ctx *gin.Context) {
 
 	var input request.LoginRequest
@@ -48,6 +70,18 @@ func LoginHandler(ctx *gin.Context) {
 
 }
 
+// SendOtpHanlder sends the otp on the register email
+//
+// @Summary Sends OTP
+// @Description Sends the otp on the register email
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param loginDetails body request.EmailRequest true "Email Details"
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /send-otp [post]
 func SendOtpHandler(ctx *gin.Context) {
 
 	utils.SetHeader(ctx)
@@ -71,6 +105,18 @@ func SendOtpHandler(ctx *gin.Context) {
 
 }
 
+// ResetPasswordHandler Resets the password of the user
+//
+// @Summary Resets the password
+// @Description Resets the password of the user
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param loginDetails body request.RestPasswordRequest true "Email Details"
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /reset-password [post]
 func ResetPasswordHandler(ctx *gin.Context) {
 
 	utils.SetHeader(ctx)
@@ -119,6 +165,16 @@ func CheckOtpHandler(ctx *gin.Context) {
 
 }
 
+// @Summary Logout Player
+// @Description	Logs out a player
+// @Accept			json
+// @Produce		json
+// @Param Authorization header string true "Player Access Token"
+// @Success		200	{object}	response.Success
+// @Failure		400	{object}	response.Success
+// @Failure		401	{object}	response.Success
+// @Tags			Authentication
+// @Router			/users/sign_out [delete]
 func SignoutHandler(ctx *gin.Context) {
 	userId, exists := ctx.Get("user_id")
 	if !exists {
@@ -130,6 +186,17 @@ func SignoutHandler(ctx *gin.Context) {
 
 }
 
+// Verifies the email of the user
+//
+// @Summary User email verification
+// @Description Perform Email verifictaion
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /users/email-verify [put]
 func VerifyEmailHandler(ctx *gin.Context) {
 
 	var tokenString string
@@ -141,6 +208,18 @@ func VerifyEmailHandler(ctx *gin.Context) {
 
 }
 
+// Social handles user social login and token generation.
+//
+// @Summary User Login
+// @Description Perform Users social login and generate access token
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param loginDetails body request.SocialLoginReq true "Login Details"
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /users/social_login [post]
 func SocialLoginHandler(ctx *gin.Context) {
 	var input request.SocialLoginReq
 	err := utils.RequestDecoding(ctx, &input)

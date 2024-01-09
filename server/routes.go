@@ -21,6 +21,8 @@ func ConfigureRoutes(server *Server) {
 	server.engine.DELETE("/users/sign_out", gateway.UserAuthorization, handler.SignoutHandler)
 	server.engine.POST("/users/social_login", handler.SocialLoginHandler)
 	server.engine.PUT("/users/email-verify", handler.VerifyEmailHandler)
+	server.engine.POST("/send-otp", handler.SendOtpHandler)
+	server.engine.POST("/reset-password", handler.ResetPasswordHandler)
 
 	//Player Routes
 	server.engine.PUT("/userData", gateway.AdminAuthorization, handler.UpdatePlayerInfoHandler)

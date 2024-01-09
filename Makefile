@@ -19,3 +19,5 @@ lint-fix:
 		|| (echo "⚠️️  you need to fix above issues manually" && exit 1)
 	@echo "⚠️️ run \"make lint-check\" again to check what did not fix yet"
 
+swag-linux: 
+	/home/chicmic/go/bin/swag init

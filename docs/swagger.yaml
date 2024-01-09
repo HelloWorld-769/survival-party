@@ -1,8 +1,317 @@
 basePath: /
+definitions:
+  request.EmailRequest:
+    properties:
+      user:
+        properties:
+          email:
+            type: string
+        required:
+        - email
+        type: object
+    type: object
+  request.LoginRequest:
+    properties:
+      user:
+        properties:
+          email:
+            type: string
+          password:
+            type: string
+        type: object
+    type: object
+  request.RestPasswordRequest:
+    properties:
+      email:
+        type: string
+      otp:
+        type: integer
+      password:
+        type: string
+    required:
+    - email
+    - otp
+    - password
+    type: object
+  request.SigupRequest:
+    properties:
+      user:
+        properties:
+          avatar:
+            type: integer
+          email:
+            type: string
+          password:
+            type: string
+          username:
+            type: string
+        type: object
+    type: object
+  request.SocialLoginReq:
+    properties:
+      avatar:
+        type: integer
+      email:
+        type: string
+      uid:
+        type: string
+    type: object
+  request.UpdatePlayer:
+    properties:
+      avatar:
+        type: integer
+      username:
+        type: string
+    type: object
+  response.Status:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+  response.Success:
+    properties:
+      status:
+        $ref: '#/definitions/response.Status'
+    type: object
 info:
   contact: {}
-  description: This is a demo version of Gin app.
-  title: Gin Demo App
+  description: This is the api documentation of survival party game
+  title: Survival Party
   version: "1.0"
-paths: {}
+paths:
+  /reset-password:
+    post:
+      consumes:
+      - application/json
+      description: Resets the password of the user
+      parameters:
+      - description: Email Details
+        in: body
+        name: loginDetails
+        required: true
+        schema:
+          $ref: '#/definitions/request.RestPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Resets the password
+      tags:
+      - Authentication
+  /send-otp:
+    post:
+      consumes:
+      - application/json
+      description: Sends the otp on the register email
+      parameters:
+      - description: Email Details
+        in: body
+        name: loginDetails
+        required: true
+        schema:
+          $ref: '#/definitions/request.EmailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Sends OTP
+      tags:
+      - Authentication
+  /userData:
+    post:
+      consumes:
+      - application/json
+      description: Updates player info like username and avatar
+      parameters:
+      - description: Player Details
+        in: body
+        name: loginDetails
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdatePlayer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Updates player info
+      tags:
+      - Player
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Perform signup and sends email for verification
+      parameters:
+      - description: Signup Request
+        in: body
+        name: guestLoginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.SigupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Sign Up
+      tags:
+      - Authentication
+  /users/email-verify:
+    put:
+      consumes:
+      - application/json
+      description: Perform Email verifictaion
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: User email verification
+      tags:
+      - Authentication
+  /users/sign_in:
+    post:
+      consumes:
+      - application/json
+      description: Perform Users login and generate access token
+      parameters:
+      - description: Login Details
+        in: body
+        name: loginDetails
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: User Login
+      tags:
+      - Authentication
+  /users/sign_out:
+    delete:
+      consumes:
+      - application/json
+      description: Logs out a player
+      parameters:
+      - description: Player Access Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Logout Player
+      tags:
+      - Authentication
+  /users/social_login:
+    post:
+      consumes:
+      - application/json
+      description: Perform Users social login and generate access token
+      parameters:
+      - description: Login Details
+        in: body
+        name: loginDetails
+        required: true
+        schema:
+          $ref: '#/definitions/request.SocialLoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: User Login
+      tags:
+      - Authentication
 swagger: "2.0"
