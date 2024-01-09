@@ -1,4 +1,4 @@
-package settings
+package player
 
 import (
 	"main/server/db"

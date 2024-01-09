@@ -143,6 +143,18 @@ func ResetPasswordHandler(ctx *gin.Context) {
 	authentication.ResetPasswordService(ctx, req)
 }
 
+// CheckOtpHandler Verifies the otp sent on email
+//
+// @Summary Verifies OTP
+// @Description Verifies the otp sent on email
+// @Tags Authentication
+// @Accept json
+// @Produce json
+// @Param loginDetails body request.OtpRequest true "Email Details"
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /check_otp [post]
 func CheckOtpHandler(ctx *gin.Context) {
 
 	utils.SetHeader(ctx)

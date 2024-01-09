@@ -275,7 +275,8 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			MatchesPlayed:  0,
 			MatchesWon:     0,
 			TotalTimeSpent: time.Now(),
-			TotalKills:     0,
+			// Badges:         []int64{},
+			TotalKills: 0,
 		}
 
 		err = db.CreateRecord(&userGameStats)

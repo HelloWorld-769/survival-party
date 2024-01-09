@@ -13,18 +13,20 @@ type User struct {
 	Password      string    `json:"password"`
 	Username      string    `json:"username"  gorm:"unique"`
 	Avatar        int64     `json:"avatar"`
+	Level         int64     `json:"level"`
 	SocialId      string    `json:"socialId"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
 	DeletedAt     gorm.DeletedAt
 }
 
+type IntArray []int
 type UserGameStats struct {
 	UserId          string    `json:"userId"`
 	User            User      `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
 	XP              int64     `json:"xp"`
-	Level           int64     `json:"level"`
 	Coins           int64     `json:"coins"`
+	Badges          IntArray  `json:"bages" gorm:"type:integer[]"`
 	Gems            int64     `json:"gems"`
 	Energy          int64     `json:"energy"`
 	TotalCoins      int64     `json:"totalCoins"`

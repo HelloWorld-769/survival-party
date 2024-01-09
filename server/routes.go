@@ -23,22 +23,15 @@ func ConfigureRoutes(server *Server) {
 	server.engine.PUT("/users/email-verify", handler.VerifyEmailHandler)
 	server.engine.POST("/send-otp", handler.SendOtpHandler)
 	server.engine.POST("/reset-password", handler.ResetPasswordHandler)
-
-	//Player Routes
-	server.engine.PUT("/userData", gateway.AdminAuthorization, handler.UpdatePlayerInfoHandler)
-
-	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	server.engine.POST("/send_otp", handler.SendOtpHandler)
 	server.engine.POST("/check_otp", handler.CheckOtpHandler)
 
-	server.engine.POST("/reset_password", handler.ResetPasswordHandler)
-
+	//Player Routes
+	server.engine.PUT("/userData", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
 	server.engine.GET("/get_settings", gateway.UserAuthorization, handler.GetSettingsHandler)
 	server.engine.PUT("/update_settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
+	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 
-	// server.engine.POST("/send-email", gomail.SendEmailOtpService)
-
+	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
 // For server Testing(acknowledgement)
