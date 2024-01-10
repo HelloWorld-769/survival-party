@@ -6,6 +6,7 @@ import (
 	"main/server/db"
 	"main/server/model"
 	"regexp"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -108,4 +109,17 @@ func GetUserGameStatsData(userId string) (*model.UserGameStats, error) {
 
 	return &userGameStats, nil
 
+}
+
+func CalculateDays(timeValue time.Time) int64 {
+	// Get the current time in UTC
+	currentTime := time.Now().UTC()
+
+	// Calculate the duration between the two time values
+	duration := currentTime.Sub(timeValue)
+
+	// Convert the duration to days
+	days := int64(duration.Hours() / 24)
+
+	return days
 }

@@ -33,10 +33,11 @@ type DailyRewards struct {
 }
 
 type UserDailyRewards struct {
-	Id     string `json:"Id" gorm:"default:uuid_generate_v4();unique;primaryKey"`
-	UserId string `json:"userId"`
-	User   User   `json:"-" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
-	Coins  int64  `json:"coins"`
-	Gems   int64  `json:"gems"`
-	Energy int64  `json:"energy"`
+	Id      string `json:"Id" gorm:"default:uuid_generate_v4();unique;primaryKey"`
+	UserId  string `json:"userId"`
+	User    User   `json:"-" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
+	Coins   int64  `json:"coins"`
+	Gems    int64  `json:"gems"`
+	Energy  int64  `json:"energy"`
+	Claimed bool   `json:"claimed"`
 }

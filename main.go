@@ -29,6 +29,7 @@ func main() {
 	app := server.NewServer(connection)
 	server.ConfigureRoutes(app)
 	handler.AddDummyDataHandler()
+	handler.StartCron()
 
 	if err := app.Run(os.Getenv("PORT")); err != nil {
 		log.Print(err)

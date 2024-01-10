@@ -88,3 +88,49 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 	response.ShowResponse("reward collected successfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 
 }
+
+func CreateUserDailyReward() {
+
+	//create user daily reward entry for all the users in the database based on their daycount
+
+	//fetch all the users
+	var allUsers []model.User
+	query := "select * from users"
+	err := db.QueryExecutor(query, &allUsers)
+	if err != nil {
+		fmt.Println("error in fetching users query:", err.Error())
+	}
+
+	for _, user := range allUsers {
+
+		//create user daily reward entry based on user daycount
+		//if user daycount is in between 1-7 then allot starting rewards else different formula based
+		//calculate user daycount
+		var dailyReward model.DailyRewards
+		if user.Emailverified {
+
+			dayCount := utils.CalculateDays(user.CreatedAt) + 1
+			query := "select * from daily_rewards where day_count=?"
+			err := db.QueryExecutor(query, &dailyReward, dayCount)
+			if err != nil {
+
+				fmt.Println("error in fetching", err.Error())
+				return
+			}
+
+			//create entry of this daily reward for this user
+			var daily_user_reward model.UserDailyRewards
+			daily_user_reward.UserId = user.Id
+			daily_user_reward.Coins += dailyReward.Coins
+			daily_user_reward.Energy += dailyReward.Energy
+			daily_user_reward.Gems += dailyReward.Gems
+
+			err = db.CreateRecord(&daily_user_reward)
+			if err != nil {
+				fmt.Println("error in creating", err.Error())
+				return
+			}
+		}
+
+	}
+}
