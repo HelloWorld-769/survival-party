@@ -20,7 +20,6 @@ type User struct {
 	DeletedAt     gorm.DeletedAt
 }
 
-type IntArray []int
 type UserGameStats struct {
 	UserId          string    `json:"userId"`
 	User            User      `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
@@ -51,4 +50,15 @@ type UserBadges struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt gorm.DeletedAt
+}
+
+type UserSpecialOffer struct {
+	SpecialOfferId string
+	SpecialOffer   SpecialOffer `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
+	UserId         string       `json:"userId"`
+	User           User         `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
+	Purchased      bool         `json:"purchased"`
+	CreatedAt      time.Time    `json:"created_at"`
+	UpdatedAt      time.Time    `json:"updated_at"`
+	DeletedAt      gorm.DeletedAt
 }

@@ -1,0 +1,122 @@
+[
+    {
+        "productId": "com.frimus.survivalparty.25000energy",
+        "rewardType": 1,
+        "currencyType": 4,
+        "quantity": 50,
+        "price": 3,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.80energy",
+        "rewardType": 1,
+        "currencyType": 2,
+        "quantity": 80,
+        "price": 50,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.100energy",
+        "rewardType": 1,
+        "currencyType": 2,
+        "quantity": 100,
+        "price": 100,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.180energy",
+        "rewardType": 1,
+        "currencyType": 3,
+        "quantity": 180,
+        "price": 50,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.315energy",
+        "rewardType": 1,
+        "currencyType": 3,
+        "quantity": 315,
+        "price": 100,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.10000coins",
+        "rewardType": 2,
+        "currencyType": 3,
+        "quantity": 10000,
+        "price": 100,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.25000coins",
+        "rewardType": 2,
+        "currencyType": 3,
+        "quantity": 25000,
+        "price": 225,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.100000coins",
+        "rewardType": 2,
+        "currencyType": 3,
+        "quantity": 100000,
+        "price": 750,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.250000coins",
+        "rewardType": 2,
+        "currencyType": 3,
+        "quantity": 250000,
+        "price": 1000,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.50000coins",
+        "rewardType": 2,
+        "currencyType": 3,
+        "quantity": 50000,
+        "price": 400,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.1000gems",
+        "rewardType": 3,
+        "currencyType": 3,
+        "quantity": 1000,
+        "price": 100,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.2500gems",
+        "rewardType": 3,
+        "currencyType": 3,
+        "quantity": 2500,
+        "price": 225,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.5000gems",
+        "rewardType": 3,
+        "currencyType": 3,
+        "quantity": 5000,
+        "price": 400,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.10000gems",
+        "rewardType": 3,
+        "currencyType": 3,
+        "quantity": 10000,
+        "price": 750,
+        "isAvailable": true
+    },
+    {
+        "productId": "com.frimus.survivalparty.25000gems",
+        "rewardType": 3,
+        "currencyType": 3,
+        "quantity": 25000,
+        "price": 1000,
+        "isAvailable": true
+    }
+]

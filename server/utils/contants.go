@@ -61,10 +61,20 @@ const (
 	PASSWORD_NOT_MATCH string = "Password are not same"
 )
 
-//reward type
+// reward type
 const (
-	Coins = iota + 1
-	Energy
+	Energy = iota + 1
+	Coins
 	Gems
+	Chest
 	Inventory
+	Experiance
+)
+
+// CurrencyType
+const (
+	C_COINS = iota + 1
+	C_GEMS
+	C_MONEY
+	C_ADS
 )

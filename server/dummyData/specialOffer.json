@@ -1,0 +1,26 @@
+[
+    {
+        "productId": "com.frimus.survivalparty.25000SpecialOffer",
+        "coins": 500,
+        "gems": 100,
+        "inventory": 2,
+        "currencyType": 3,
+        "price": 100
+    },
+    {
+        "productId": "com.frimus.survivalparty.2500SpecialOffer",
+        "coins": 300,
+        "gems": 200,
+        "inventory": 4,
+        "currencyType": 3,
+        "price": 100
+    },
+    {
+        "productId": "com.frimus.survivalparty.500SpecialOffer",
+        "coins": 600,
+        "gems": 100,
+        "inventory": 5,
+        "currencyType": 3,
+        "price": 100
+    }
+]

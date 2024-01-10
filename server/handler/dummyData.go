@@ -26,8 +26,8 @@ func AddDummyDataHandler() {
 	}{
 		{"level_rewards", "server/dummyData/rewards.json", &[]model.LevelRewards{}},
 		{"daily_rewards", "server/dummyData/dailyRewards.json", &[]model.DailyRewards{}},
-		// {"default_customisations", "server/dummyData/defaultCustomization.json", &[]model.DefaultCustomisation{}},
-		// {"race_types", "server/dummyData/raceTypes.json", &[]model.RaceTypes{}},
+		{"shops", "server/dummyData/shop.json", &[]model.Shop{}},
+		{"special_offers", "server/dummyData/specialOffer.json", &[]model.SpecialOffer{}},
 		// {"race_rewards", "server/dummyData/rewards.json", &[]model.RaceRewards{}},
 		// {"reward_data", "server/dummyData/collectables_rewards.json", &[]model.RewardData{}},
 		// {"arena_level_perks", "server/dummyData/arenaPerks.json", &[]model.ArenaLevelPerks{}},
@@ -61,6 +61,14 @@ func addtoDb(filePath string, modelType interface{}) {
 			db.CreateRecord(&item)
 		}
 	case *[]model.DailyRewards:
+		for _, item := range *slice {
+			db.CreateRecord(&item)
+		}
+	case *[]model.Shop:
+		for _, item := range *slice {
+			db.CreateRecord(&item)
+		}
+	case *[]model.SpecialOffer:
 		for _, item := range *slice {
 			db.CreateRecord(&item)
 		}
