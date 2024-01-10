@@ -3,6 +3,8 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"main/server/db"
+	"main/server/model"
 	"regexp"
 
 	"golang.org/x/crypto/bcrypt"
@@ -71,4 +73,39 @@ func CheckPasswordHash(password, hash string) bool {
 	fmt.Println("password hash", password, hash)
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func TableIsEmpty(tablename string) bool {
+	var exists bool
+	query := "SELECT EXISTS(SELECT 1 FROM " + tablename + ");"
+	db.QueryExecutor(query, &exists)
+
+	return exists
+}
+
+func GetUserData(userId string) (*model.User, error) {
+
+	var user model.User
+	query := "select * from users where user_id =?"
+	err := db.QueryExecutor(query, &user, userId)
+	if err != nil {
+
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func GetUserGameStatsData(userId string) (*model.UserGameStats, error) {
+
+	var userGameStats model.UserGameStats
+	query := "select * from user_game_stats where user_id =?"
+	err := db.QueryExecutor(query, &userGameStats, userId)
+	if err != nil {
+
+		return nil, err
+	}
+
+	return &userGameStats, nil
+
 }

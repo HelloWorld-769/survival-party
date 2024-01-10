@@ -4,6 +4,7 @@ import (
 	"log"
 	"main/server"
 	"main/server/db"
+	"main/server/handler"
 	"main/server/services/alert_service/twilio"
 	"main/server/socket"
 	"os"
@@ -27,6 +28,7 @@ func main() {
 	defer socketServer.Close()
 	app := server.NewServer(connection)
 	server.ConfigureRoutes(app)
+	handler.AddDummyDataHandler()
 
 	if err := app.Run(os.Getenv("PORT")); err != nil {
 		log.Print(err)

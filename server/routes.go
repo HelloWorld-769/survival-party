@@ -31,6 +31,9 @@ func ConfigureRoutes(server *Server) {
 	server.engine.PUT("/update_settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 
+	server.engine.GET("/get_level_rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
+	server.engine.POST("/level_reward_collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
+
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 

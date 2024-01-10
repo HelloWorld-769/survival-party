@@ -60,3 +60,11 @@ const (
 	USER_NOT_FOUND     string = "User not found"
 	PASSWORD_NOT_MATCH string = "Password are not same"
 )
+
+//reward type
+const (
+	Coins = iota + 1
+	Energy
+	Gems
+	Inventory
+)

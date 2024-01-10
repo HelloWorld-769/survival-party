@@ -23,3 +23,7 @@ type UpdatePlayerSettingsRequest struct {
 		Vibration    bool    `json:"vibration"`
 	} `json:"setting"`
 }
+
+type PlayerLevelRewardCollectRequest struct {
+	Level int64 `json:"level"`
+}

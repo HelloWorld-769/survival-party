@@ -399,3 +399,36 @@ func ResetPasswordService(ctx *gin.Context, req request.RestPasswordRequest) {
 	// db.QueryExecutor(query, &user, passwordHash, req.Email)
 
 }
+
+func ChangePasswordService(ctx *gin.Context, userId string, password string) {
+
+	//for the logged in user
+	//check the current password matches with the inputPssword
+
+	var user model.User
+	err := db.FindById(&user, userId, "user_id")
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+	if utils.CheckPasswordHash(password, user.Password) {
+
+		//update or change the password
+		newHashPassword, err := utils.HashPassword(password)
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+
+		}
+		user.Password = *newHashPassword
+
+		err = db.UpdateRecord(&user, userId, "user_id").Error
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+
+		response.ShowResponse("password changed successfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+	}
+
+}

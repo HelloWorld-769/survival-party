@@ -26,6 +26,7 @@ type UserGameStats struct {
 	User            User      `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
 	XP              int64     `json:"xp"`
 	Coins           int64     `json:"coins"`
+	Level           int64     `json:"level"`
 	Gems            int64     `json:"gems"`
 	Energy          int64     `json:"energy"`
 	TotalCoins      int64     `json:"totalCoins"`

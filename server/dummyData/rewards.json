@@ -1,0 +1,46 @@
+[
+    {
+        "rewardId": "c2d0b7d4-5461-40e4-a37d-6e7ecb9aa43a",
+        "rewardType": 1,
+        "quantity": 25,
+        "levelRequired":1
+
+    },
+    {
+        "rewardId": "d956509f-7845-44d2-b025-f859acff56f8",
+        "rewardType": 2,
+        "quantity": 20,
+        "levelRequired":2
+        
+    },
+    {
+        "rewardId": "2cb6e075-bd42-42f1-acd4-8e095763b309",
+        "rewardType": 2,
+        "quantity": 30,
+        "levelRequired":3
+        
+    },{
+        "rewardId": "7c5a6ebc-aa44-4b17-97e0-5e9e0bc7219b",
+        "rewardType": 3,
+        "quantity": 15,
+        "levelRequired":4
+        
+    },
+    {
+        "rewardId": "a0e52262-3373-4f05-af6d-92941c30f4a4",
+        "rewardType": 3,
+        "quantity": 15,
+        "levelRequired":4
+        
+    },
+    {
+        "rewardId": "67b846f1-8ae3-4d43-b789-b1309a00703a",
+        "rewardType": 4,
+        "quantity": 10,
+        "levelRequired":4
+        
+    }
+
+
+
+]

@@ -17,7 +17,10 @@ type Session struct {
 }
 
 type ResetSession struct {
-	SessionId string `json:"sessionId" gorm:"default:uuid_generate_v4();unique;primaryKey"`
-	UserEmail string `json:"userEmail"`
-	Otp       int64  `json:"otp"`
+	SessionId string    `json:"sessionId" gorm:"default:uuid_generate_v4();unique;primaryKey"`
+	UserEmail string    `json:"userEmail"`
+	Otp       int64     `json:"otp"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt gorm.DeletedAt
 }

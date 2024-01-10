@@ -250,3 +250,26 @@ func SocialLoginHandler(ctx *gin.Context) {
 	authentication.SocialLoginService(ctx, &input)
 
 }
+
+func ChangePasswordHandler(ctx *gin.Context) {
+
+	var inputPassword string
+	err := utils.RequestDecoding(ctx, &inputPassword)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
+	//validation check
+	if inputPassword == "" {
+
+		response.ShowResponse("password cannot be blank", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
+	userId, exists := ctx.Get("user_id")
+	if !exists {
+		response.ShowResponse(utils.UNAUTHORIZED, utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	authentication.ChangePasswordService(ctx, userId.(string), inputPassword)
+}
