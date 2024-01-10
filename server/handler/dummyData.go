@@ -25,7 +25,7 @@ func AddDummyDataHandler() {
 		dataPtr   interface{}
 	}{
 		{"level_rewards", "server/dummyData/rewards.json", &[]model.LevelRewards{}},
-		// {"part_customizations", "server/dummyData/partCustomization.json", &[]model.PartCustomization{}},
+		{"daily_rewards", "server/dummyData/dailyRewards.json", &[]model.DailyRewards{}},
 		// {"default_customisations", "server/dummyData/defaultCustomization.json", &[]model.DefaultCustomisation{}},
 		// {"race_types", "server/dummyData/raceTypes.json", &[]model.RaceTypes{}},
 		// {"race_rewards", "server/dummyData/rewards.json", &[]model.RaceRewards{}},
@@ -60,7 +60,10 @@ func addtoDb(filePath string, modelType interface{}) {
 		for _, item := range *slice {
 			db.CreateRecord(&item)
 		}
-
+	case *[]model.DailyRewards:
+		for _, item := range *slice {
+			db.CreateRecord(&item)
+		}
 	default:
 		log.Fatal("Invalid modelType provided")
 	}

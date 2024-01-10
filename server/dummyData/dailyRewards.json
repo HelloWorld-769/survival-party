@@ -1,0 +1,60 @@
+[
+
+
+    {
+        "rewardId":"a7a51650-d37e-40ff-aa86-5fd54bb10b77",
+        "dayCount":1,
+        "coins":10,
+        "gems":1,
+        "energy":10
+
+    },
+    {
+        "rewardId":"4563d519-6e8d-4292-b68f-c3cf37f11c00",
+        "dayCount":2,
+        "coins":20,
+        "gems":2,
+        "energy":10
+
+    },
+    {
+        "rewardId":"cd73a3d2-d06c-46ca-ab17-bd6ac7f41054",
+        "dayCount":3,
+        "coins":50,
+        "gems":5,
+        "energy":10
+
+    },
+    {
+        "rewardId":"22c1d255-e356-4312-84f8-65ad7d6f34c0",
+        "dayCount":4,
+        "coins":50,
+        "gems":10,
+        "energy":10
+
+    },
+    {
+        "rewardId":"043cb823-e446-44c7-93f6-1ca2ce9b745c",
+        "dayCount":5,
+        "coins":50,
+        "gems":15,
+        "energy":15
+
+    },
+    {
+        "rewardId":"93e09b70-a93b-4c61-87b9-b41fa3332159",
+        "dayCount":6,
+        "coins":60,
+        "gems":20,
+        "energy":10
+
+    },
+    {
+        "rewardId":"24c747c9-884f-486b-817e-3e00304aa6b9",
+        "dayCount":7,
+        "coins":150,
+        "gems":25,
+        "energy":20
+
+    }
+]
