@@ -499,10 +499,14 @@ const docTemplate = `{
                 ],
                 "tags": [
 <<<<<<< HEAD
+<<<<<<< HEAD
                     "Store"
 =======
                     "Player"
 >>>>>>> a459c37 (doc:created docs for routes)
+=======
+                    "Store"
+>>>>>>> 501cb55 (Feat:added shop buy handler and starter pack)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [
