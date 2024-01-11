@@ -27,12 +27,20 @@ func ConfigureRoutes(server *Server) {
 	server.engine.POST("/api/v1/check-otp", handler.CheckOtpHandler)
 
 	//Player Routes
+<<<<<<< HEAD
 	server.engine.PUT("/api/v1/userData", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
 	server.engine.GET("/api/v1/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
 	server.engine.PUT("/api/v1/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/api/v1/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 	server.engine.GET("/api/v1/store", gateway.UserAuthorization, handler.GetStoreHandler)
 	server.engine.POST("/api/v1/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
+=======
+	server.engine.PUT("/user-data", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
+	server.engine.GET("/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
+	server.engine.PUT("/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
+	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
+	server.engine.GET("/store", gateway.UserAuthorization, handler.GetStoreHandler)
+>>>>>>> a23bf06 (starter pack fix)
 
 	server.engine.GET("/api/v1/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
 	server.engine.POST("/api/v1/level-reward-collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
