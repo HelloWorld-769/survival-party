@@ -257,6 +257,7 @@ paths:
       summary: Collects Reward
       tags:
       - Player
+<<<<<<< HEAD
   /popupoffers:
     get:
       consumes:
@@ -290,6 +291,8 @@ paths:
       summary: Get the specific type of reward
       tags:
       - Store
+=======
+>>>>>>> a459c37 (doc:created docs for routes)
   /reset-password:
     post:
       consumes:
@@ -407,7 +410,11 @@ paths:
             $ref: '#/definitions/response.Success'
       summary: Gets shop details
       tags:
+<<<<<<< HEAD
       - Store
+=======
+      - Player
+>>>>>>> a459c37 (doc:created docs for routes)
   /update_settings:
     put:
       consumes:

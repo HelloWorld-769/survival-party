@@ -255,6 +255,7 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -305,6 +306,8 @@ const docTemplate = `{
                 }
             }
         },
+=======
+>>>>>>> a459c37 (doc:created docs for routes)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
@@ -451,7 +454,11 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
+<<<<<<< HEAD
                     "Store"
+=======
+                    "Player"
+>>>>>>> a459c37 (doc:created docs for routes)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [
