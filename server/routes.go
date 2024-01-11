@@ -32,6 +32,7 @@ func ConfigureRoutes(server *Server) {
 	server.engine.PUT("/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 	server.engine.GET("/store", gateway.UserAuthorization, handler.GetStoreHandler)
+	server.engine.POST("/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
 
 	//Level rewards
 	server.engine.GET("/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
