@@ -1,6 +1,7 @@
 package shop
 
 import (
+	"fmt"
 	"main/server/db"
 	"main/server/model"
 	"main/server/response"
@@ -34,6 +35,7 @@ type Temp struct {
 }
 
 func GetStoreService(ctx *gin.Context, userId string) {
+	fmt.Println("User Id: ", userId)
 
 	var specOfferRes struct {
 		UserId       string
@@ -56,6 +58,8 @@ func GetStoreService(ctx *gin.Context, userId string) {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
+
+	fmt.Println("")
 
 	var shopDetails []model.Shop
 	query = "SELECT * FROM shops "
