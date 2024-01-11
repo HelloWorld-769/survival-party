@@ -445,6 +445,7 @@ paths:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       - Store
 <<<<<<< HEAD
 =======
@@ -459,6 +460,9 @@ paths:
 >>>>>>> a1e10ba (feat: daily goals)
 =======
       - Player
+=======
+      - Store
+>>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
   /update_settings:
 >>>>>>> 14d0086 (doc:created docs for routes)
     put:

@@ -504,6 +504,7 @@ const docTemplate = `{
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     "Store"
 =======
                     "Player"
@@ -514,6 +515,9 @@ const docTemplate = `{
 =======
                     "Player"
 >>>>>>> 14d0086 (doc:created docs for routes)
+=======
+                    "Store"
+>>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [

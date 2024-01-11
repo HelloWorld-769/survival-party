@@ -40,7 +40,11 @@ func ConfigureRoutes(server *Server) {
 	server.engine.PUT("/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 	server.engine.GET("/store", gateway.UserAuthorization, handler.GetStoreHandler)
+<<<<<<< HEAD
 >>>>>>> a23bf06 (starter pack fix)
+=======
+	server.engine.POST("/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
+>>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
 
 	server.engine.GET("/api/v1/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
 	server.engine.POST("/api/v1/level-reward-collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
