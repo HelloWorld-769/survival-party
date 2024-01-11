@@ -56,13 +56,13 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 	switch LevelReward.RewardType {
 	case utils.Coins:
 		fmt.Println("Coins")
-		userData.Coins += LevelReward.Quantity
+		userData.CurrentCoins += LevelReward.Quantity
 	case utils.Energy:
 		fmt.Println("Energy")
 		userData.Energy += LevelReward.Quantity
 	case utils.Gems:
 		fmt.Println("Gems")
-		userData.Gems += LevelReward.Quantity
+		userData.CurrentGems += LevelReward.Quantity
 	default:
 		fmt.Println("nothing for reward")
 	}

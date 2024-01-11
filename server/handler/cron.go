@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"main/server/services/rewards"
+	"main/server/services/shop"
 	"time"
 
 	"github.com/robfig/cron/v3"
@@ -26,6 +27,7 @@ func StartCron() {
 			//create User daily rewards (available to claim)
 			rewards.CreateUserDailyReward()
 		}
+		shop.GiveNewSpecialOffer()
 
 	})
 

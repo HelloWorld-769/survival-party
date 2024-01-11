@@ -5,7 +5,8 @@
         "gems": 100,
         "inventory": 2,
         "currencyType": 3,
-        "price": 100
+        "price": 100,
+        "isAvailable":true
     },
     {
         "productId": "com.frimus.survivalparty.2500SpecialOffer",
@@ -13,7 +14,8 @@
         "gems": 200,
         "inventory": 4,
         "currencyType": 3,
-        "price": 100
+        "price": 100,
+        "isAvailable":true
     },
     {
         "productId": "com.frimus.survivalparty.500SpecialOffer",
@@ -21,6 +23,7 @@
         "gems": 100,
         "inventory": 5,
         "currencyType": 3,
-        "price": 100
+        "price": 100,
+        "isAvailable":true
     }
 ]

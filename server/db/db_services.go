@@ -10,6 +10,10 @@ func Transfer(connection *gorm.DB) {
 	db = connection
 }
 
+func BeginTransaction() *gorm.DB {
+	return db.Begin()
+}
+
 func CreateRecord(data interface{}) error {
 
 	err := db.Create(data).Error

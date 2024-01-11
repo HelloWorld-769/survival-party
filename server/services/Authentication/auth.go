@@ -48,6 +48,8 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 
 	userGameStats := model.UserGameStats{
 		UserId:         userRecord.Id,
+		CurrentCoins:   10000,
+		CurrentGems:    10000,
 		MatchesPlayed:  0,
 		MatchesWon:     0,
 		TotalTimeSpent: time.Now(),

@@ -14,6 +14,7 @@ type SpecialOffer struct {
 	Inventory    int64     `json:"inventory"`
 	CurrencyType int       `json:"currencyType"`
 	Price        int64     `json:"price"`
+	IsAvailable  bool      `json:"isAvailable"`
 	ExpireAt     time.Time `json:"expiresAt"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
