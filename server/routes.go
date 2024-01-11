@@ -13,6 +13,8 @@ func ConfigureRoutes(server *Server) {
 
 	//Allowing CORS
 	server.engine.Use(gateway.CORSMiddleware())
+	//swagger route
+	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	//Auth routes
 	server.engine.POST("/users", handler.SignupHandler)
@@ -30,6 +32,7 @@ func ConfigureRoutes(server *Server) {
 	server.engine.PUT("/update_settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 
+	//Level rewards
 	server.engine.GET("/get_level_rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
 	server.engine.POST("/level_reward_collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
 
@@ -39,4 +42,7 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/popupoffers", handler.GetPopupHandler)
 
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	//daily rewards
+	server.engine.PUT("/collect-dailyRewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
+	server.engine.GET("/dailyRewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)
 }

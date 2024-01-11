@@ -52,7 +52,7 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 		CurrentGems:    10000,
 		MatchesPlayed:  0,
 		MatchesWon:     0,
-		TotalTimeSpent: time.Now(),
+		TotalTimeSpent: 0,
 		TotalKills:     0,
 	}
 
@@ -298,7 +298,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			UserId:         userRecord.Id,
 			MatchesPlayed:  0,
 			MatchesWon:     0,
-			TotalTimeSpent: time.Now(),
+			TotalTimeSpent: 0,
 			// Badges:         []int64{},
 			TotalKills: 0,
 		}

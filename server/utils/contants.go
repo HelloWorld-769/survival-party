@@ -80,3 +80,17 @@ const (
 	C_MONEY
 	C_ADS
 )
+
+// enum status:{
+// 	UNAVAILABLE: 0,
+// 	CLAIMED: 1,
+// 	UNCLAIMED: 2,
+// 	MISSED: 3
+// }
+
+const (
+	UNAVAILABLE = iota + 1
+	CLAIMED
+	UNCLAIMED
+	MISSED
+)

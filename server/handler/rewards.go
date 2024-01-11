@@ -62,3 +62,26 @@ func PlayerLevelRewardCollectionHandler(ctx *gin.Context) {
 	rewards.PlayerLevelRewardCollect(ctx, userId.(string), req)
 
 }
+
+func CollectDailyRewardHandler(ctx *gin.Context) {
+
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		response.ShowResponse("userId missing from ", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	rewards.CollectDailyReward(ctx, userId.(string))
+}
+
+func GetUserDailyRewardDataHandler(ctx *gin.Context) {
+
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		response.ShowResponse("userId missing from ", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	rewards.GetUserDailyRewardData(ctx, userId.(string))
+
+}

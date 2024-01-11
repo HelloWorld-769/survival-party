@@ -123,3 +123,31 @@ func CalculateDays(timeValue time.Time) int64 {
 
 	return days
 }
+
+func MilliSecondsToHours(MilliSeconds int64) int64 {
+
+	result := MilliSeconds / (1000 * 60 * 60)
+	return result
+}
+
+func UserMultipler(userId string) int64 {
+
+	//fecth the user game stats
+	query := "select * from user_game_stats where user_id=?"
+	var user_game_stats model.UserGameStats
+	err := db.QueryExecutor(query, &user_game_stats, userId)
+	if err != nil {
+		fmt.Println("error", err.Error())
+		return 0
+	}
+
+	user, err := GetUserData(userId)
+	if err != nil {
+		fmt.Println("error", err.Error())
+		return 0
+	}
+	daycount := CalculateDays(user.CreatedAt) + 1
+
+	multiplier := (daycount * 2) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
+	return multiplier
+}

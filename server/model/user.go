@@ -34,7 +34,7 @@ type UserGameStats struct {
 	HighestTrophies int64     `json:"highestTrophies"`
 	MatchesPlayed   int64     `json:"matchesPlayed"`
 	MatchesWon      int64     `json:"matchesWon"`
-	TotalTimeSpent  time.Time `json:"timeSpent"`
+	TotalTimeSpent  int64     `json:"timeSpent"`
 	TotalKills      int64     `json:"totalKills"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`

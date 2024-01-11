@@ -22,7 +22,7 @@ func StartCron() {
 		// Format the time to HH:MM:SS
 		formattedTime := currentTime.Format("15:04")
 		fmt.Println("formatted time is:", formattedTime)
-		if formattedTime == "18:25" {
+		if formattedTime == "18:54" {
 
 			//create User daily rewards (available to claim)
 			rewards.CreateUserDailyReward()
