@@ -287,6 +287,7 @@ paths:
       tags:
       - Player
 <<<<<<< HEAD
+<<<<<<< HEAD
   /popupoffers:
     get:
       consumes:
@@ -322,6 +323,8 @@ paths:
       - Store
 =======
 >>>>>>> a459c37 (doc:created docs for routes)
+=======
+>>>>>>> 14d0086 (doc:created docs for routes)
   /reset-password:
     post:
       consumes:
@@ -441,6 +444,7 @@ paths:
       tags:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       - Store
 <<<<<<< HEAD
 =======
@@ -453,6 +457,10 @@ paths:
 =======
   /update-settings:
 >>>>>>> a1e10ba (feat: daily goals)
+=======
+      - Player
+  /update_settings:
+>>>>>>> 14d0086 (doc:created docs for routes)
     put:
       consumes:
       - application/json

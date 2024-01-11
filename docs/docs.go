@@ -300,6 +300,7 @@ const docTemplate = `{
             }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -352,6 +353,8 @@ const docTemplate = `{
         },
 =======
 >>>>>>> a459c37 (doc:created docs for routes)
+=======
+>>>>>>> 14d0086 (doc:created docs for routes)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
@@ -500,6 +503,7 @@ const docTemplate = `{
                 "tags": [
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     "Store"
 =======
                     "Player"
@@ -507,6 +511,9 @@ const docTemplate = `{
 =======
                     "Store"
 >>>>>>> 501cb55 (Feat:added shop buy handler and starter pack)
+=======
+                    "Player"
+>>>>>>> 14d0086 (doc:created docs for routes)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [
@@ -540,7 +547,11 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "/update-settings": {
+=======
+        "/update_settings": {
+>>>>>>> 14d0086 (doc:created docs for routes)
             "put": {
                 "description": "Updates the game settings of that player",
                 "consumes": [
