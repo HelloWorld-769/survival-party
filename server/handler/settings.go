@@ -11,13 +11,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetSettingsHandler Gets the current settings of that player
+//
+// @Summary Gets the settings
+// @Description Gets the current settings of that player
+// @Tags Player
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Player Access token"
+// @Success 200 {object} response.Success "Sucess"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /get_settings [get]
 func GetSettingsHandler(ctx *gin.Context) {
-
-	utils.SetHeader(ctx)
 
 	userId, exists := ctx.Get("userId")
 	if !exists {
-		response.ShowResponse("userId missing from ", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		response.ShowResponse("userId missing from ", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
 		return
 	}
 
@@ -25,13 +35,24 @@ func GetSettingsHandler(ctx *gin.Context) {
 	player.GetSettingsService(ctx, userId.(string))
 }
 
+// UpdateSettingsHandler Updates the settings of that player
+//
+// @Summary Updates setting
+// @Description Updates the game settings of that player
+// @Tags Player
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Player Access token"
+// @Param loginDetails body request.PlayerLevelRewardCollectRequest true "Player Details"
+// @Success 200 {object} response.Success "Sucess"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /update_settings [put]
 func UpdateSettingsHandler(ctx *gin.Context) {
-
-	utils.SetHeader(ctx)
 
 	userId, exists := ctx.Get("userId")
 	if !exists {
-		response.ShowResponse("userId missing from ", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		response.ShowResponse("userId missing from ", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
 		return
 	}
 
@@ -44,7 +65,7 @@ func UpdateSettingsHandler(ctx *gin.Context) {
 	//validation Check on request body fields
 	err := validation.CheckValidation(&req)
 	if err != nil {
-		response.ShowResponse(err.Error(), 400, "Failure", "", ctx)
+		response.ShowResponse(err.Error(), 400, utils.FAILURE, nil, ctx)
 		return
 	}
 
