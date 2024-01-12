@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"main/server/request"
 	"main/server/response"
-	"main/server/services/player"
+	"main/server/services/user"
 	"main/server/utils"
 	"main/server/validation"
 
@@ -32,7 +32,7 @@ func GetSettingsHandler(ctx *gin.Context) {
 	}
 
 	//call the service
-	player.GetSettingsService(ctx, userId.(string))
+	user.GetSettingsService(ctx, userId.(string))
 }
 
 // UpdateSettingsHandler Updates the settings of that player
@@ -70,5 +70,5 @@ func UpdateSettingsHandler(ctx *gin.Context) {
 	}
 
 	//call the service
-	player.UpdateSettingsService(ctx, userId.(string), req)
+	user.UpdateSettingsService(ctx, userId.(string), req)
 }

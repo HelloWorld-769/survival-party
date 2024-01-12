@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	dailygoal "main/server/services/daily_goal"
 	"main/server/services/player"
 	"main/server/services/rewards"
 	"main/server/services/shop"
@@ -36,6 +37,13 @@ func StartCron() {
 			player.UpdateDayCount()
 		}
 		shop.GiveNewSpecialOffer()
+
+		dailygoal.DailyGoalGeneration()
+
+		// if formattedTime == "17:48" {
+
+		// 	dailygoal.DeleteAllGoals()
+		// }
 
 	})
 

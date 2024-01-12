@@ -3,7 +3,7 @@ package handler
 import (
 	"main/server/request"
 	"main/server/response"
-	"main/server/services/player"
+	"main/server/services/user"
 	"main/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -36,7 +36,7 @@ func UpdatePlayerInfoHandler(ctx *gin.Context) {
 		return
 	}
 
-	player.UpdatePlayerService(ctx, userId.(string), input)
+	user.UpdatePlayerService(ctx, userId.(string), input)
 }
 
 // GetPlayerStatsHandler Gets the player stats
@@ -58,5 +58,5 @@ func GetPlayerStatsHandler(ctx *gin.Context) {
 		return
 	}
 
-	player.GetPlayerStatsService(ctx, userId.(string))
+	user.GetPlayerStatsService(ctx, userId.(string))
 }
