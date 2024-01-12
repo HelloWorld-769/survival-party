@@ -2,12 +2,15 @@ package shop
 
 import (
 	"fmt"
+	"io/ioutil"
 	"main/server/db"
 	"main/server/model"
 	"main/server/request"
 	"main/server/response"
 	"main/server/utils"
 	"math/rand"
+	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -167,9 +170,28 @@ func BuyFromStoreService(ctx *gin.Context, userId string, input request.BuyStore
 			return
 		}
 		userGameStats.CurrentCoins -= shopData.Price
-	} else {
-		response.ShowResponse("Invalid currency type", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
-		return
+	} else if shopData.CurrencyType == utils.C_MONEY {
+		//hit the google api
+
+		link := os.Getenv("GOOGLE_API") + "/" + utils.PACKAGE_NAME + "/purchases/products/" + input.ProductId + "/tokens/" + input.Token
+
+		req, err := http.NewRequest("GET", link, nil)
+		if err != nil {
+			response.ShowResponse("Error from creating google api request"+err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			response.ShowResponse("Error from hitting google api request"+err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+		resBody, _ := ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
+		if resp.StatusCode != 200 {
+			response.ShowResponse(string(resBody), int64(resp.StatusCode), utils.FAILURE, nil, ctx)
+			return
+		}
 	}
 
 	if shopData.RewardType == utils.Energy {

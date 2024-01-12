@@ -44,6 +44,8 @@ const (
 	HTTP_NO_CONTENT                      int64 = 204
 )
 
+const PACKAGE_NAME string = "com.frimus.survivalparty"
+
 const (
 	FAILURE       string = "Failure"
 	SUCCESS       string = "Success"
