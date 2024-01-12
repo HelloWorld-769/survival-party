@@ -257,6 +257,39 @@ paths:
       summary: Collects Reward
       tags:
       - Player
+  /popupoffers:
+    get:
+      consumes:
+      - application/json
+      description: Get the specific type of reward
+      parameters:
+      - description: Type of reward
+        in: query
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "401":
+          description: Unauthorised
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Get the specific type of reward
+      tags:
+      - Store
   /reset-password:
     post:
       consumes:

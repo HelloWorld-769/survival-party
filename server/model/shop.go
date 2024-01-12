@@ -13,6 +13,7 @@ type Shop struct {
 	CurrencyType int64     `json:"currencyType"`
 	Quantity     int64     `json:"quantity"`
 	Price        int64     `json:"price"`
+	Popup        bool      `json:"popup"`
 	IsAvailable  bool      `json:"isAvailable"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`

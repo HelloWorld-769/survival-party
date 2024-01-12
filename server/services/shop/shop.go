@@ -272,3 +272,37 @@ func GiveNewSpecialOffer() {
 
 	fmt.Println("Sucessfully generated special rewards for that user ")
 }
+
+func GetPopupService(ctx *gin.Context, rewardId int64) {
+
+	var result struct {
+		Offers []struct {
+			CurrencyType int64 `json:"currencyType"`
+			Price        int64 `json:"price"`
+			Quantity     int64 `json:"quantity"`
+		} `json:"offers"`
+	}
+
+	var storeDetails []model.Shop
+	query := "SELECT * FROM shops WHERE reward_type=? AND popup=true"
+	err := db.QueryExecutor(query, &storeDetails, rewardId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	for _, data := range storeDetails {
+		result.Offers = append(result.Offers, struct {
+			CurrencyType int64 `json:"currencyType"`
+			Price        int64 `json:"price"`
+			Quantity     int64 `json:"quantity"`
+		}{
+			CurrencyType: data.CurrencyType,
+			Price:        data.Price,
+			Quantity:     data.Quantity,
+		})
+	}
+
+	response.ShowResponse(utils.DATA_FETCH_SUCCESS, utils.HTTP_OK, utils.SUCCESS, result, ctx)
+
+}

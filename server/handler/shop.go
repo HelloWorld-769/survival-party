@@ -5,6 +5,7 @@ import (
 	"main/server/response"
 	"main/server/services/shop"
 	"main/server/utils"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -60,5 +61,25 @@ func BuyFromStoreHandler(ctx *gin.Context) {
 	}
 
 	shop.BuyFromStoreService(ctx, userId.(string), input)
+
+}
+
+// @Summary Get the specific type of reward
+// @Description Get the specific type of reward
+// @Tags Store
+// @Accept json
+// @Produce json
+// @Param type query string true "Type of reward"
+// @Success 200 {object} response.Success "Success"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure  401 {object} response.Success "Unauthorised"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /popupoffers [get]
+func GetPopupHandler(ctx *gin.Context) {
+	rewardIdStr := ctx.Query("type")
+
+	rewardId, _ := strconv.Atoi(rewardIdStr)
+
+	shop.GetPopupService(ctx, int64(rewardId))
 
 }
