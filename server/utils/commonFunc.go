@@ -193,7 +193,7 @@ func UserMultipler(userId string) int64 {
 		fmt.Println("error", err.Error())
 		return 0
 	}
-	daycount := CalculateDays(user.CreatedAt) + 1
+	daycount := CalculateDays(user.EmailVerifiedAt) + 1
 
 	multiplier := (daycount * 2) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
 	return multiplier
