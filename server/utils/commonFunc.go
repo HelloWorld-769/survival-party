@@ -87,7 +87,7 @@ func TableIsEmpty(tablename string) bool {
 func GetUserData(userId string) (*model.User, error) {
 
 	var user model.User
-	query := "select * from users where user_id =?"
+	query := "select * from users where id =?"
 	err := db.QueryExecutor(query, &user, userId)
 	if err != nil {
 
@@ -146,7 +146,7 @@ func UserMultipler(userId string) int64 {
 		fmt.Println("error", err.Error())
 		return 0
 	}
-	daycount := CalculateDays(user.CreatedAt) + 1
+	daycount := CalculateDays(user.EmailVerifiedAt) + 1
 
 	multiplier := (daycount * 2) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
 	return multiplier

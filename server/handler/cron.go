@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"main/server/services/player"
 	"main/server/services/rewards"
 	"main/server/services/shop"
 	"time"
@@ -22,10 +23,17 @@ func StartCron() {
 		// Format the time to HH:MM:SS
 		formattedTime := currentTime.Format("15:04")
 		fmt.Println("formatted time is:", formattedTime)
-		if formattedTime == "18:54" {
+		if formattedTime == "16:31" {
+			rewards.UpdateDailyRewardsData()
+		}
+		if formattedTime == "19:15" {
 
 			//create User daily rewards (available to claim)
 			rewards.CreateUserDailyReward()
+
+		}
+		if formattedTime == "16:25" {
+			player.UpdateDayCount()
 		}
 		shop.GiveNewSpecialOffer()
 

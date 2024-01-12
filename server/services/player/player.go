@@ -138,3 +138,25 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 	response.ShowResponse(utils.DATA_FETCH_SUCCESS, utils.HTTP_OK, utils.SUCCESS, playerResponse, ctx)
 
 }
+
+func UpdateDayCount() {
+
+	var users []model.User
+	query := "select * from users where email_verified =true"
+	err := db.QueryExecutor(query, &users)
+	if err != nil {
+		fmt.Println("error:", err.Error())
+		return
+	}
+
+	for _, user := range users {
+
+		user.DayCount++
+		err := db.UpdateRecord(&user, user.Id, "user_id").Error
+		if err != nil {
+			fmt.Println("error:", err.Error())
+			return
+		}
+	}
+
+}

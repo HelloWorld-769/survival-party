@@ -8,6 +8,7 @@ import (
 	"main/server/request"
 	"main/server/response"
 	"main/server/services/alert_service/Gomail"
+	"main/server/services/rewards"
 	"main/server/services/token"
 	"main/server/utils"
 	"strconv"
@@ -34,10 +35,11 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 	}
 
 	userRecord := model.User{
-		Email:    input.User.Email,
-		Password: *encryptedPassword,
-		Username: input.User.Username,
-		Avatar:   input.User.Avatar,
+		Email:           input.User.Email,
+		Password:        *encryptedPassword,
+		Username:        input.User.Username,
+		Avatar:          input.User.Avatar,
+		EmailVerifiedAt: time.Now(),
 	}
 
 	err = db.CreateRecord(&userRecord)
@@ -165,6 +167,12 @@ func VerifyEmail(ctx *gin.Context, tokenString string) {
 		return
 	}
 
+	err = rewards.CreateStarterDailyRewards(claims.Id)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
 	response.ShowResponse("Email verified succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 
 }
@@ -198,9 +206,19 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 	}
 
 	//check if emial is verified or not
-	if !user.Emailverified {
+	if !user.EmailVerified {
 		response.ShowResponse("You have to confirm your email address before continuing.", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
+	}
+
+	if user.DayCount == 0 {
+
+		user.DayCount = 1
+		err := db.UpdateRecord(&user, user.Id, "id").Error
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
 	}
 
 	accessTokenExpirationTime := time.Now().Add(48 * time.Hour)
@@ -263,12 +281,13 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		}
 		//give a random userNmae to that user
 		userRecord := model.User{
-			Email:         input.Email,
-			Emailverified: false,
-			Password:      "",
-			Username:      "Suvival_Party_" + strconv.Itoa(count),
-			Avatar:        input.Avatar,
-			SocialId:      input.Uid,
+			Email:           input.Email,
+			EmailVerified:   true,
+			Password:        "",
+			Username:        "Suvival_Party_" + strconv.Itoa(count),
+			Avatar:          input.Avatar,
+			SocialId:        input.Uid,
+			EmailVerifiedAt: time.Now(),
 		}
 
 		err = db.CreateRecord(&userRecord)
@@ -334,12 +353,27 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			return
 		}
 
+		err = rewards.CreateStarterDailyRewards(userRecord.Id)
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+
 	} else {
 		//user is trying to log in in using social login
 		var user *model.User
 		query := "SELECT * FROM users WHERE email=? AND social_id=?"
 		err := db.QueryExecutor(query, &user, input.Email, input.Uid)
 		if err != nil {
+			if user.DayCount == 0 {
+
+				user.DayCount = 1
+				err := db.UpdateRecord(&user, user.Id, "id").Error
+				if err != nil {
+					response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+					return
+				}
+			}
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
@@ -372,6 +406,16 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		if err != nil {
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
+		}
+
+		if user.DayCount == 0 {
+
+			user.DayCount = 1
+			err := db.UpdateRecord(&user, user.Id, "id").Error
+			if err != nil {
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
 		}
 
 	}
