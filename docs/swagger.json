@@ -296,7 +296,12 @@
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 72e6077 (doc:created docs for routes)
+=======
+=======
+>>>>>>> c4acd51 (feat: added pop up offer route)
+>>>>>>> 7b19332 (feat: added pop up offer route)
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -348,12 +353,20 @@
             }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 7b19332 (feat: added pop up offer route)
 =======
 >>>>>>> a459c37 (doc:created docs for routes)
 =======
 >>>>>>> 14d0086 (doc:created docs for routes)
+<<<<<<< HEAD
 >>>>>>> 72e6077 (doc:created docs for routes)
+=======
+=======
+>>>>>>> c4acd51 (feat: added pop up offer route)
+>>>>>>> 7b19332 (feat: added pop up offer route)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
