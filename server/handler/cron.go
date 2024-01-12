@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	dailygoal "main/server/services/daily_goal"
 	"main/server/services/player"
 	"main/server/services/rewards"
 	"main/server/services/shop"
