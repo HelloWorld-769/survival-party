@@ -39,12 +39,15 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
 	server.engine.PUT("/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
+<<<<<<< HEAD
 	server.engine.GET("/store", gateway.UserAuthorization, handler.GetStoreHandler)
 <<<<<<< HEAD
 >>>>>>> a23bf06 (starter pack fix)
 =======
 	server.engine.POST("/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
 >>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
+=======
+>>>>>>> c4acd51 (feat: added pop up offer route)
 
 	server.engine.GET("/api/v1/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
 	server.engine.POST("/api/v1/level-reward-collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
@@ -63,4 +66,10 @@ func ConfigureRoutes(server *Server) {
 	//daily rewards
 	server.engine.PUT("/collect-daily-rewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
 	server.engine.GET("/daily-rewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)
+	//Store Routes
+	server.engine.GET("/store", gateway.UserAuthorization, handler.GetStoreHandler)
+	server.engine.POST("/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
+	server.engine.GET("/popupoffers", handler.GetPopupHandler)
+
+	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

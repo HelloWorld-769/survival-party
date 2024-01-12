@@ -301,6 +301,9 @@ const docTemplate = `{
         },
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c4acd51 (feat: added pop up offer route)
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -351,10 +354,13 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
 =======
 >>>>>>> a459c37 (doc:created docs for routes)
 =======
 >>>>>>> 14d0086 (doc:created docs for routes)
+=======
+>>>>>>> c4acd51 (feat: added pop up offer route)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",

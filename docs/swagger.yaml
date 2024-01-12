@@ -288,6 +288,9 @@ paths:
       - Player
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c4acd51 (feat: added pop up offer route)
   /popupoffers:
     get:
       consumes:
@@ -321,10 +324,13 @@ paths:
       summary: Get the specific type of reward
       tags:
       - Store
+<<<<<<< HEAD
 =======
 >>>>>>> a459c37 (doc:created docs for routes)
 =======
 >>>>>>> 14d0086 (doc:created docs for routes)
+=======
+>>>>>>> c4acd51 (feat: added pop up offer route)
   /reset-password:
     post:
       consumes:
