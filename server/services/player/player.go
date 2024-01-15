@@ -152,7 +152,7 @@ func UpdateDayCount() {
 	for _, user := range users {
 
 		user.DayCount++
-		err := db.UpdateRecord(&user, user.Id, "user_id").Error
+		err := db.UpdateRecord(&user, user.Id, "id").Error
 		if err != nil {
 			fmt.Println("error:", err.Error())
 			return

@@ -26,13 +26,13 @@ func StartCron() {
 		if formattedTime == "16:31" {
 			rewards.UpdateDailyRewardsData()
 		}
-		if formattedTime == "19:15" {
+		if formattedTime == "11:58" {
 
 			//create User daily rewards (available to claim)
 			rewards.CreateUserDailyReward()
 
 		}
-		if formattedTime == "16:25" {
+		if formattedTime == "11:25" {
 			player.UpdateDayCount()
 		}
 		shop.GiveNewSpecialOffer()

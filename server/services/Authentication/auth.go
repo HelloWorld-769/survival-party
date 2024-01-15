@@ -40,6 +40,7 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 		Username:        input.User.Username,
 		Avatar:          input.User.Avatar,
 		EmailVerifiedAt: time.Now(),
+		DayCount:        1,
 	}
 
 	err = db.CreateRecord(&userRecord)
@@ -288,6 +289,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			Avatar:          input.Avatar,
 			SocialId:        input.Uid,
 			EmailVerifiedAt: time.Now(),
+			DayCount:        1,
 		}
 
 		err = db.CreateRecord(&userRecord)

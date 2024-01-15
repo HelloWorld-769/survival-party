@@ -111,11 +111,18 @@ func CreateUserDailyReward() {
 
 		//create user daily reward entry based on user daycount
 		//calculate user daycount
-		dayCount := utils.CalculateDays(user.EmailVerifiedAt) + 1
+
+		var dayCount int
+		query := "select day_count from users where emailverified =true and id=?"
+		err := db.QueryExecutor(query, &dayCount, user.Id)
+		if err != nil {
+			fmt.Println("error ", err.Error())
+			return
+		}
 		fmt.Println("user ", user.Id)
 		fmt.Println("day Count: ", dayCount)
 
-		if dayCount%7 == 0 && dayCount >= 7 {
+		if dayCount%8 == 0 && dayCount >= 7 {
 
 			//delete previous 7 daily reward entries for this user
 			query := "delete from user_daily_rewards where user_id =?"
@@ -136,7 +143,12 @@ func CreateUserDailyReward() {
 				//find random reward Type
 				//append the quantity into reward
 				randomInt := rand.Intn(6)
-				if randomInt == 4 {
+				if randomInt == 3 {
+					//gems
+					randomInt := int(Multiplier) * (rand.Intn(10))
+					daily_user_reward.Gain = int64(randomInt)
+
+				} else if randomInt == 4 {
 					//inventory
 					//set asset name
 					daily_user_reward.AssetName = "egg_hat" //(can be random asset in future)
@@ -328,14 +340,16 @@ func UpdateDailyRewardsData() {
 
 	for _, user := range users {
 
-		daycount := utils.CalculateDays(user.EmailVerifiedAt) + 1
-		if daycount%7 != 0 {
+		var dayCount int
+		query := "select daycount from users where emailverified =true and id=?"
+		db.QueryExecutor(query, &dayCount, user.Id)
+		if dayCount%7 != 0 {
 
 			//other than last day or first of daily reward weekly pack
 			//make the status missed if still unclaimed
 			var userDailyReward model.UserDailyRewards
 			query := "select * from user_daily_rewards where user_id=? and daycount=?"
-			err := db.QueryExecutor(query, userDailyReward, user.Id, daycount)
+			err := db.QueryExecutor(query, userDailyReward, user.Id, dayCount)
 			if err != nil {
 				fmt.Println("error ", err.Error())
 				return
@@ -352,7 +366,7 @@ func UpdateDailyRewardsData() {
 			}
 			//make the next day reward status from unavailbale to unclaimed
 			query = "select * from user_daily_rewards where user_id=? and daycount=?"
-			err = db.QueryExecutor(query, userDailyReward, user.Id, daycount+1)
+			err = db.QueryExecutor(query, userDailyReward, user.Id, dayCount+1)
 			if err != nil {
 				fmt.Println("error ", err.Error())
 				return
