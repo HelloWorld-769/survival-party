@@ -118,6 +118,22 @@ func CreateUserDailyReward() {
 			dayCount := utils.CalculateDays(user.CreatedAt) + 1
 			query := "select * from daily_rewards where day_count=?"
 			err := db.QueryExecutor(query, &dailyReward, dayCount)
+
+		var dayCount int
+		query := "select day_count from users where emailverified =true and id=?"
+		err := db.QueryExecutor(query, &dayCount, user.Id)
+		if err != nil {
+			fmt.Println("error ", err.Error())
+			return
+		}
+		fmt.Println("user ", user.Id)
+		fmt.Println("day Count: ", dayCount)
+
+		if dayCount%8 == 0 && dayCount >= 7 {
+
+			//delete previous 7 daily reward entries for this user
+			query := "delete from user_daily_rewards where user_id =?"
+			err := db.QueryExecutor(query, nil, user.Id)
 			if err != nil {
 
 				fmt.Println("error in fetching", err.Error())
@@ -135,6 +151,44 @@ func CreateUserDailyReward() {
 			if err != nil {
 				fmt.Println("error in creating", err.Error())
 				return
+				//create entry of this daily reward for this user
+				var daily_user_reward model.UserDailyRewards
+				daily_user_reward.UserId = user.Id
+				//find random reward Type
+				//append the quantity into reward
+				randomInt := rand.Intn(6)
+				if randomInt == 3 {
+					//gems
+					randomInt := int(Multiplier) * (rand.Intn(10))
+					daily_user_reward.Gain = int64(randomInt)
+
+				} else if randomInt == 4 {
+					//inventory
+					//set asset name
+					daily_user_reward.AssetName = "egg_hat" //(can be random asset in future)
+					daily_user_reward.Gain = 1
+				} else if randomInt == 5 {
+					//Chest
+					//set chest level
+					randomInt := rand.Intn(6)
+					daily_user_reward.ChestType = int64(randomInt)
+					daily_user_reward.Gain = 1
+				} else {
+					randomInt := int(Multiplier) * (rand.Intn(100) + rand.Intn(50))
+					daily_user_reward.Gain = int64(randomInt)
+				}
+				daily_user_reward.RewardType = int64(randomInt)
+
+				if i == 0 {
+					daily_user_reward.Status = utils.UNCLAIMED
+				}
+				daily_user_reward.Status = utils.UNAVAILABLE
+				fmt.Println("entry created for user!!!")
+				err = db.CreateRecord(&daily_user_reward)
+				if err != nil {
+					fmt.Println("error in creating", err.Error())
+					return
+				}
 			}
 		}
 
@@ -300,14 +354,16 @@ func UpdateDailyRewardsData() {
 
 	for _, user := range users {
 
-		daycount := utils.CalculateDays(user.EmailVerifiedAt) + 1
-		if daycount%7 != 0 {
+		var dayCount int
+		query := "select daycount from users where emailverified =true and id=?"
+		db.QueryExecutor(query, &dayCount, user.Id)
+		if dayCount%7 != 0 {
 
 			//other than last day or first of daily reward weekly pack
 			//make the status missed if still unclaimed
 			var userDailyReward model.UserDailyRewards
 			query := "select * from user_daily_rewards where user_id=? and daycount=?"
-			err := db.QueryExecutor(query, userDailyReward, user.Id, daycount)
+			err := db.QueryExecutor(query, userDailyReward, user.Id, dayCount)
 			if err != nil {
 				fmt.Println("error ", err.Error())
 				return
@@ -324,7 +380,7 @@ func UpdateDailyRewardsData() {
 			}
 			//make the next day reward status from unavailbale to unclaimed
 			query = "select * from user_daily_rewards where user_id=? and daycount=?"
-			err = db.QueryExecutor(query, userDailyReward, user.Id, daycount+1)
+			err = db.QueryExecutor(query, userDailyReward, user.Id, dayCount+1)
 			if err != nil {
 				fmt.Println("error ", err.Error())
 				return

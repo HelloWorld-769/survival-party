@@ -35,10 +35,12 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 	}
 
 	userRecord := model.User{
-		Email:    input.User.Email,
-		Password: *encryptedPassword,
-		Username: input.User.Username,
-		Avatar:   input.User.Avatar,
+		Email:           input.User.Email,
+		Password:        *encryptedPassword,
+		Username:        input.User.Username,
+		Avatar:          input.User.Avatar,
+		EmailVerifiedAt: time.Now(),
+		DayCount:        1,
 	}
 
 	err = db.CreateRecord(&userRecord)
@@ -277,12 +279,14 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		}
 		//give a random userNmae to that user
 		userRecord := model.User{
-			Email:         input.Email,
-			EmailVerified: false,
-			Password:      "",
-			Username:      "Suvival_Party_" + strconv.Itoa(count),
-			Avatar:        input.Avatar,
-			SocialId:      input.Uid,
+			Email:           input.Email,
+			EmailVerified:   true,
+			Password:        "",
+			Username:        "Suvival_Party_" + strconv.Itoa(count),
+			Avatar:          input.Avatar,
+			SocialId:        input.Uid,
+			EmailVerifiedAt: time.Now(),
+			DayCount:        1,
 		}
 
 		err = db.CreateRecord(&userRecord)
