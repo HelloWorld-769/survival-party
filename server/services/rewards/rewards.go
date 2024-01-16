@@ -105,7 +105,6 @@ func CreateUserDailyReward() {
 	if err != nil {
 		fmt.Println("error in fetching users query:", err.Error())
 	}
-	fmt.Println("users:", allUsers)
 
 	for _, user := range allUsers {
 
