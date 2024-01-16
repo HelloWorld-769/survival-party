@@ -531,7 +531,7 @@ paths:
       summary: User email verification
       tags:
       - Authentication
-  /users/sign_in:
+  /users/sign-in:
     post:
       consumes:
       - application/json

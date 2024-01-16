@@ -13,6 +13,7 @@ import (
 func GetSettingsService(ctx *gin.Context, userId string) {
 
 	var userSettings model.UserSettings
+
 	query := "select * from user_settings where user_id = ?"
 	err := db.QueryExecutor(query, &userSettings, userId)
 	if err != nil {
@@ -28,10 +29,13 @@ func UpdateSettingsService(ctx *gin.Context, userId string, req request.UpdatePl
 
 	var userSettings model.UserSettings
 
-	userSettings.Sound = req.Settings.Sound
-	userSettings.Music = req.Settings.Music
-	userSettings.JoystickSize = req.Settings.JoystickSize
-	userSettings.Vibration = req.Settings.Vibration
+	userSettings.Sound = req.Sound
+	userSettings.Music = req.Music
+	userSettings.JoystickSize = req.JoystickSize
+	userSettings.Vibration = req.Vibration
+	userSettings.Language = req.Language
+	userSettings.FriendRequests = req.FriendRequests
+	userSettings.Notifications = req.Notifications
 
 	err := db.UpdateRecord(&userSettings, userId, "user_id").Error
 	if err != nil {

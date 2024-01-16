@@ -51,7 +51,7 @@ func SignupHandler(ctx *gin.Context) {
 // @Success 200 {object} response.Success "Login successful"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /users/sign_in [post]
+// @Router /users/sign-in [post]
 func LoginHandler(ctx *gin.Context) {
 
 	var input request.LoginRequest

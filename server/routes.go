@@ -17,24 +17,24 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	//Auth routes
-	server.engine.POST("/users", handler.SignupHandler)
-	server.engine.POST("/users/sign_in", handler.LoginHandler)
-	server.engine.DELETE("/users/sign_out", gateway.UserAuthorization, handler.SignoutHandler)
-	server.engine.POST("/users/social_login", handler.SocialLoginHandler)
+	server.engine.POST("/users/sign-up", handler.SignupHandler)
+	server.engine.POST("/users/sign-in", handler.LoginHandler)
+	server.engine.DELETE("/users/sign-out", gateway.UserAuthorization, handler.SignoutHandler)
+	server.engine.POST("/users/social-login", handler.SocialLoginHandler)
 	server.engine.PUT("/users/email-verify", handler.VerifyEmailHandler)
 	server.engine.POST("/send-otp", handler.SendOtpHandler)
 	server.engine.POST("/reset-password", handler.ResetPasswordHandler)
-	server.engine.POST("/check_otp", handler.CheckOtpHandler)
+	server.engine.POST("/check-otp", handler.CheckOtpHandler)
 
 	//Player Routes
-	server.engine.PUT("/userData", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
-	server.engine.GET("/get_settings", gateway.UserAuthorization, handler.GetSettingsHandler)
-	server.engine.PUT("/update_settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
+	server.engine.PUT("/user-data", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
+	server.engine.GET("/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
+	server.engine.PUT("/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 
 	//Level rewards
-	server.engine.GET("/get_level_rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
-	server.engine.POST("/level_reward_collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
+	server.engine.GET("/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
+	server.engine.POST("/level-reward-collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
 
 	//Store Routes
 	server.engine.GET("/store", gateway.UserAuthorization, handler.GetStoreHandler)
@@ -43,6 +43,6 @@ func ConfigureRoutes(server *Server) {
 
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//daily rewards
-	server.engine.PUT("/collect-dailyRewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
-	server.engine.GET("/dailyRewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)
+	server.engine.PUT("/collect-daily-rewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
+	server.engine.GET("/daily-rewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)
 }

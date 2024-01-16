@@ -672,7 +672,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/sign_in": {
+        "/users/sign-in": {
             "post": {
                 "description": "Perform Users login and generate access token",
                 "consumes": [

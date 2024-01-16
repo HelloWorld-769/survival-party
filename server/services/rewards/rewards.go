@@ -37,9 +37,9 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 
 	if userData.Level < req.Level {
 		//user is not allowed to collect this reward
-		fmt.Println("userdata level", userData.User.Level)
-		fmt.Println("req.Level", req.Level)
-		fmt.Println("user level", userData.Level)
+		// fmt.Println("userdata level", userData.User.Level)
+		// fmt.Println("req.Level", req.Level)
+		// fmt.Println("user level", userData.Level)
 		response.ShowResponse("Not enough user level ", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
 	}
@@ -105,7 +105,6 @@ func CreateUserDailyReward() {
 	if err != nil {
 		fmt.Println("error in fetching users query:", err.Error())
 	}
-	fmt.Println("users:", allUsers)
 
 	for _, user := range allUsers {
 
@@ -302,7 +301,16 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		return
 	}
 
-	response.ShowResponse("reward claimed successfully ", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+	//fetch the updated daily rewards and give in response
+	var dailyRewards []model.UserDailyRewards
+	query = "select * from daily_rewards where user_id=?"
+	err = db.QueryExecutor(query, &dailyRewards, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	response.ShowResponse("reward claimed successfully ", utils.HTTP_OK, utils.SUCCESS, dailyRewards, ctx)
 
 }
 
