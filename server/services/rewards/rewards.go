@@ -106,7 +106,6 @@ func CreateUserDailyReward() {
 	if err != nil {
 		fmt.Println("error in fetching users query:", err.Error())
 	}
-	fmt.Println("users:", allUsers)
 
 	for _, user := range allUsers {
 
@@ -316,7 +315,16 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		return
 	}
 
-	response.ShowResponse("reward claimed successfully ", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+	//fetch the updated daily rewards and give in response
+	var dailyRewards []model.UserDailyRewards
+	query = "select * from daily_rewards where user_id=?"
+	err = db.QueryExecutor(query, &dailyRewards, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	response.ShowResponse("reward claimed successfully ", utils.HTTP_OK, utils.SUCCESS, dailyRewards, ctx)
 
 }
 
