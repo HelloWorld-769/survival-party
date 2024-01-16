@@ -73,6 +73,6 @@ func ConfigureRoutes(server *Server) {
 
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//daily rewards
-	server.engine.PUT("/collect-dailyRewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
-	server.engine.GET("/dailyRewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)
+	server.engine.PUT("/collect-daily-rewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
+	server.engine.GET("/daily-rewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)
 }
