@@ -299,7 +299,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -350,8 +349,6 @@ const docTemplate = `{
                 }
             }
         },
-=======
->>>>>>> a459c37 (doc:created docs for routes)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
@@ -727,6 +724,55 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
+=======
+        "/users/sign_in": {
+            "post": {
+                "description": "Perform signup and sends email for verification",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign Up",
+                "parameters": [
+                    {
+                        "description": "Signup Request",
+                        "name": "guestLoginRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.SigupRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+>>>>>>> 686f25b (feat: daily goals)
         "/users/sign-out": {
             "delete": {
                 "description": "Logs out a player",

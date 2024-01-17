@@ -288,7 +288,6 @@ paths:
       summary: Collects Reward
       tags:
       - Player
-<<<<<<< HEAD
   /popupoffers:
     get:
       consumes:
@@ -322,8 +321,6 @@ paths:
       summary: Get the specific type of reward
       tags:
       - Store
-=======
->>>>>>> a459c37 (doc:created docs for routes)
   /reset-password:
     post:
       consumes:
@@ -444,10 +441,14 @@ paths:
 <<<<<<< HEAD
 <<<<<<< HEAD
       - Store
+<<<<<<< HEAD
 =======
       - Player
 >>>>>>> a459c37 (doc:created docs for routes)
   /update_settings:
+=======
+  /update-settings:
+>>>>>>> a1e10ba (feat: daily goals)
     put:
       consumes:
       - application/json
@@ -570,7 +571,11 @@ paths:
       summary: User Login
       tags:
       - Authentication
+<<<<<<< HEAD
   /users/sign-out:
+=======
+  /users/sign_out:
+>>>>>>> 686f25b (feat: daily goals)
     delete:
       consumes:
       - application/json
