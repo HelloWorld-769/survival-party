@@ -304,9 +304,15 @@ const docTemplate = `{
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c4acd51 (feat: added pop up offer route)
+<<<<<<< HEAD
 >>>>>>> 7b19332 (feat: added pop up offer route)
+=======
+=======
+>>>>>>> 9b94616 (resolved merge conflicts)
+>>>>>>> 52d6069 (resolved merge conflicts)
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -358,6 +364,7 @@ const docTemplate = `{
             }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a459c37 (doc:created docs for routes)
 <<<<<<< HEAD
@@ -366,7 +373,12 @@ const docTemplate = `{
 >>>>>>> 14d0086 (doc:created docs for routes)
 =======
 >>>>>>> c4acd51 (feat: added pop up offer route)
+<<<<<<< HEAD
 >>>>>>> 7b19332 (feat: added pop up offer route)
+=======
+=======
+>>>>>>> 9b94616 (resolved merge conflicts)
+>>>>>>> 52d6069 (resolved merge conflicts)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
@@ -516,6 +528,11 @@ const docTemplate = `{
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 5caa952 (resolved merge conflicts)
                     "Store"
 =======
                     "Player"
@@ -526,6 +543,15 @@ const docTemplate = `{
 =======
                     "Player"
 >>>>>>> 14d0086 (doc:created docs for routes)
+<<<<<<< HEAD
+=======
+=======
+                    "Store"
+>>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
+=======
+                    "Store"
+>>>>>>> 9b94616 (resolved merge conflicts)
+>>>>>>> 5caa952 (resolved merge conflicts)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [
@@ -751,8 +777,56 @@ const docTemplate = `{
             }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "/users/sign_in": {
+=======
+        "/users/sign-out": {
+            "delete": {
+                "description": "Logs out a player",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout Player",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/sign-up": {
+>>>>>>> 52d6069 (resolved merge conflicts)
             "post": {
                 "description": "Perform signup and sends email for verification",
                 "consumes": [
@@ -798,6 +872,7 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
 >>>>>>> 686f25b (feat: daily goals)
         "/users/sign-out": {
             "delete": {
@@ -843,6 +918,7 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
         "/users/sign-up": {
             "post": {
                 "description": "Perform signup and sends email for verification",
@@ -889,6 +965,10 @@ const docTemplate = `{
                 }
             }
         },
+=======
+=======
+>>>>>>> 52d6069 (resolved merge conflicts)
+>>>>>>> 5caa952 (resolved merge conflicts)
         "/users/social-login": {
             "post": {
                 "description": "Perform Users social login and generate access token",
