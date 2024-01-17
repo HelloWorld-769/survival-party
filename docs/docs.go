@@ -592,7 +592,7 @@ const docTemplate = `{
             }
         },
         "/users/email-verify": {
-            "put": {
+            "get": {
                 "description": "Perform Email verifictaion",
                 "consumes": [
                     "application/json"

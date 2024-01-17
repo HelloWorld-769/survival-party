@@ -21,7 +21,7 @@ func ConfigureRoutes(server *Server) {
 	server.engine.POST("/users/sign-in", handler.LoginHandler)
 	server.engine.DELETE("/users/sign-out", gateway.UserAuthorization, handler.SignoutHandler)
 	server.engine.POST("/users/social-login", handler.SocialLoginHandler)
-	server.engine.PUT("/users/email-verify", handler.VerifyEmailHandler)
+	server.engine.GET("/users/email-verify", handler.VerifyEmailHandler)
 	server.engine.POST("/send-otp", handler.SendOtpHandler)
 	server.engine.POST("/reset-password", handler.ResetPasswordHandler)
 	server.engine.POST("/check-otp", handler.CheckOtpHandler)

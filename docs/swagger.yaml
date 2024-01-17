@@ -479,7 +479,7 @@ paths:
       tags:
       - Player
   /users/email-verify:
-    put:
+    get:
       consumes:
       - application/json
       description: Perform Email verifictaion

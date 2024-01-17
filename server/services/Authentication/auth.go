@@ -148,7 +148,7 @@ func VerifyEmail(ctx *gin.Context, tokenString string) {
 
 	//check if the email is already verifed or not
 	var emailStatus bool
-	query := "SELECT emailverified FROM users WHERE id=?"
+	query := "SELECT email_verified FROM users WHERE id=?"
 
 	err = db.QueryExecutor(query, &emailStatus, claims.Id)
 	if err != nil {
@@ -161,7 +161,7 @@ func VerifyEmail(ctx *gin.Context, tokenString string) {
 		return
 	}
 
-	query = "UPDATE users SET emailverified=true WHERE id=?"
+	query = "UPDATE users SET email_verified=true WHERE id=?"
 	err = db.RawExecutor(query, claims.Id)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)

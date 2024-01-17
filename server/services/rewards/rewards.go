@@ -188,7 +188,7 @@ func CreateStarterDailyRewards(userId string) error {
 
 	//check if already created
 	var count int64
-	query := "select count(*) from user_daily_reward where user_id=?"
+	query := "select count(*) from user_daily_rewards where user_id=?"
 	err := db.QueryExecutor(query, &count, userId)
 	if err != nil {
 		fmt.Println("error in fetching", err.Error())
