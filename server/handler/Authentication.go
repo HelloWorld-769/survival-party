@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} response.Success "Login successful"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /users [post]
+// @Router /users/sign-up [post]
 func SignupHandler(ctx *gin.Context) {
 	var input request.SigupRequest
 	err := utils.RequestDecoding(ctx, &input)

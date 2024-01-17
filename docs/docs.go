@@ -591,52 +591,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
-            "post": {
-                "description": "Perform signup and sends email for verification",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Sign Up",
-                "parameters": [
-                    {
-                        "description": "Signup Request",
-                        "name": "guestLoginRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.SigupRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Login successful",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    }
-                }
-            }
-        },
         "/users/email-verify": {
             "put": {
                 "description": "Perform Email verifictaion",
@@ -693,6 +647,52 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/request.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/sign-up": {
+            "post": {
+                "description": "Perform signup and sends email for verification",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign Up",
+                "parameters": [
+                    {
+                        "description": "Signup Request",
+                        "name": "guestLoginRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.SigupRequest"
                         }
                     }
                 ],

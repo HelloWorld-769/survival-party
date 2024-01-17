@@ -37,14 +37,10 @@ type UserDailyRewards struct {
 	UserId     string `json:"userId" gorm:"constraint:unique"`
 	User       User   `json:"-" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
 	Status     int64  `json:"status"`
+	DayCount   int64  `json:"dayCount"`
 	RewardType int64  `json:"rewardType"`
 	Gain       int64  `json:"gain" `
-	AssetName  string `json:"assetName"`
-	ChestType  int64  `json:"chestType"`
-
-	// Coins   int64  `json:"coins"`
-	// Gems    int64  `json:"gems"`
-	// Energy  int64  `json:"energy"`
-	// Claimed bool   `json:"claimed"`
-
+	AssetName  string `json:"assetName,omitempty" `
+	Name       string `json:"name ,omitempty"`
+	ChestType  int64  `json:"chestType,omitempty"`
 }

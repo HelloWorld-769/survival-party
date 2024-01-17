@@ -147,7 +147,7 @@ func UserMultipler(userId string) int64 {
 		return 0
 	}
 	var dayCount int
-	query = "select daycount from users where emailverified =true and id=?"
+	query = "select day_count from users where email_verified =true and id=?"
 	db.QueryExecutor(query, &dayCount, user.Id)
 
 	multiplier := int64((dayCount * 2)) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
