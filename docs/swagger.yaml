@@ -464,6 +464,7 @@ paths:
 =======
   /update-settings:
 >>>>>>> a1e10ba (feat: daily goals)
+<<<<<<< HEAD
 =======
       - Player
 =======
@@ -471,6 +472,8 @@ paths:
 >>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
   /update_settings:
 >>>>>>> 14d0086 (doc:created docs for routes)
+=======
+>>>>>>> 46c96ed (feat: daily goals)
     put:
       consumes:
       - application/json

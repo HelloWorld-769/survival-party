@@ -28,12 +28,16 @@ func ConfigureRoutes(server *Server) {
 
 	//Player Routes
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 46c96ed (feat: daily goals)
 	server.engine.PUT("/api/v1/userData", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
 	server.engine.GET("/api/v1/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
 	server.engine.PUT("/api/v1/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/api/v1/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 	server.engine.GET("/api/v1/store", gateway.UserAuthorization, handler.GetStoreHandler)
 	server.engine.POST("/api/v1/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
+<<<<<<< HEAD
 =======
 	server.engine.PUT("/user-data", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
 	server.engine.GET("/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
@@ -63,6 +67,17 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/popupoffers", handler.GetPopupHandler)
 
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+=======
+
+	server.engine.GET("/api/v1/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
+	server.engine.POST("/api/v1/level-reward-collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
+
+	//Daily Goals
+	server.engine.GET("/api/v1/get-daily-goals", gateway.UserAuthorization, handler.GetDailyGoalsHandler)
+	server.engine.POST("/api/v1/skip-daily-goal", gateway.UserAuthorization, handler.SkipGoalHandler)
+	server.engine.POST("/api/v1/claim-daily-goal", gateway.UserAuthorization, handler.ClaimDailyGoalHandler)
+
+>>>>>>> 46c96ed (feat: daily goals)
 	//daily rewards
 	server.engine.PUT("/collect-daily-rewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
 	server.engine.GET("/daily-rewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)

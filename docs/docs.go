@@ -558,10 +558,14 @@ const docTemplate = `{
             }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "/update-settings": {
 =======
         "/update_settings": {
 >>>>>>> 14d0086 (doc:created docs for routes)
+=======
+        "/update-settings": {
+>>>>>>> 46c96ed (feat: daily goals)
             "put": {
                 "description": "Updates the game settings of that player",
                 "consumes": [
