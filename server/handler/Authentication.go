@@ -154,7 +154,7 @@ func ResetPasswordHandler(ctx *gin.Context) {
 // @Success 200 {object} response.Success "Login successful"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /check_otp [post]
+// @Router /check-otp [post]
 func CheckOtpHandler(ctx *gin.Context) {
 
 	utils.SetHeader(ctx)
@@ -186,7 +186,7 @@ func CheckOtpHandler(ctx *gin.Context) {
 // @Failure		400	{object}	response.Success
 // @Failure		401	{object}	response.Success
 // @Tags			Authentication
-// @Router			/users/sign_out [delete]
+// @Router			/users/sign-out [delete]
 func SignoutHandler(ctx *gin.Context) {
 	userId, exists := ctx.Get("userId")
 	if !exists {
@@ -231,7 +231,7 @@ func VerifyEmailHandler(ctx *gin.Context) {
 // @Success 200 {object} response.Success "Login successful"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /users/social_login [post]
+// @Router /users/social-login [post]
 func SocialLoginHandler(ctx *gin.Context) {
 	var input request.SocialLoginReq
 	err := utils.RequestDecoding(ctx, &input)

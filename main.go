@@ -15,7 +15,7 @@ import (
 // @title Survival Party
 // @version 1.0
 // @description This is the api documentation of survival party game
-// @BasePath /
+// @BasePath /api/v1/
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")

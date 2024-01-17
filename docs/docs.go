@@ -68,7 +68,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/check_otp": {
+        "/check-otp": {
             "post": {
                 "description": "Verifies the otp sent on email",
                 "consumes": [
@@ -114,7 +114,51 @@ const docTemplate = `{
                 }
             }
         },
-        "/get_level_rewards": {
+        "/get-daily-goals": {
+            "get": {
+                "description": "Gets the daily goals for given player",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DailyGoal"
+                ],
+                "summary": "Get the daily goals",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucess",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/get-level-rewards": {
             "get": {
                 "description": "Gets the rewards according to player level",
                 "consumes": [
@@ -158,7 +202,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/get_settings": {
+        "/get-settings": {
             "get": {
                 "description": "Gets the current settings of that player",
                 "consumes": [
@@ -202,7 +246,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/level_reward_collect": {
+        "/level-reward-collect": {
             "post": {
                 "description": "Collects the reward for a level of that player",
                 "consumes": [
@@ -496,7 +540,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/update_settings": {
+        "/update-settings": {
             "put": {
                 "description": "Updates the game settings of that player",
                 "consumes": [
@@ -683,7 +727,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/sign-up": {
+        "/users/sign_in": {
             "post": {
                 "description": "Perform signup and sends email for verification",
                 "consumes": [
@@ -729,7 +773,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/sign_out": {
+        "/users/sign-out": {
             "delete": {
                 "description": "Logs out a player",
                 "consumes": [
@@ -773,7 +817,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/social_login": {
+        "/users/social-login": {
             "post": {
                 "description": "Perform Users social login and generate access token",
                 "consumes": [
@@ -973,7 +1017,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
-	BasePath:         "/",
+	BasePath:         "/api/v1/",
 	Schemes:          []string{},
 	Title:            "Survival Party",
 	Description:      "This is the api documentation of survival party game",

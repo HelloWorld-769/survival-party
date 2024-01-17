@@ -38,7 +38,7 @@ func StartCron() {
 		}
 		shop.GiveNewSpecialOffer()
 
-		dailygoal.DailyGoalGeneration()
+		// dailygoal.DailyGoalGeneration()
 
 		// if formattedTime == "17:48" {
 

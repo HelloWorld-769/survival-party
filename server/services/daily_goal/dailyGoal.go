@@ -4,41 +4,73 @@ import (
 	"fmt"
 	"main/server/db"
 	"main/server/model"
+	"main/server/request"
+	"main/server/response"
 	"main/server/utils"
 	"math/rand"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func DailyGoalGeneration() {
 	noOfGoalsMin := 4
-	noOfGoalsMax := 7
+	noOfGoalsMax := 6
 	noOfGoals := rand.Intn(noOfGoalsMax-noOfGoalsMin+1) + noOfGoalsMin
 
 	var data []struct {
 		Id    string
-		level int64
+		Level int64
 	}
 	query := "SELECT id,level FROM users WHERE emailverified =true"
 	err := db.QueryExecutor(query, &data)
+
 	if err != nil {
 		fmt.Println("Error in gettign the users from the database")
 		return
 	}
 
+	// Iterate over each user in the data slice
 	for _, it := range data {
 
+		// Initialize a slice to store the generated UserDailyGoals records
 		var temp []model.UserDailyGoals
 
+		mp := make(map[int]int)
+
+		//generatig a unique number to give to all rewrds so that they can be linked to major rwrd which is given on completion of all goals
+		rewardId := uuid.New().String()
+
+		//this code is to avoid random number genrator to generate same number twice
+		usedValues := make(map[int]bool)
 		for i := 0; i < noOfGoals; i++ {
 			rand.Seed(time.Now().UnixNano())
-			//selecting a random goal type
-			randGoalType := rand.Intn(6) + 1
 
-			fmt.Println("aRandom Goal type:", randGoalType)
+			// Generate a unique random goal type
+			var randGoalType int
+			for {
+				randGoalType = rand.Intn(6) + 1
+				if !usedValues[randGoalType] {
+					usedValues[randGoalType] = true
+					break
+				}
+			}
 
+			// Add the random goal type to the map
+			mp[i] = randGoalType
+		}
+
+		// Initialize a variable to store the sum of progress for all goals
+		var sum int64
+
+		// Iterate over the generated goal types and create UserDailyGoals records
+		for _, val := range mp {
+
+			rand.Seed(time.Now().UnixNano())
 			var record model.UserDailyGoals
 			record.UserId = it.Id
-			record.GoalType = int64(randGoalType)
+			record.GoalType = int64(val)
 
 			//selecting the random currency type
 			currencyType := []int{utils.C_ADS, utils.C_GEMS}
@@ -47,17 +79,20 @@ func DailyGoalGeneration() {
 			if randCurrency == utils.C_ADS {
 				record.Price = 1
 			} else {
-				record.Price = int64(rand.Intn(100-50+1) + 50)
+				rand.Seed(time.Now().UnixNano())
+				record.Price = utils.RoundToNearestMultiple(int64(rand.Intn(100-50+1)+50), 10)
 			}
 
-			if randGoalType == int(utils.PLAYERS_KILLED) || randGoalType == int(utils.ZOMBIES_KILLED) {
+			if val == int(utils.PLAYERS_KILLED) {
 				min := 20
 				max := 80
 
-				lowerRange := min + (int(it.level-1) * ((max - min) / utils.TOTAL_LEVELS))
-				upperRange := min + (int(it.level) * ((max - min) / utils.TOTAL_LEVELS))
+				lowerRange := min + (int(it.Level-1) * ((max - min) / utils.TOTAL_LEVELS))
+				upperRange := min + (int(it.Level) * ((max - min) / utils.TOTAL_LEVELS))
 
-				kills := generateRandomNumber(int(it.level), lowerRange, upperRange)
+				fmt.Println("lower range and upper range ", lowerRange, upperRange)
+
+				kills := generateRandomNumber(int(it.Level), lowerRange, upperRange)
 
 				baseCoins := 20
 				baseGems := 2
@@ -65,49 +100,109 @@ func DailyGoalGeneration() {
 				record.Gems = int64(baseGems) * kills
 				record.TotalProgress = kills
 
-			} else if randGoalType == int(utils.MINI_GAMES_PLAYED) {
+				sum += kills
+
+			} else if val == int(utils.MINI_GAMES_PLAYED) {
 				min := 3
 				max := 5
 				baseCoins := 25
 				baseGems := 8
 
-				gamPlay := generateRandomNumber(int(it.level), min, max)
+				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
 				record.Gems = int64(baseGems) * gamPlay
+				record.TotalProgress = gamPlay
+				sum += gamPlay
 
-			} else if randGoalType == int(utils.BECAME_ZOMBIE) {
+			} else if val == int(utils.ZOMBIES_KILLED) {
+
+				min := 30
+				max := 90
+
+				lowerRange := min + (int(it.Level-1) * ((max - min) / utils.TOTAL_LEVELS))
+				upperRange := min + (int(it.Level) * ((max - min) / utils.TOTAL_LEVELS))
+
+				kills := generateRandomNumber(int(it.Level), lowerRange, upperRange)
+
+				baseCoins := 20
+				baseGems := 2
+				record.Coins = int64(baseCoins) * kills
+				record.Gems = int64(baseGems) * kills
+				record.TotalProgress = kills
+				sum += kills
+
+			} else if val == int(utils.BECAME_ZOMBIE) {
 				min := 2
 				max := 6
 
 				baseCoins := 20
 				baseGems := 2
 
-				gamPlay := generateRandomNumber(int(it.level), min, max)
+				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
 				record.Gems = int64(baseGems) * gamPlay
+				record.TotalProgress = gamPlay
+				sum += gamPlay
 
-			} else if randGoalType == int(utils.ESCAPE_SURVIVOR) {
+			} else if val == int(utils.ESCAPE_SURVIVOR) {
 
 				min := 3
 				max := 10
 				baseCoins := 50
 				baseGems := 15
 
-				gamPlay := generateRandomNumber(int(it.level), min, max)
+				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
 				record.Gems = int64(baseGems) * gamPlay
-			} else if randGoalType == int(utils.COMPLETED_TASKS) {
+				record.TotalProgress = gamPlay
+				sum += gamPlay
+
+			} else if val == int(utils.COMPLETED_TASKS) {
 				min := 2
 				max := 3
 				baseCoins := 250
 				baseGems := 25
 
-				gamPlay := generateRandomNumber(int(it.level), min, max)
+				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
 				record.Gems = int64(baseGems) * gamPlay
+				record.TotalProgress = gamPlay
+				sum += gamPlay
+
 			}
+			record.DailyRewardId = rewardId
 
 			temp = append(temp, record)
+		}
+
+		MaxCoins := 1000
+		Maxgems := 100
+		MaxEnergy := 8
+
+		// Create a DailyGoalRewards record with aggregated values for coins, gems, and energy
+		baseCoins := float64(MaxCoins / 200)
+		baseGems := float64(float64(Maxgems) / 200)
+		baseEnergy := float64(float64(MaxEnergy) / 200)
+
+		fmt.Println("base coins is ", baseCoins)
+		fmt.Println("base gems is ", baseGems)
+		fmt.Println("base energy is", baseEnergy)
+		record := model.DailyGoalRewards{
+			Id:     rewardId,
+			Coins:  (utils.RoundToNearestMultiple(int64((baseCoins)*float64(sum)), 10)),
+			Gems:   (utils.RoundToNearestMultiple((int64(baseGems * float64(sum))), 10)),
+			Energy: int64(baseEnergy * float64(sum)),
+		}
+
+		// Set Chest to 1 if the user's level is greater than 5
+		if it.Level > 5 {
+			record.Chest = 1
+		}
+
+		err = db.CreateRecord(&record)
+		if err != nil {
+			fmt.Println("Error in creting the entry in db.")
+			return
 		}
 
 		err = db.CreateRecord(&temp)
@@ -136,5 +231,184 @@ func generateRandomNumber(seed, min, max int) int64 {
 	// Generate a random number within the desired range
 	randomValue := rand.Intn(max-min+1) + min
 
-	return int64(randomValue)
+	return utils.RoundToNearestMultiple(int64(randomValue), 10)
+}
+
+type RewardResponse struct {
+	GoalsData []struct {
+		Id              string                    `json:"id"`
+		GoalType        int64                     `json:"goalType"`
+		CurrentProgress int64                     `json:"currentProgress"`
+		TotalProgress   int64                     `json:"totalProgress"`
+		CurrencyType    int64                     `json:"currencyType"`
+		Price           int64                     `json:"price"`
+		RewardData      []response.RewardResponse `json:"rewardData"`
+	} `json:"goalsData"`
+	Rewards []response.RewardResponse `json:"rewards"`
+}
+
+func GetDailyGoalsService(ctx *gin.Context, userId string) {
+
+	var singleDailyGoal []model.UserDailyGoals
+
+	query := "SELECT * FROM user_daily_goals WHERE user_id=?"
+	err := db.QueryExecutor(query, &singleDailyGoal, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	var totalReward model.DailyGoalRewards
+	query = "SELECT * FROM daily_goal_rewards WHERE id=?"
+	err = db.QueryExecutor(query, &totalReward, singleDailyGoal[0].DailyRewardId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	res := RewardResponse{
+		Rewards: []response.RewardResponse{
+			{
+				RewardType: utils.Coins,
+				Quantity:   totalReward.Coins,
+			}, {
+				RewardType: utils.Gems,
+				Quantity:   totalReward.Gems,
+			}, {
+				RewardType: utils.Energy,
+				Quantity:   totalReward.Energy,
+			},
+		},
+	}
+
+	if totalReward.Energy != 0 {
+		res.Rewards = append(res.Rewards, response.RewardResponse{RewardType: utils.Chest,
+			Quantity: totalReward.Chest,
+		})
+	}
+
+	for _, data := range singleDailyGoal {
+		res.GoalsData = append(res.GoalsData, struct {
+			Id              string                    "json:\"id\""
+			GoalType        int64                     "json:\"goalType\""
+			CurrentProgress int64                     "json:\"currentProgress\""
+			TotalProgress   int64                     "json:\"totalProgress\""
+			CurrencyType    int64                     `json:"currencyType"`
+			Price           int64                     `json:"price"`
+			RewardData      []response.RewardResponse "json:\"rewardData\""
+		}{
+			Id:              data.Id,
+			GoalType:        data.GoalType,
+			CurrentProgress: data.CurrentProgress,
+			TotalProgress:   data.TotalProgress,
+			CurrencyType:    data.CurrencyType,
+			Price:           data.Price,
+			RewardData: []response.RewardResponse{
+				{
+					RewardType: utils.Coins,
+					Quantity:   data.Coins,
+				}, {
+					RewardType: utils.Gems,
+					Quantity:   data.Gems,
+				},
+			},
+		})
+
+	}
+
+	response.ShowResponse(utils.DATA_FETCH_SUCCESS, utils.HTTP_OK, utils.SUCCESS, res, ctx)
+
+}
+
+func SkipGoalService(ctx *gin.Context, userId string, input request.GoalRequest) {
+
+	var userDetails model.UserGameStats
+	query := "SELECT * from user_game_stats WHERE user_id=?"
+	err := db.QueryExecutor(query, &userDetails, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	var dailyGoal model.UserDailyGoals
+	query = "SELECT * FROM user_daily_goals WHERE user_id=? AND id=?"
+	err = db.QueryExecutor(query, &dailyGoal, userId, input.Id)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	dailyGoal.CurrentProgress = dailyGoal.TotalProgress
+
+	userDetails.TotalCoins += dailyGoal.Coins
+	userDetails.TotalGems += dailyGoal.Gems
+
+	userDetails.CurrentCoins += dailyGoal.Coins
+	userDetails.CurrentGems += dailyGoal.Gems
+
+	if dailyGoal.CurrencyType == utils.C_GEMS {
+		if userDetails.CurrentGems < dailyGoal.Price {
+			response.ShowResponse("Not enught gems", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			return
+		}
+		userDetails.CurrentGems -= dailyGoal.Price
+	}
+
+	err = db.UpdateRecord(&dailyGoal, input.Id, "id").Error
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	err = db.UpdateRecord(&userDetails, userId, "user_id").Error
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	res := []response.RewardResponse{
+		{
+			RewardType: utils.Coins,
+			Quantity:   dailyGoal.Coins,
+		}, {
+			RewardType: utils.Gems,
+			Quantity:   dailyGoal.Gems,
+		},
+	}
+
+	response.ShowResponse(utils.SUCCESS, utils.HTTP_OK, utils.SUCCESS, res, ctx)
+
+}
+
+func ClaimDailyGoalService(ctx *gin.Context, userId string, input request.GoalRequest) {
+
+	// var userDetails model.UserGameStats
+	// query := "SELECT * from user_game_stats WHERE user_id=?"
+	// err := db.QueryExecutor(query, &userDetails, userId)
+	// if err != nil {
+	// 	response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+	// 	return
+	// }
+
+	// var dailyGoalReward model.DailyGoalRewards
+	// query = "SELECT * FROM daily_goal_rewards WHERE user_id=? AND id=?"
+	// err = db.QueryExecutor(query, &dailyGoalReward, userId, input.Id)
+	// if err != nil {
+	// 	response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+	// 	return
+	// }
+
+	// userDetails.TotalCoins += dailyGoalReward.Coins
+	// userDetails.TotalGems += dailyGoalReward.Gems
+
+	// userDetails.CurrentCoins += dailyGoalReward.Coins
+	// userDetails.CurrentGems += dailyGoalReward.Gems
+	// userDetails.Energy += dailyGoalReward.Energy
+
+	// err = db.UpdateRecord(&userDetails, userId, "user_id").Error
+	// if err != nil {
+	// 	response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+	// 	return
+	// }
+
 }

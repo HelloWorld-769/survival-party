@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} response.Success "Sucess"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /get_settings [get]
+// @Router /get-settings [get]
 func GetSettingsHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")
@@ -47,7 +47,7 @@ func GetSettingsHandler(ctx *gin.Context) {
 // @Success 200 {object} response.Success "Sucess"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /update_settings [put]
+// @Router /update-settings [put]
 func UpdateSettingsHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")

@@ -1,4 +1,4 @@
-basePath: /
+basePath: /api/v1/
 definitions:
   request.BuyStoreRequest:
     properties:
@@ -134,7 +134,7 @@ paths:
       summary: Buy things
       tags:
       - Store
-  /check_otp:
+  /check-otp:
     post:
       consumes:
       - application/json
@@ -164,7 +164,36 @@ paths:
       summary: Verifies OTP
       tags:
       - Authentication
-  /get_level_rewards:
+  /get-daily-goals:
+    get:
+      consumes:
+      - application/json
+      description: Gets the daily goals for given player
+      parameters:
+      - description: Player Access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucess
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Get the daily goals
+      tags:
+      - DailyGoal
+  /get-level-rewards:
     get:
       consumes:
       - application/json
@@ -193,7 +222,7 @@ paths:
       summary: Gets reward list
       tags:
       - Player
-  /get_settings:
+  /get-settings:
     get:
       consumes:
       - application/json
@@ -222,7 +251,7 @@ paths:
       summary: Gets the settings
       tags:
       - Player
-  /level_reward_collect:
+  /level-reward-collect:
     post:
       consumes:
       - application/json
@@ -413,6 +442,7 @@ paths:
 <<<<<<< HEAD
 <<<<<<< HEAD
       - Store
+<<<<<<< HEAD
 =======
       - Player
 >>>>>>> a459c37 (doc:created docs for routes)
@@ -420,6 +450,9 @@ paths:
       - Store
 >>>>>>> 501cb55 (Feat:added shop buy handler and starter pack)
   /update_settings:
+=======
+  /update-settings:
+>>>>>>> a1e10ba (feat: daily goals)
     put:
       consumes:
       - application/json
@@ -542,36 +575,6 @@ paths:
       summary: User Login
       tags:
       - Authentication
-  /users/sign-up:
-    post:
-      consumes:
-      - application/json
-      description: Perform signup and sends email for verification
-      parameters:
-      - description: Signup Request
-        in: body
-        name: guestLoginRequest
-        required: true
-        schema:
-          $ref: '#/definitions/request.SigupRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Login successful
-          schema:
-            $ref: '#/definitions/response.Success'
-        "400":
-          description: Bad request
-          schema:
-            $ref: '#/definitions/response.Success'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Success'
-      summary: Sign Up
-      tags:
-      - Authentication
   /users/sign_out:
     delete:
       consumes:
@@ -601,7 +604,7 @@ paths:
       summary: Logout Player
       tags:
       - Authentication
-  /users/social_login:
+  /users/social-login:
     post:
       consumes:
       - application/json

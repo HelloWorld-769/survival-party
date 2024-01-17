@@ -18,17 +18,14 @@ import (
 
 type Res struct {
 	SpecialOffer struct {
-		ProductId string `json:"productId"`
-		Name      string `json:"name"`
-		Type      int64  `json:"type"`
-		Data      []struct {
-			RewardType int64 `json:"rewardType"`
-			Quantity   int64 `json:"quantity"`
-		} `json:"data"`
-		CurrencyType int64 `json:"currencyType"`
-		Price        int64 `json:"price"`
-		ExpiresAt    int64 `json:"expiresAt"`
-		IsAvailable  bool  `json:"isAvailable"`
+		ProductId    string                    `json:"productId"`
+		Name         string                    `json:"name"`
+		Type         int64                     `json:"type"`
+		Data         []response.RewardResponse `json:"data"`
+		CurrencyType int64                     `json:"currencyType"`
+		Price        int64                     `json:"price"`
+		ExpiresAt    int64                     `json:"expiresAt"`
+		IsAvailable  bool                      `json:"isAvailable"`
 	}
 	Energy Temp `json:"Energy"`
 	Coins  Temp `json:"Coins"`
@@ -81,17 +78,14 @@ func GetStoreService(ctx *gin.Context, userId string) {
 	var res Res
 
 	res.SpecialOffer = struct {
-		ProductId string "json:\"productId\""
-		Name      string "json:\"name\""
-		Type      int64  "json:\"type\""
-		Data      []struct {
-			RewardType int64 "json:\"rewardType\""
-			Quantity   int64 "json:\"quantity\""
-		} "json:\"data\""
-		CurrencyType int64 "json:\"currencyType\""
-		Price        int64 "json:\"price\""
-		ExpiresAt    int64 `json:"expiresAt"`
-		IsAvailable  bool  `json:"isAvailable"`
+		ProductId    string                    "json:\"productId\""
+		Name         string                    "json:\"name\""
+		Type         int64                     "json:\"type\""
+		Data         []response.RewardResponse "json:\"data\""
+		CurrencyType int64                     "json:\"currencyType\""
+		Price        int64                     "json:\"price\""
+		ExpiresAt    int64                     `json:"expiresAt"`
+		IsAvailable  bool                      `json:"isAvailable"`
 	}{
 		ProductId:    specOfferRes.ProductId,
 		Name:         "Starter Pack",
@@ -100,10 +94,7 @@ func GetStoreService(ctx *gin.Context, userId string) {
 		Price:        specOfferRes.Price,
 		ExpiresAt:    int64(7 - utils.CalculateDays(specOfferRes.CreatedAt)),
 		IsAvailable:  specOfferRes.IsAvailable,
-		Data: []struct {
-			RewardType int64 "json:\"rewardType\""
-			Quantity   int64 "json:\"quantity\""
-		}{
+		Data: []response.RewardResponse{
 			{
 				RewardType: utils.Coins,
 				Quantity:   specOfferRes.Coins,

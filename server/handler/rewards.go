@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} response.Success "Login successful"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /get_level_rewards [get]
+// @Router /get-level-rewards [get]
 func GetPlayerLevelRewardsHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")
@@ -44,7 +44,7 @@ func GetPlayerLevelRewardsHandler(ctx *gin.Context) {
 // @Success 200 {object} response.Success "Login successful"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /level_reward_collect [post]
+// @Router /level-reward-collect [post]
 func PlayerLevelRewardCollectionHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")

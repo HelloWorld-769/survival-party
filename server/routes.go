@@ -17,26 +17,30 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	//Auth routes
-	server.engine.POST("/users/sign-up", handler.SignupHandler)
-	server.engine.POST("/users/sign-in", handler.LoginHandler)
-	server.engine.DELETE("/users/sign-out", gateway.UserAuthorization, handler.SignoutHandler)
-	server.engine.POST("/users/social-login", handler.SocialLoginHandler)
-	server.engine.GET("/users/email-verify", handler.VerifyEmailHandler)
-	server.engine.POST("/send-otp", handler.SendOtpHandler)
-	server.engine.POST("/reset-password", handler.ResetPasswordHandler)
-	server.engine.POST("/check-otp", handler.CheckOtpHandler)
+	server.engine.POST("/api/v1/users", handler.SignupHandler)
+	server.engine.POST("/api/v1/users/sign-in", handler.LoginHandler)
+	server.engine.DELETE("/api/v1/users/sign-out", gateway.UserAuthorization, handler.SignoutHandler)
+	server.engine.POST("/api/v1/users/social-login", handler.SocialLoginHandler)
+	server.engine.PUT("/api/v1/users/email-verify", handler.VerifyEmailHandler)
+	server.engine.POST("/api/v1/send-otp", handler.SendOtpHandler)
+	server.engine.POST("/api/v1/reset-password", handler.ResetPasswordHandler)
+	server.engine.POST("/api/v1/check-otp", handler.CheckOtpHandler)
 
 	//Player Routes
-	server.engine.PUT("/user-data", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
-	server.engine.GET("/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
-	server.engine.PUT("/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
-	server.engine.GET("/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
-	server.engine.GET("/store", gateway.UserAuthorization, handler.GetStoreHandler)
-	server.engine.POST("/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
+	server.engine.PUT("/api/v1/userData", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
+	server.engine.GET("/api/v1/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
+	server.engine.PUT("/api/v1/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
+	server.engine.GET("/api/v1/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
+	server.engine.GET("/api/v1/store", gateway.UserAuthorization, handler.GetStoreHandler)
+	server.engine.POST("/api/v1/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
 
-	//Level rewards
-	server.engine.GET("/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
-	server.engine.POST("/level-reward-collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
+	server.engine.GET("/api/v1/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)
+	server.engine.POST("/api/v1/level-reward-collect", gateway.UserAuthorization, handler.PlayerLevelRewardCollectionHandler)
+
+	//Daily Goals
+	server.engine.GET("/api/v1/get-daily-goals", gateway.UserAuthorization, handler.GetDailyGoalsHandler)
+	server.engine.POST("/api/v1/skip-daily-goal", gateway.UserAuthorization, handler.SkipGoalHandler)
+	server.engine.POST("/api/v1/claim-daily-goal", gateway.UserAuthorization, handler.ClaimDailyGoalHandler)
 
 	//Store Routes
 	server.engine.GET("/store", gateway.UserAuthorization, handler.GetStoreHandler)
