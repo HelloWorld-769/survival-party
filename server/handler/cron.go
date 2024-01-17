@@ -26,7 +26,7 @@ func StartCron() {
 		if formattedTime == "16:31" {
 			rewards.UpdateDailyRewardsData()
 		}
-		if formattedTime == "10:24" {
+
 		if formattedTime == "18:54" {
 
 			//create User daily rewards (available to claim)

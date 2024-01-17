@@ -146,35 +146,15 @@ func UserMultipler(userId string) int64 {
 		fmt.Println("error", err.Error())
 		return 0
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 	var dayCount int
 	query = "select day_count from users where email_verified =true and id=?"
 	db.QueryExecutor(query, &dayCount, user.Id)
-=======
-	daycount := CalculateDays(user.EmailVerifiedAt) + 1
->>>>>>> 1721103 (fix/daily reward model changes (chest object pending))
-=======
-	var dayCount int
-	query = "select daycount from users where emailverified =true and id=?"
-	db.QueryExecutor(query, &dayCount, user.Id)
->>>>>>> e69dc87 (fix/change in daycount)
 
 	multiplier := int64((dayCount * 2)) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
 	return multiplier
-func RoundToNearestMultiple(n, multiple int64) int64 {
-	// Calculate the remainder when dividing n by multiple
-	remainder := n % multiple
-
-	// Calculate the difference between multiple and the remainder
-	difference := multiple - remainder
-
-	// Determine whether to round up or down based on the remainder
-	if remainder <= difference/2 {
-		return n - remainder
-	}
-	return n + difference
 }
+
 func RoundToNearestMultiple(n, multiple int64) int64 {
 	// Calculate the remainder when dividing n by multiple
 	remainder := n % multiple
