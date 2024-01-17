@@ -4,6 +4,8 @@ definitions:
     properties:
       productId:
         type: string
+      token:
+        type: string
     type: object
   request.EmailRequest:
     properties:
@@ -289,8 +291,11 @@ paths:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c4acd51 (feat: added pop up offer route)
+=======
+>>>>>>> 9b94616 (resolved merge conflicts)
   /popupoffers:
     get:
       consumes:
@@ -325,12 +330,15 @@ paths:
       tags:
       - Store
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a459c37 (doc:created docs for routes)
 =======
 >>>>>>> 14d0086 (doc:created docs for routes)
 =======
 >>>>>>> c4acd51 (feat: added pop up offer route)
+=======
+>>>>>>> 9b94616 (resolved merge conflicts)
   /reset-password:
     post:
       consumes:
@@ -452,17 +460,12 @@ paths:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-      - Store
 <<<<<<< HEAD
 =======
-      - Player
->>>>>>> a459c37 (doc:created docs for routes)
-=======
+>>>>>>> 9b94616 (resolved merge conflicts)
       - Store
->>>>>>> 501cb55 (Feat:added shop buy handler and starter pack)
-  /update_settings:
-=======
   /update-settings:
+<<<<<<< HEAD
 >>>>>>> a1e10ba (feat: daily goals)
 <<<<<<< HEAD
 =======
@@ -474,6 +477,8 @@ paths:
 >>>>>>> 14d0086 (doc:created docs for routes)
 =======
 >>>>>>> 46c96ed (feat: daily goals)
+=======
+>>>>>>> 9b94616 (resolved merge conflicts)
     put:
       consumes:
       - application/json
@@ -596,7 +601,7 @@ paths:
       summary: User Login
       tags:
       - Authentication
-  /users/sign_out:
+  /users/sign-out:
     delete:
       consumes:
       - application/json
@@ -623,6 +628,36 @@ paths:
           schema:
             $ref: '#/definitions/response.Success'
       summary: Logout Player
+      tags:
+      - Authentication
+  /users/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Perform signup and sends email for verification
+      parameters:
+      - description: Signup Request
+        in: body
+        name: guestLoginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/request.SigupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Sign Up
       tags:
       - Authentication
   /users/social-login:

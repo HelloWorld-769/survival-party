@@ -2,9 +2,9 @@ package handler
 
 import (
 	"fmt"
-	"main/server/services/player"
 	"main/server/services/rewards"
 	"main/server/services/shop"
+	"main/server/services/user"
 	"time"
 
 	"github.com/robfig/cron/v3"
@@ -34,7 +34,7 @@ func StartCron() {
 
 		}
 		if formattedTime == "11:25" {
-			player.UpdateDayCount()
+			user.UpdateDayCount()
 		}
 		shop.GiveNewSpecialOffer()
 
