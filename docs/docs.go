@@ -301,6 +301,7 @@ const docTemplate = `{
         },
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -313,6 +314,8 @@ const docTemplate = `{
 =======
 >>>>>>> 9b94616 (resolved merge conflicts)
 >>>>>>> 52d6069 (resolved merge conflicts)
+=======
+>>>>>>> 2446eb2 (fixed minor issues)
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -365,6 +368,7 @@ const docTemplate = `{
         },
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a459c37 (doc:created docs for routes)
 <<<<<<< HEAD
@@ -379,6 +383,8 @@ const docTemplate = `{
 =======
 >>>>>>> 9b94616 (resolved merge conflicts)
 >>>>>>> 52d6069 (resolved merge conflicts)
+=======
+>>>>>>> 2446eb2 (fixed minor issues)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
@@ -529,10 +535,7 @@ const docTemplate = `{
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-=======
 <<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 5caa952 (resolved merge conflicts)
                     "Store"
 =======
                     "Player"
@@ -543,15 +546,12 @@ const docTemplate = `{
 =======
                     "Player"
 >>>>>>> 14d0086 (doc:created docs for routes)
-<<<<<<< HEAD
-=======
 =======
                     "Store"
 >>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
 =======
                     "Store"
 >>>>>>> 9b94616 (resolved merge conflicts)
->>>>>>> 5caa952 (resolved merge conflicts)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [
@@ -586,10 +586,14 @@ const docTemplate = `{
             }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "/update-settings": {
 =======
         "/update_settings": {
 >>>>>>> 14d0086 (doc:created docs for routes)
+=======
+        "/update-settings": {
+>>>>>>> 46c96ed (feat: daily goals)
             "put": {
                 "description": "Updates the game settings of that player",
                 "consumes": [

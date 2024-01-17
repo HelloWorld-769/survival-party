@@ -293,6 +293,7 @@
             }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -309,6 +310,8 @@
 =======
 >>>>>>> 9b94616 (resolved merge conflicts)
 >>>>>>> 52d6069 (resolved merge conflicts)
+=======
+>>>>>>> 2446eb2 (fixed minor issues)
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -362,6 +365,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 7b19332 (feat: added pop up offer route)
@@ -382,6 +386,8 @@
 =======
 >>>>>>> 9b94616 (resolved merge conflicts)
 >>>>>>> 52d6069 (resolved merge conflicts)
+=======
+>>>>>>> 2446eb2 (fixed minor issues)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
@@ -532,6 +538,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -555,6 +562,9 @@
                     "Store"
 >>>>>>> 9b94616 (resolved merge conflicts)
 >>>>>>> 5caa952 (resolved merge conflicts)
+=======
+                    "Store"
+>>>>>>> 0027c48 (fixed minor issues)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [
@@ -589,10 +599,14 @@
             }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "/update-settings": {
 =======
         "/update_settings": {
 >>>>>>> 14d0086 (doc:created docs for routes)
+=======
+        "/update-settings": {
+>>>>>>> 0027c48 (fixed minor issues)
             "put": {
                 "description": "Updates the game settings of that player",
                 "consumes": [

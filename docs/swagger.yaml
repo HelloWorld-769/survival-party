@@ -289,6 +289,7 @@ paths:
       tags:
       - Player
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -305,6 +306,8 @@ paths:
 =======
 >>>>>>> 9b94616 (resolved merge conflicts)
 >>>>>>> 52d6069 (resolved merge conflicts)
+=======
+>>>>>>> 2446eb2 (fixed minor issues)
   /popupoffers:
     get:
       consumes:
@@ -341,6 +344,7 @@ paths:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 7b19332 (feat: added pop up offer route)
@@ -361,6 +365,8 @@ paths:
 =======
 >>>>>>> 9b94616 (resolved merge conflicts)
 >>>>>>> 52d6069 (resolved merge conflicts)
+=======
+>>>>>>> 2446eb2 (fixed minor issues)
   /reset-password:
     post:
       consumes:
@@ -487,6 +493,7 @@ paths:
 <<<<<<< HEAD
 >>>>>>> 5caa952 (resolved merge conflicts)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
       - Player
@@ -495,9 +502,12 @@ paths:
 =======
 =======
 >>>>>>> 9b94616 (resolved merge conflicts)
+=======
+>>>>>>> 2446eb2 (fixed minor issues)
       - Store
 >>>>>>> 52d6069 (resolved merge conflicts)
   /update-settings:
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> a1e10ba (feat: daily goals)
 =======
@@ -511,6 +521,8 @@ paths:
 =======
 >>>>>>> 9b94616 (resolved merge conflicts)
 >>>>>>> 5caa952 (resolved merge conflicts)
+=======
+>>>>>>> 0027c48 (fixed minor issues)
     put:
       consumes:
       - application/json
