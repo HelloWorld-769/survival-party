@@ -290,6 +290,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		}
 		//give a random userNmae to that user
 		userRecord := model.User{
+<<<<<<< HEAD
 			Email:           input.Email,
 			EmailVerified:   true,
 			Password:        "",
@@ -298,6 +299,14 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			SocialId:        input.Uid,
 			EmailVerifiedAt: time.Now(),
 			DayCount:        1,
+=======
+			Email:         input.Email,
+			EmailVerified: false,
+			Password:      "",
+			Username:      "Suvival_Party_" + strconv.Itoa(count),
+			Avatar:        input.Avatar,
+			SocialId:      input.Uid,
+>>>>>>> 7642e69 (feat:added claim reward on all goals completion)
 		}
 
 		err = db.CreateRecord(&userRecord)

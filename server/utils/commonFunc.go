@@ -156,6 +156,10 @@ func UserMultipler(userId string) int64 {
 }
 
 func RoundToNearestMultiple(n, multiple int64) int64 {
+	if n < 10 {
+		return n
+	}
+
 	// Calculate the remainder when dividing n by multiple
 	remainder := n % multiple
 

@@ -23,7 +23,7 @@ func DailyGoalGeneration() {
 		Id    string
 		Level int64
 	}
-	query := "SELECT id,level FROM users WHERE emailverified =true"
+	query := "SELECT id,level FROM users WHERE email_verified =true"
 	err := db.QueryExecutor(query, &data)
 
 	if err != nil {
@@ -244,6 +244,11 @@ type RewardResponse struct {
 		Price           int64                     `json:"price"`
 		RewardData      []response.RewardResponse `json:"rewardData"`
 	} `json:"goalsData"`
+	Timer struct {
+		Hour   int64 `json:"hour"`
+		Minute int64 `json:"minute"`
+	} `json:"timer"`
+	Claimed bool                      `json:"claimed"`
 	Rewards []response.RewardResponse `json:"rewards"`
 }
 
@@ -280,12 +285,20 @@ func GetDailyGoalsService(ctx *gin.Context, userId string) {
 			},
 		},
 	}
+	res.Timer = struct {
+		Hour   int64 "json:\"hour\""
+		Minute int64 "json:\"minute\""
+	}{
+		Hour:   int64(totalReward.CreatedAt.Add(24 * time.Hour).Sub(time.Now()).Hours()),
+		Minute: int64(totalReward.CreatedAt.Add(24*time.Hour).Sub(time.Now()).Minutes()) % 60,
+	}
 
 	if totalReward.Energy != 0 {
 		res.Rewards = append(res.Rewards, response.RewardResponse{RewardType: utils.Chest,
 			Quantity: totalReward.Chest,
 		})
 	}
+	res.Claimed = totalReward.Claimed
 
 	for _, data := range singleDailyGoal {
 		res.GoalsData = append(res.GoalsData, struct {
@@ -382,33 +395,75 @@ func SkipGoalService(ctx *gin.Context, userId string, input request.GoalRequest)
 
 func ClaimDailyGoalService(ctx *gin.Context, userId string, input request.GoalRequest) {
 
-	// var userDetails model.UserGameStats
-	// query := "SELECT * from user_game_stats WHERE user_id=?"
-	// err := db.QueryExecutor(query, &userDetails, userId)
-	// if err != nil {
-	// 	response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-	// 	return
-	// }
+	var completed bool
+	query := ` SELECT
+	(SELECT COUNT(*) FROM user_daily_goals WHERE daily_reward_id = ? AND total_progress = current_progress) =
+	(SELECT COUNT(*) FROM user_daily_goals WHERE daily_reward_id = ?) AS result;`
+	err := db.QueryExecutor(query, &completed, input.Id, input.Id)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
 
-	// var dailyGoalReward model.DailyGoalRewards
-	// query = "SELECT * FROM daily_goal_rewards WHERE user_id=? AND id=?"
-	// err = db.QueryExecutor(query, &dailyGoalReward, userId, input.Id)
-	// if err != nil {
-	// 	response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-	// 	return
-	// }
+	if !completed {
+		response.ShowResponse("Tasks not completed", utils.HTTP_BAD_REQUEST, utils.SUCCESS, nil, ctx)
+		return
+	}
 
-	// userDetails.TotalCoins += dailyGoalReward.Coins
-	// userDetails.TotalGems += dailyGoalReward.Gems
+	var userDetails model.UserGameStats
+	query = "SELECT * from user_game_stats WHERE user_id=?"
+	err = db.QueryExecutor(query, &userDetails, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
 
-	// userDetails.CurrentCoins += dailyGoalReward.Coins
-	// userDetails.CurrentGems += dailyGoalReward.Gems
-	// userDetails.Energy += dailyGoalReward.Energy
+	var dailyGoalReward model.DailyGoalRewards
+	query = "SELECT * FROM daily_goal_rewards WHERE user_id=? AND id=?"
+	err = db.QueryExecutor(query, &dailyGoalReward, userId, input.Id)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
 
-	// err = db.UpdateRecord(&userDetails, userId, "user_id").Error
-	// if err != nil {
-	// 	response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-	// 	return
-	// }
+	userDetails.TotalCoins += dailyGoalReward.Coins
+	userDetails.TotalGems += dailyGoalReward.Gems
+
+	userDetails.CurrentCoins += dailyGoalReward.Coins
+	userDetails.CurrentGems += dailyGoalReward.Gems
+	userDetails.Energy += dailyGoalReward.Energy
+
+	err = db.UpdateRecord(&userDetails, userId, "user_id").Error
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	query = "UPDATE daily_goal_rewards SET claimed=true WHERE id=?"
+	err = db.RawExecutor(query, input.Id)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	res := []response.RewardResponse{
+		{
+			RewardType: utils.Coins,
+			Quantity:   dailyGoalReward.Coins,
+		}, {
+			RewardType: utils.Gems,
+			Quantity:   dailyGoalReward.Gems,
+		},
+		{
+			RewardType: utils.Energy,
+			Quantity:   dailyGoalReward.Energy,
+		},
+		{
+			RewardType: utils.Chest,
+			Quantity:   dailyGoalReward.Chest,
+		},
+	}
+
+	response.ShowResponse(utils.SUCCESS, utils.HTTP_OK, utils.SUCCESS, res, ctx)
 
 }

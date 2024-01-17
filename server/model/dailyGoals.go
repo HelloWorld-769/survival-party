@@ -1,5 +1,11 @@
 package model
 
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
 type UserDailyGoals struct {
 	Id               string           `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
 	UserId           string           `json:"userId"`
@@ -12,12 +18,19 @@ type UserDailyGoals struct {
 	Price            int64            `json:"price"`
 	DailyRewardId    string           `json:"dailyRewardId"`
 	DailyGoalRewards DailyGoalRewards `json:"-" gorm:"foreignKey:DailyRewardId;constraint:OnDelete:CASCADE"`
+	CreatedAt        time.Time        `json:"created_at"`
+	UpdatedAt        time.Time        `json:"updated_at"`
+	DeletedAt        gorm.DeletedAt
 }
 
 type DailyGoalRewards struct {
-	Id     string `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
-	Coins  int64  `json:"coins"`
-	Gems   int64  `json:"gems"`
-	Energy int64  `json:"energy"`
-	Chest  int64  `json:"chest"`
+	Id        string    `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
+	Coins     int64     `json:"coins"`
+	Gems      int64     `json:"gems"`
+	Energy    int64     `json:"energy"`
+	Chest     int64     `json:"chest"`
+	Claimed   bool      `json:"claimed"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt gorm.DeletedAt
 }

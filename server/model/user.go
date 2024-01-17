@@ -7,6 +7,7 @@ import (
 )
 
 type User struct {
+<<<<<<< HEAD
 	Id              string    `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
 	Email           string    `json:"email"  gorm:"unique"`
 	EmailVerified   bool      `json:"emailverified"`
@@ -20,6 +21,19 @@ type User struct {
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
 	DeletedAt       gorm.DeletedAt
+=======
+	Id            string    `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
+	Email         string    `json:"email"  gorm:"unique"`
+	EmailVerified bool      `json:"emailverified"`
+	Password      string    `json:"password"`
+	Username      string    `json:"username"  gorm:"unique"`
+	Avatar        int64     `json:"avatar"`
+	Level         int64     `json:"level"`
+	SocialId      string    `json:"socialId"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt
+>>>>>>> 7642e69 (feat:added claim reward on all goals completion)
 }
 
 type UserGameStats struct {

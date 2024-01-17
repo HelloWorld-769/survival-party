@@ -7,10 +7,13 @@ import (
 )
 
 type LevelRewards struct {
-	RewardId      string `json:"rewardId" gorm:"default:uuid_generate_v4();unique;primaryKey"`
-	RewardType    int64  `json:"rewardType"`
-	Quantity      int64  `json:"quantity"`
-	LevelRequired int64  `json:"levelRequired"`
+	RewardId      string    `json:"rewardId" gorm:"default:uuid_generate_v4();unique;primaryKey"`
+	RewardType    int64     `json:"rewardType"`
+	Quantity      int64     `json:"quantity"`
+	LevelRequired int64     `json:"levelRequired"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt
 }
 
 type UserLevelRewards struct {
@@ -25,11 +28,14 @@ type UserLevelRewards struct {
 }
 
 type DailyRewards struct {
-	RewardId string `json:"rewardId" gorm:"default:uuid_generate_v4();unique;primaryKey"`
-	DayCount int64  `json:"dayCount"`
-	Coins    int64  `json:"coins"`
-	Gems     int64  `json:"gems"`
-	Energy   int64  `json:"energy"`
+	RewardId  string    `json:"rewardId" gorm:"default:uuid_generate_v4();unique;primaryKey"`
+	DayCount  int64     `json:"dayCount"`
+	Coins     int64     `json:"coins"`
+	Gems      int64     `json:"gems"`
+	Energy    int64     `json:"energy"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt gorm.DeletedAt
 }
 
 type UserDailyRewards struct {

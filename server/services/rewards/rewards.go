@@ -111,6 +111,11 @@ func CreateUserDailyReward() {
 
 		//create user daily reward entry based on user daycount
 		//calculate user daycount
+<<<<<<< HEAD
+=======
+		var dailyReward model.DailyRewards
+		if user.EmailVerified {
+>>>>>>> 7642e69 (feat:added claim reward on all goals completion)
 
 		var dayCount int
 		query := "select day_count from users where email_verified = true and id=?"
