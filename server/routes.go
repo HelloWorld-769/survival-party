@@ -17,11 +17,11 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	//Auth routes
-	server.engine.POST("/api/v1/users", handler.SignupHandler)
+	server.engine.POST("/api/v1/users/sign-up", handler.SignupHandler)
 	server.engine.POST("/api/v1/users/sign-in", handler.LoginHandler)
 	server.engine.DELETE("/api/v1/users/sign-out", gateway.UserAuthorization, handler.SignoutHandler)
 	server.engine.POST("/api/v1/users/social-login", handler.SocialLoginHandler)
-	server.engine.PUT("/api/v1/users/email-verify", handler.VerifyEmailHandler)
+	server.engine.GET("/api/v1/users/email-verify", handler.VerifyEmailHandler)
 	server.engine.POST("/api/v1/send-otp", handler.SendOtpHandler)
 	server.engine.POST("/api/v1/reset-password", handler.ResetPasswordHandler)
 	server.engine.POST("/api/v1/check-otp", handler.CheckOtpHandler)

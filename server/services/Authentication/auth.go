@@ -121,7 +121,7 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 	}
 
 	fmt.Println(ctx.Request.Header.Get("Origin"))
-	link := ctx.Request.Header.Get("Origin") + "/users/email-verify?token=" + *tokenString
+	link := ctx.Request.Header.Get("Origin") + "/api/v1/users/email-verify?token=" + *tokenString
 
 	fmt.Println("link is", link)
 
