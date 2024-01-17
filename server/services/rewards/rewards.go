@@ -119,7 +119,7 @@ func CreateUserDailyReward() {
 			err := db.QueryExecutor(query, &dailyReward, dayCount)
 
 		var dayCount int
-		query := "select day_count from users where emailverified =true and id=?"
+		query := "select day_count from users where email_verified = true and id=?"
 		err := db.QueryExecutor(query, &dayCount, user.Id)
 		if err != nil {
 			fmt.Println("error ", err.Error())
@@ -152,6 +152,7 @@ func CreateUserDailyReward() {
 				return
 				//create entry of this daily reward for this user
 				var daily_user_reward model.UserDailyRewards
+				daily_user_reward.DayCount = int64(i + 1)
 				daily_user_reward.UserId = user.Id
 				//find random reward Type
 				//append the quantity into reward
@@ -165,6 +166,7 @@ func CreateUserDailyReward() {
 					//inventory
 					//set asset name
 					daily_user_reward.AssetName = "egg_hat" //(can be random asset in future)
+					daily_user_reward.Name = "egg_hat"
 					daily_user_reward.Gain = 1
 				} else if randomInt == 5 {
 					//Chest
@@ -183,6 +185,8 @@ func CreateUserDailyReward() {
 				}
 				daily_user_reward.Status = utils.UNAVAILABLE
 				fmt.Println("entry created for user!!!")
+
+				fmt.Println("reward ", i+1, daily_user_reward)
 				err = db.CreateRecord(&daily_user_reward)
 				if err != nil {
 					fmt.Println("error in creating", err.Error())
@@ -221,6 +225,7 @@ func CreateStarterDailyRewards(userId string) error {
 			//create entry of this daily reward for this user
 			var daily_user_reward model.UserDailyRewards
 			daily_user_reward.UserId = userId
+			daily_user_reward.DayCount = int64(i + 1)
 			Multiplier := utils.UserMultipler(userId)
 
 			//find random reward Type
@@ -230,6 +235,7 @@ func CreateStarterDailyRewards(userId string) error {
 				//inventory
 				//set asset name
 				daily_user_reward.AssetName = "egg_hat" //(can be random asset in future)
+				daily_user_reward.Name = "egg_hat"
 				daily_user_reward.Gain = 1
 			} else if randomInt == 6 {
 				//Chest
@@ -332,7 +338,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 // get user daily reward data
 func GetUserDailyRewardData(ctx *gin.Context, userId string) {
 
-	var UserDailyRewardsData model.UserDailyRewards
+	var UserDailyRewardsData []model.UserDailyRewards
 	query := "select * from user_daily_rewards where user_id = ?"
 	err := db.QueryExecutor(query, &UserDailyRewardsData, userId)
 	if err != nil {
