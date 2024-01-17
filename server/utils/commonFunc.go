@@ -152,6 +152,7 @@ func UserMultipler(userId string) int64 {
 
 	multiplier := int64((dayCount * 2)) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
 	return multiplier
+}
 func RoundToNearestMultiple(n, multiple int64) int64 {
 	// Calculate the remainder when dividing n by multiple
 	remainder := n % multiple
