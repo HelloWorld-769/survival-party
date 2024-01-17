@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} response.Success "Login successful"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /userData [post]
+// @Router /user-data [put]
 func UpdatePlayerInfoHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")

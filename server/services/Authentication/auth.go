@@ -8,6 +8,7 @@ import (
 	"main/server/request"
 	"main/server/response"
 	"main/server/services/alert_service/Gomail"
+	dailygoal "main/server/services/daily_goal"
 	"main/server/services/rewards"
 	"main/server/services/token"
 	"main/server/utils"
@@ -173,6 +174,9 @@ func VerifyEmail(ctx *gin.Context, tokenString string) {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
+
+	//generating daily goals for user
+	go dailygoal.DailyGoalGeneration()
 
 	response.ShowResponse("Email verified succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 

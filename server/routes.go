@@ -29,7 +29,7 @@ func ConfigureRoutes(server *Server) {
 
 	//Player Routes
 
-	server.engine.PUT("/api/v1/userData", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
+	server.engine.PUT("/api/v1/user-data", gateway.UserAuthorization, handler.UpdatePlayerInfoHandler)
 	server.engine.GET("/api/v1/get-settings", gateway.UserAuthorization, handler.GetSettingsHandler)
 	server.engine.PUT("/api/v1/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/api/v1/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)

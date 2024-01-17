@@ -288,14 +288,6 @@ paths:
       summary: Collects Reward
       tags:
       - Player
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
   /popupoffers:
     get:
       consumes:
@@ -329,16 +321,6 @@ paths:
       summary: Get the specific type of reward
       tags:
       - Store
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a459c37 (doc:created docs for routes)
-=======
->>>>>>> 14d0086 (doc:created docs for routes)
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
   /reset-password:
     post:
       consumes:
@@ -456,29 +438,8 @@ paths:
             $ref: '#/definitions/response.Success'
       summary: Gets shop details
       tags:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
       - Store
   /update-settings:
-<<<<<<< HEAD
->>>>>>> a1e10ba (feat: daily goals)
-<<<<<<< HEAD
-=======
-      - Player
-=======
-      - Store
->>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
-  /update_settings:
->>>>>>> 14d0086 (doc:created docs for routes)
-=======
->>>>>>> 46c96ed (feat: daily goals)
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
     put:
       consumes:
       - application/json
@@ -513,8 +474,8 @@ paths:
       summary: Updates setting
       tags:
       - Player
-  /userData:
-    post:
+  /user-data:
+    put:
       consumes:
       - application/json
       description: Updates player info like username and avatar

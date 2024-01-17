@@ -299,14 +299,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -357,16 +349,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a459c37 (doc:created docs for routes)
-=======
->>>>>>> 14d0086 (doc:created docs for routes)
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
@@ -513,27 +495,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     "Store"
-=======
-                    "Player"
->>>>>>> a459c37 (doc:created docs for routes)
-=======
-                    "Store"
->>>>>>> 501cb55 (Feat:added shop buy handler and starter pack)
-=======
-                    "Player"
->>>>>>> 14d0086 (doc:created docs for routes)
-=======
-                    "Store"
->>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
-=======
-                    "Store"
->>>>>>> 9b94616 (resolved merge conflicts)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [
@@ -567,15 +529,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
         "/update-settings": {
-=======
-        "/update_settings": {
->>>>>>> 14d0086 (doc:created docs for routes)
-=======
-        "/update-settings": {
->>>>>>> 46c96ed (feat: daily goals)
             "put": {
                 "description": "Updates the game settings of that player",
                 "consumes": [
@@ -628,8 +582,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/userData": {
-            "post": {
+        "/user-data": {
+            "put": {
                 "description": "Updates player info like username and avatar",
                 "consumes": [
                     "application/json"
