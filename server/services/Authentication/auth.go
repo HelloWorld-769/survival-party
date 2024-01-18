@@ -48,7 +48,8 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 	err = db.CreateRecord(&userRecord)
 	if err != nil {
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			response.ShowResponse("Credentials should be unique", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			response.ShowResponse("Credentials should be unique", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			return
 		}
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return

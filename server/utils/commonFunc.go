@@ -171,6 +171,7 @@ func RoundToNearestMultiple(n, multiple int64) int64 {
 		return n - remainder
 	}
 	return n + difference
+}
 func MilliSecondsToHours(MilliSeconds int64) int64 {
 
 	result := MilliSeconds / (1000 * 60 * 60)

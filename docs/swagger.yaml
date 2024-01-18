@@ -288,26 +288,6 @@ paths:
       summary: Collects Reward
       tags:
       - Player
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 72e6077 (doc:created docs for routes)
-=======
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
->>>>>>> 7b19332 (feat: added pop up offer route)
-=======
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
->>>>>>> 52d6069 (resolved merge conflicts)
-=======
->>>>>>> 2446eb2 (fixed minor issues)
   /popupoffers:
     get:
       consumes:
@@ -341,32 +321,6 @@ paths:
       summary: Get the specific type of reward
       tags:
       - Store
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 7b19332 (feat: added pop up offer route)
-=======
->>>>>>> 52d6069 (resolved merge conflicts)
-=======
->>>>>>> a459c37 (doc:created docs for routes)
-=======
->>>>>>> 14d0086 (doc:created docs for routes)
-<<<<<<< HEAD
->>>>>>> 72e6077 (doc:created docs for routes)
-=======
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
-<<<<<<< HEAD
->>>>>>> 7b19332 (feat: added pop up offer route)
-=======
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
->>>>>>> 52d6069 (resolved merge conflicts)
-=======
->>>>>>> 2446eb2 (fixed minor issues)
   /reset-password:
     post:
       consumes:
@@ -488,6 +442,7 @@ paths:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       - Store
 =======
 <<<<<<< HEAD
@@ -504,8 +459,9 @@ paths:
 >>>>>>> 9b94616 (resolved merge conflicts)
 =======
 >>>>>>> 2446eb2 (fixed minor issues)
+=======
+>>>>>>> 01a653d (fix:merge conflicts resolve)
       - Store
->>>>>>> 52d6069 (resolved merge conflicts)
   /update-settings:
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -645,15 +601,7 @@ paths:
       summary: User Login
       tags:
       - Authentication
-<<<<<<< HEAD
-<<<<<<< HEAD
   /users/sign-out:
-=======
-  /users/sign_out:
->>>>>>> 686f25b (feat: daily goals)
-=======
-  /users/sign-out:
->>>>>>> 52d6069 (resolved merge conflicts)
     delete:
       consumes:
       - application/json

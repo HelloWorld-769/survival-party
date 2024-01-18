@@ -299,23 +299,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
-<<<<<<< HEAD
->>>>>>> 7b19332 (feat: added pop up offer route)
-=======
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
->>>>>>> 52d6069 (resolved merge conflicts)
-=======
->>>>>>> 2446eb2 (fixed minor issues)
         "/popupoffers": {
             "get": {
                 "description": "Get the specific type of reward",
@@ -366,25 +349,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a459c37 (doc:created docs for routes)
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 14d0086 (doc:created docs for routes)
-=======
->>>>>>> c4acd51 (feat: added pop up offer route)
-<<<<<<< HEAD
->>>>>>> 7b19332 (feat: added pop up offer route)
-=======
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
->>>>>>> 52d6069 (resolved merge conflicts)
-=======
->>>>>>> 2446eb2 (fixed minor issues)
         "/reset-password": {
             "post": {
                 "description": "Resets the password of the user",
@@ -780,11 +744,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        "/users/sign_in": {
-=======
         "/users/sign-out": {
             "delete": {
                 "description": "Logs out a player",
@@ -830,7 +789,6 @@ const docTemplate = `{
             }
         },
         "/users/sign-up": {
->>>>>>> 52d6069 (resolved merge conflicts)
             "post": {
                 "description": "Perform signup and sends email for verification",
                 "consumes": [
@@ -876,6 +834,7 @@ const docTemplate = `{
                 }
             }
         },
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 686f25b (feat: daily goals)
         "/users/sign-out": {
@@ -973,6 +932,8 @@ const docTemplate = `{
 =======
 >>>>>>> 52d6069 (resolved merge conflicts)
 >>>>>>> 5caa952 (resolved merge conflicts)
+=======
+>>>>>>> 01a653d (fix:merge conflicts resolve)
         "/users/social-login": {
             "post": {
                 "description": "Perform Users social login and generate access token",
