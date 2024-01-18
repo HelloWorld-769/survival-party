@@ -235,11 +235,11 @@ func CreateStarterDailyRewards(userId string) error {
 				daily_user_reward.Gain = int64(randomInt)
 			}
 			daily_user_reward.RewardType = int64(randomInt)
-			daily_user_reward.Status = utils.UNAVAILABLE
 			if i == 0 {
 				//for the first daly reward
 				daily_user_reward.Status = utils.UNCLAIMED
 			}
+			daily_user_reward.Status = utils.UNAVAILABLE
 
 			err = db.CreateRecord(&daily_user_reward)
 			if err != nil {
@@ -254,7 +254,7 @@ func CreateStarterDailyRewards(userId string) error {
 
 func CollectDailyReward(ctx *gin.Context, userId string) {
 
-	//get user data
+	//get user gamestats data
 	var userGameStats model.UserGameStats
 	query := "select * from user_game_stats where user_id=?"
 	err := db.QueryExecutor(query, &userGameStats, userId)
@@ -262,34 +262,46 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
+
+	//get the user data 
+
+	user,err:=utils.GetUserData(userId)
 	//get daily reward data
-	var userRewardData model.UserDailyRewards
+	var userRewardData []model.UserDailyRewards
 	query = "select * from user_daily_rewards where user_id=?"
 	err = db.QueryExecutor(query, &userRewardData, userId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
-	//update this userRewardData as claimed true
-	userRewardData.Status = utils.CLAIMED
-	err = db.UpdateRecord(&userRewardData, userId, "user_id").Error
-	if err != nil {
-		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+	//check if already claimed 
+	if userRewardData[user.DayCount].Status==utils.CLAIMED{
+
+		response.ShowResponse("daily reward already claimed", utils.HTTP_BAD_REQUEST,utils.FAILURE,nil, ctx)
 		return
+	}else{
+		//update this userRewardData as claimed true
+		userRewardData[user.DayCount].Status=utils.CLAIMED
+		err = db.UpdateRecord(&userRewardData, userId, "user_id").Error
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
 	}
 
-	switch userRewardData.RewardType {
+
+	switch userRewardData[user.DayCount].RewardType {
 	case 1:
 		fmt.Println("Energy")
-		userGameStats.Energy += userRewardData.Gain
+		userGameStats.Energy += userRewardData[user.DayCount].Gain
 	case 2:
 		fmt.Println("Coins")
-		userGameStats.CurrentCoins += userRewardData.Gain
-		userGameStats.TotalCoins += userRewardData.Gain
+		userGameStats.CurrentCoins += userRewardData[user.DayCount].Gain
+		userGameStats.TotalCoins += userRewardData[user.DayCount].Gain
 	case 3:
 		fmt.Println("Gems")
-		userGameStats.CurrentGems += userRewardData.Gain
-		userGameStats.TotalGems += userRewardData.Gain
+		userGameStats.CurrentGems += userRewardData[user.DayCount].Gain
+		userGameStats.TotalGems += userRewardData[user.DayCount].Gain
 
 	case 4:
 		fmt.Println("Inventory")
@@ -299,7 +311,6 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		fmt.Println("Invalid")
 	}
 
-	//update user game stats with reward data
 	//update user game stats with reward data
 
 	err = db.UpdateRecord(&userGameStats, userId, "user_id").Error
