@@ -12,6 +12,7 @@ import (
 	"main/server/services/rewards"
 	"main/server/services/token"
 	"main/server/utils"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -46,6 +47,9 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 
 	err = db.CreateRecord(&userRecord)
 	if err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			response.ShowResponse("Credentials should be unique", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		}
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
@@ -122,7 +126,7 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 	}
 
 	fmt.Println(ctx.Request.Header.Get("Origin"))
-	link := ctx.Request.Header.Get("Origin") + "/api/v1/users/email-verify?token=" + *tokenString
+	link := "http://192.180.2.127:" + os.Getenv("PORT") + "/api/v1/users/email-verify?token=" + *tokenString
 
 	fmt.Println("link is", link)
 
