@@ -50,5 +50,6 @@ func ConfigureRoutes(server *Server) {
 	//daily rewards
 	server.engine.PUT("/api/v1/collect-daily-rewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
 	server.engine.GET("/api/v1/daily-rewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)
-	server.engine.GET("/api/v1/timeLeft", rewards.DailyRewardTimeLeft)
+	server.engine.GET("/api/v1/time-left", rewards.DailyRewardTimeLeft)
+
 }

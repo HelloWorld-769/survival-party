@@ -48,8 +48,6 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 		UserId          string    `json:"userId"`
 		XP              int64     `json:"xp"`
 		Level           int64     `json:"level"`
-		Coins           int64     `json:"coins"`
-		Gems            int64     `json:"gems"`
 		Energy          int64     `json:"energy"`
 		TotalCoins      int64     `json:"totalCoins"`
 		CurrentCoins    int64     `json:"currentCoins"`
@@ -57,8 +55,8 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 		CurrentGems     int64     `json:"currentGems"`
 		CurrentTrophies int64     `json:"currentTrophies"`
 		HighestTrophies int64     `json:"highestTrophies"`
-		MatchesPlayed   int64     `json:"matchesPlayed"`
 		MatchesWon      int64     `json:"matchesWon"`
+		MatchesLost     int64     `json:"matchesLost"`
 		TotalTimeSpent  int64     `json:"timeSpent"`
 		TotalKills      int64     `json:"totalKills"`
 		Badge           int64     `json:"badge"`
@@ -90,8 +88,6 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 		UserId          string  `json:"userId"`
 		XP              int64   `json:"xp"`
 		Level           int64   `json:"level"`
-		Coins           int64   `json:"coins"`
-		Gems            int64   `json:"gems"`
 		Energy          int64   `json:"energy"`
 		TotalCoins      int64   `json:"totalCoins"`
 		CurrentCoins    int64   `json:"currentCoins"`
@@ -101,6 +97,7 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 		HighestTrophies int64   `json:"highestTrophies"`
 		MatchesPlayed   int64   `json:"matchesPlayed"`
 		MatchesWon      int64   `json:"matchesWon"`
+		MatchesLost     int64   `json:"matchesLost"`
 		TotalTimeSpent  int64   `json:"timeSpent"`
 		TotalKills      int64   `json:"totalKills"`
 		Badges          []int64 `json:"badges"`
@@ -114,8 +111,6 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 			UserId:          data.UserId,
 			XP:              data.XP,
 			Level:           data.Level,
-			Coins:           data.Coins,
-			Gems:            data.Gems,
 			Energy:          data.Energy,
 			TotalCoins:      data.TotalCoins,
 			CurrentCoins:    data.CurrentCoins,
@@ -123,8 +118,9 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 			CurrentGems:     data.CurrentGems,
 			CurrentTrophies: data.CurrentTrophies,
 			HighestTrophies: data.HighestTrophies,
-			MatchesPlayed:   data.MatchesPlayed,
-			MatchesWon:      data.MatchesPlayed,
+			MatchesPlayed:   data.MatchesWon + data.MatchesLost,
+			MatchesWon:      data.MatchesWon,
+			MatchesLost:     data.MatchesLost,
 			TotalTimeSpent:  data.TotalTimeSpent,
 			TotalKills:      data.TotalKills,
 		}

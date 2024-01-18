@@ -41,7 +41,7 @@ func StartCron() {
 
 		if formattedTime == "14:20" {
 
-			dailygoal.DailyGoalGeneration()
+			dailygoal.DailyGoalGeneration(false, nil)
 
 		}
 

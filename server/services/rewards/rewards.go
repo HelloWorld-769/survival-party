@@ -143,6 +143,10 @@ func CreateUserDailyReward() {
 				daily_user_reward.UserId = user.Id
 				//find random reward Type
 				//append the quantity into reward
+				daily_user_reward.Status = utils.UNAVAILABLE
+				if i == 0 {
+					daily_user_reward.Status = utils.UNCLAIMED
+				}
 				randomInt := rand.Intn(6)
 				if randomInt == 3 {
 					//gems
@@ -167,10 +171,6 @@ func CreateUserDailyReward() {
 				}
 				daily_user_reward.RewardType = int64(randomInt)
 
-				if i == 0 {
-					daily_user_reward.Status = utils.UNCLAIMED
-				}
-				daily_user_reward.Status = utils.UNAVAILABLE
 				fmt.Println("entry created for user!!!")
 
 				fmt.Println("reward ", i+1, daily_user_reward)
@@ -235,12 +235,11 @@ func CreateStarterDailyRewards(userId string) error {
 				daily_user_reward.Gain = int64(randomInt)
 			}
 			daily_user_reward.RewardType = int64(randomInt)
-
+			daily_user_reward.Status = utils.UNAVAILABLE
 			if i == 0 {
-				//for the first daily reward
+				//for the first daly reward
 				daily_user_reward.Status = utils.UNCLAIMED
 			}
-			daily_user_reward.Status = utils.UNAVAILABLE
 
 			err = db.CreateRecord(&daily_user_reward)
 			if err != nil {
@@ -266,7 +265,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	//get daily reward data
 	var userRewardData model.UserDailyRewards
 	query = "select * from user_daily_rewards where user_id=?"
-	err = db.QueryExecutor(query, &userRewardData)
+	err = db.QueryExecutor(query, &userRewardData, userId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
@@ -311,7 +310,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 
 	//fetch the updated daily rewards and give in response
 	var dailyRewards []model.UserDailyRewards
-	query = "select * from daily_rewards where user_id=?"
+	query = "select * from user_daily_rewards where user_id=? order by day_count"
 	err = db.QueryExecutor(query, &dailyRewards, userId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
@@ -327,7 +326,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 func GetUserDailyRewardData(ctx *gin.Context, userId string) {
 
 	var UserDailyRewardsData []model.UserDailyRewards
-	query := "select * from user_daily_rewards where user_id = ?"
+	query := "select * from user_daily_rewards where user_id = ? order by day_count"
 	err := db.QueryExecutor(query, &UserDailyRewardsData, userId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)

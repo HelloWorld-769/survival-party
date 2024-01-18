@@ -14,7 +14,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func DailyGoalGeneration() {
+func DailyGoalGeneration(isNew bool, userId *string) {
 	noOfGoalsMin := 4
 	noOfGoalsMax := 6
 	noOfGoals := rand.Intn(noOfGoalsMax-noOfGoalsMin+1) + noOfGoalsMin
@@ -23,12 +23,23 @@ func DailyGoalGeneration() {
 		Id    string
 		Level int64
 	}
-	query := "SELECT id,level FROM users WHERE email_verified =true"
-	err := db.QueryExecutor(query, &data)
+	if isNew {
+		query := "SELECT id,level FROM users WHERE id=?"
+		err := db.QueryExecutor(query, &data, *userId)
 
-	if err != nil {
-		fmt.Println("Error in gettign the users from the database")
-		return
+		if err != nil {
+			fmt.Println("Error in gettign the users from the database")
+			return
+		}
+
+	} else {
+		query := "SELECT id,level FROM users WHERE email_verified =true"
+		err := db.QueryExecutor(query, &data)
+
+		if err != nil {
+			fmt.Println("Error in gettign the users from the database")
+			return
+		}
 	}
 
 	// Iterate over each user in the data slice
@@ -199,7 +210,7 @@ func DailyGoalGeneration() {
 			record.Chest = 1
 		}
 
-		err = db.CreateRecord(&record)
+		err := db.CreateRecord(&record)
 		if err != nil {
 			fmt.Println("Error in creting the entry in db.")
 			return

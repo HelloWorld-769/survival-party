@@ -45,8 +45,10 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 		DayCount:        1,
 	}
 
-	err = db.CreateRecord(&userRecord)
+	tx := db.BeginTransaction()
+	err = tx.Create(&userRecord).Error
 	if err != nil {
+		tx.Rollback()
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
 			response.ShowResponse("Credentials should be unique", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 			return
@@ -59,8 +61,6 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 		UserId:         userRecord.Id,
 		CurrentCoins:   10000,
 		CurrentGems:    10000,
-		MatchesPlayed:  0,
-		MatchesWon:     0,
 		TotalTimeSpent: 0,
 		TotalKills:     0,
 	}
@@ -76,16 +76,18 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 		Language:       "english",
 	}
 
-	err = db.CreateRecord(&userSettings)
+	err = tx.Create(&userSettings).Error
 	if err != nil {
+		tx.Rollback()
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
 
 	expirationTime := time.Now().Add(time.Minute * 5)
 
-	err = db.CreateRecord(&userGameStats)
+	err = tx.Create(&userGameStats).Error
 	if err != nil {
+		tx.Rollback()
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
@@ -106,8 +108,9 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 		Purchased:      false,
 	}
 
-	err = db.CreateRecord(&userStartPack)
+	err = tx.Create(&userStartPack).Error
 	if err != nil {
+		tx.Rollback()
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
@@ -121,6 +124,7 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 	}
 	tokenString, err := token.GenerateToken(resetClaims)
 	if err != nil {
+		tx.Rollback()
 		// If there is an error in generating the reset token, return an error response.
 		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
@@ -131,7 +135,20 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 
 	fmt.Println("link is", link)
 
-	Gomail.SendEmailService(ctx, link, userRecord.Email)
+	err = Gomail.SendEmailService(ctx, link, userRecord.Email)
+	if err != nil {
+		tx.Rollback()
+		// If there is an error in generating the reset token, return an error response.
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
 
 	response.ShowResponse("A mail has been sent to your email, please verify your account", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 
@@ -181,7 +198,7 @@ func VerifyEmail(ctx *gin.Context, tokenString string) {
 	}
 
 	//generating daily goals for user
-	go dailygoal.DailyGoalGeneration()
+	go dailygoal.DailyGoalGeneration(true, &claims.Id)
 
 	response.ShowResponse("Email verified succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 
@@ -257,8 +274,11 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 	}
 
 	response.ShowResponse(utils.LOGIN_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
-		Token string `json:"token"`
-	}{Token: "Bearer " + *accessToken}, ctx)
+		Token  string `json:"token"`
+		UserId string `json:"userId"`
+	}{Token: "Bearer " + *accessToken,
+		UserId: user.Id,
+	}, ctx)
 
 }
 
@@ -326,8 +346,6 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 
 		userGameStats := model.UserGameStats{
 			UserId:         userRecord.Id,
-			MatchesPlayed:  0,
-			MatchesWon:     0,
 			TotalTimeSpent: 0,
 			// Badges:         []int64{},
 			TotalKills: 0,

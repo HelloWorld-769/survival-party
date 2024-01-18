@@ -1,6 +1,7 @@
 package Gomail
 
 import (
+	"bytes"
 	"crypto/tls"
 	"fmt"
 	"main/server/db"
@@ -10,6 +11,7 @@ import (
 	"main/server/utils"
 	"math/rand"
 	"os"
+	"text/template"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -100,7 +102,7 @@ func SendEmailOtpService(context *gin.Context, req request.EmailRequest) {
 	response.ShowResponse("email sent successfully", 200, "Success", "", context)
 }
 
-func SendEmailService(context *gin.Context, link string, toEmail string) {
+func SendEmailService(context *gin.Context, link string, toEmail string) error {
 
 	utils.SetHeader(context)
 
@@ -120,7 +122,21 @@ func SendEmailService(context *gin.Context, link string, toEmail string) {
 
 	// Set E-Mail body. You can set plain text or html with text/html
 
-	m.SetBody("text/plain", link)
+	var body bytes.Buffer
+	tmp, err := template.ParseFiles("server/emailTemplate/emailTemplate.html")
+	if err != nil {
+		return err
+	}
+
+	data := struct {
+		Link string
+	}{
+		Link: link,
+	}
+
+	tmp.Execute(&body, data)
+
+	m.SetBody("text/html", body.String())
 	// m.Attach("/home/chicmic/Downloads/image.png")
 
 	// Settings for SMTP server
@@ -133,8 +149,10 @@ func SendEmailService(context *gin.Context, link string, toEmail string) {
 	// Now send E-Mail
 	if err := d.DialAndSend(m); err != nil {
 		fmt.Println(err)
-		panic(err)
+		return err
 	}
+
+	return nil
 
 }
 func ResetSessionAlreadyPresent(email string) (bool, error) {

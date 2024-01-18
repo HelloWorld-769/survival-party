@@ -18,19 +18,19 @@ type UserDailyGoals struct {
 	Price            int64            `json:"price"`
 	DailyRewardId    string           `json:"dailyRewardId"`
 	DailyGoalRewards DailyGoalRewards `json:"-" gorm:"foreignKey:DailyRewardId;constraint:OnDelete:CASCADE"`
-	CreatedAt        time.Time        `json:"created_at"`
-	UpdatedAt        time.Time        `json:"updated_at"`
-	DeletedAt        gorm.DeletedAt
+	CreatedAt        time.Time        `json:"-"`
+	UpdatedAt        time.Time        `json:"-"`
+	DeletedAt        gorm.DeletedAt   `json:"-"`
 }
 
 type DailyGoalRewards struct {
-	Id        string    `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
-	Coins     int64     `json:"coins"`
-	Gems      int64     `json:"gems"`
-	Energy    int64     `json:"energy"`
-	Chest     int64     `json:"chest"`
-	Claimed   bool      `json:"claimed"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt gorm.DeletedAt
+	Id        string         `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
+	Coins     int64          `json:"coins"`
+	Gems      int64          `json:"gems"`
+	Energy    int64          `json:"energy"`
+	Chest     int64          `json:"chest"`
+	Claimed   bool           `json:"claimed"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `json:"-"`
 }
