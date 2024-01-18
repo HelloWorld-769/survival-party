@@ -495,27 +495,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     "Store"
-=======
-                    "Player"
->>>>>>> a459c37 (doc:created docs for routes)
-=======
-                    "Store"
->>>>>>> 501cb55 (Feat:added shop buy handler and starter pack)
-=======
-                    "Player"
->>>>>>> 14d0086 (doc:created docs for routes)
-=======
-                    "Store"
->>>>>>> 813b225 (Feat:added shop buy handler and starter pack)
-=======
-                    "Store"
->>>>>>> 9b94616 (resolved merge conflicts)
                 ],
                 "summary": "Gets shop details",
                 "parameters": [
@@ -549,15 +529,7 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
         "/update-settings": {
-=======
-        "/update_settings": {
->>>>>>> 14d0086 (doc:created docs for routes)
-=======
-        "/update-settings": {
->>>>>>> 46c96ed (feat: daily goals)
             "put": {
                 "description": "Updates the game settings of that player",
                 "consumes": [
@@ -834,106 +806,6 @@ const docTemplate = `{
                 }
             }
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 686f25b (feat: daily goals)
-        "/users/sign-out": {
-            "delete": {
-                "description": "Logs out a player",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Logout Player",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Player Access Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    }
-                }
-            }
-        },
-<<<<<<< HEAD
-        "/users/sign-up": {
-            "post": {
-                "description": "Perform signup and sends email for verification",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Sign Up",
-                "parameters": [
-                    {
-                        "description": "Signup Request",
-                        "name": "guestLoginRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.SigupRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Login successful",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    }
-                }
-            }
-        },
-=======
-=======
->>>>>>> 52d6069 (resolved merge conflicts)
->>>>>>> 5caa952 (resolved merge conflicts)
-=======
->>>>>>> 01a653d (fix:merge conflicts resolve)
         "/users/social-login": {
             "post": {
                 "description": "Perform Users social login and generate access token",

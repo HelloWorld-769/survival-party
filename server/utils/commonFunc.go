@@ -124,37 +124,6 @@ func CalculateDays(timeValue time.Time) int64 {
 	return days
 }
 
-func MilliSecondsToHours(MilliSeconds int64) int64 {
-
-	result := MilliSeconds / (1000 * 60 * 60)
-	return result
-}
-
-func UserMultipler(userId string) int64 {
-
-	//fecth the user game stats
-	query := "select * from user_game_stats where user_id=?"
-	var user_game_stats model.UserGameStats
-	err := db.QueryExecutor(query, &user_game_stats, userId)
-	if err != nil {
-		fmt.Println("error", err.Error())
-		return 0
-	}
-
-	user, err := GetUserData(userId)
-	if err != nil {
-		fmt.Println("error", err.Error())
-		return 0
-	}
-
-	var dayCount int
-	query = "select day_count from users where email_verified =true and id=?"
-	db.QueryExecutor(query, &dayCount, user.Id)
-
-	multiplier := int64((dayCount * 2)) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
-	return multiplier
-}
-
 func RoundToNearestMultiple(n, multiple int64) int64 {
 	if n < 10 {
 		return n
@@ -200,16 +169,4 @@ func UserMultipler(userId string) int64 {
 
 	multiplier := int64((dayCount * 2)) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
 	return multiplier
-func RoundToNearestMultiple(n, multiple int64) int64 {
-	// Calculate the remainder when dividing n by multiple
-	remainder := n % multiple
-
-	// Calculate the difference between multiple and the remainder
-	difference := multiple - remainder
-
-	// Determine whether to round up or down based on the remainder
-	if remainder <= difference/2 {
-		return n - remainder
-	}
-	return n + difference
 }

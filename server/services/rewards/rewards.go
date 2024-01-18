@@ -8,7 +8,6 @@ import (
 	"main/server/response"
 	"main/server/utils"
 	"math/rand"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -111,12 +110,6 @@ func CreateUserDailyReward() {
 
 		//create user daily reward entry based on user daycount
 		//calculate user daycount
-		var dailyReward model.DailyRewards
-		if user.EmailVerified {
-
-			dayCount := utils.CalculateDays(user.CreatedAt) + 1
-			query := "select * from daily_rewards where day_count=?"
-			err := db.QueryExecutor(query, &dailyReward, dayCount)
 
 		var dayCount int
 		query := "select day_count from users where email_verified = true and id=?"
@@ -134,22 +127,15 @@ func CreateUserDailyReward() {
 			query := "delete from user_daily_rewards where user_id =?"
 			err := db.QueryExecutor(query, nil, user.Id)
 			if err != nil {
-
-				fmt.Println("error in fetching", err.Error())
+				fmt.Println("error in deleting previous daily reward entries", err.Error())
 				return
 			}
+			for i := 0; i < 7; i++ {
 
-			//create entry of this daily reward for this user
-			var daily_user_reward model.UserDailyRewards
-			daily_user_reward.UserId = user.Id
-			daily_user_reward.Coins += dailyReward.Coins
-			daily_user_reward.Energy += dailyReward.Energy
-			daily_user_reward.Gems += dailyReward.Gems
+				//generate daily reward based on formula
+				//formula based on users gameplay_time and users created_at
+				Multiplier := utils.UserMultipler(user.Id)
 
-			err = db.CreateRecord(&daily_user_reward)
-			if err != nil {
-				fmt.Println("error in creating", err.Error())
-				return
 				//create entry of this daily reward for this user
 				var daily_user_reward model.UserDailyRewards
 				daily_user_reward.DayCount = int64(i + 1)

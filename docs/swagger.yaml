@@ -438,47 +438,8 @@ paths:
             $ref: '#/definitions/response.Success'
       summary: Gets shop details
       tags:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      - Store
-=======
-<<<<<<< HEAD
->>>>>>> 5caa952 (resolved merge conflicts)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-      - Player
->>>>>>> a459c37 (doc:created docs for routes)
-  /update_settings:
-=======
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
-=======
->>>>>>> 2446eb2 (fixed minor issues)
-=======
->>>>>>> 01a653d (fix:merge conflicts resolve)
       - Store
   /update-settings:
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> a1e10ba (feat: daily goals)
-=======
-      - Player
-  /update_settings:
->>>>>>> 14d0086 (doc:created docs for routes)
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 46c96ed (feat: daily goals)
-=======
->>>>>>> 9b94616 (resolved merge conflicts)
->>>>>>> 5caa952 (resolved merge conflicts)
-=======
->>>>>>> 0027c48 (fixed minor issues)
     put:
       consumes:
       - application/json
