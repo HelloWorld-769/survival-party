@@ -275,7 +275,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	}
 	//get daily reward data
 	var userRewardData []model.UserDailyRewards
-	query = "select * from user_daily_rewards where user_id=?"
+	query = "select * from user_daily_rewards where user_id=? order by day_count asc "
 	err = db.QueryExecutor(query, &userRewardData, userId)
 	if err != nil {
 		fmt.Println("here3")
@@ -283,6 +283,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
+	fmt.Println("user daycount:   ", user.DayCount)
 	//check if already claimed
 	if userRewardData[user.DayCount].Status == utils.CLAIMED {
 
@@ -290,7 +291,15 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		return
 	} else {
 		//update this userRewardData as claimed true
-		userRewardData[user.DayCount].Status = utils.CLAIMED
+		userRewardData[user.DayCount-1].Status = utils.CLAIMED
+		userRewardData[user.DayCount].Status = utils.UNCLAIMED
+		err = db.UpdateRecord(&userRewardData[user.DayCount-1], userId, "user_id").Error
+		if err != nil {
+			fmt.Println("here4")
+
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
 		err = db.UpdateRecord(&userRewardData[user.DayCount], userId, "user_id").Error
 		if err != nil {
 			fmt.Println("here4")
