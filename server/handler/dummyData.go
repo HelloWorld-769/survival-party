@@ -8,10 +8,8 @@ import (
 	"main/server/db"
 	"main/server/model"
 	"main/server/request"
-	authentication "main/server/services/Authentication"
+	"main/server/services"
 	"main/server/utils"
-
-	"github.com/gin-gonic/gin"
 )
 
 func ReadJSONFile(filePath string) ([]byte, error) {
@@ -47,7 +45,6 @@ func AddDummyDataHandler() {
 
 }
 func AddDummyUsers() {
-	var ctx *gin.Context
 	filePath := "server/dummyData/dummyUsers.json"
 	if !utils.TableIsEmpty("users") {
 		Data, err := ReadJSONFile(filePath)
@@ -63,7 +60,7 @@ func AddDummyUsers() {
 		fmt.Println("   ", modelType)
 
 		for _, item := range modelType {
-			authentication.SignupService(ctx, item)
+			services.AddDummyUsers(item)
 		}
 	}
 
