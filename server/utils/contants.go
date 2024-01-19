@@ -70,7 +70,7 @@ const (
 	Gems
 	Chest
 	Inventory
-	Experiance
+	Experience
 )
 
 // CurrencyType

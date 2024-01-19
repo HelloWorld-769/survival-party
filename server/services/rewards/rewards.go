@@ -147,28 +147,28 @@ func CreateUserDailyReward() {
 				if i == 0 {
 					daily_user_reward.Status = utils.UNCLAIMED
 				}
-				randomInt := rand.Intn(6)
-				if randomInt == 3 {
-					//gems
-					randomInt := int(Multiplier) * (rand.Intn(10))
-					daily_user_reward.Gain = int64(randomInt)
+				randomInt := rand.Intn(4)
+				// if randomInt == 3 {
+				// 	//gems
+				// 	randomInt := int(Multiplier) * (rand.Intn(10))
+				// 	daily_user_reward.Gain = int64(randomInt)
 
-				} else if randomInt == 4 {
-					//inventory
-					//set asset name
-					daily_user_reward.AssetName = "egg_hat" //(can be random asset in future)
-					daily_user_reward.Name = "egg_hat"
-					daily_user_reward.Gain = 1
-				} else if randomInt == 5 {
-					//Chest
-					//set chest level
-					randomInt := rand.Intn(6)
-					daily_user_reward.ChestType = int64(randomInt)
-					daily_user_reward.Gain = 1
-				} else {
-					randomInt := int(Multiplier) * (rand.Intn(100) + rand.Intn(50))
-					daily_user_reward.Gain = int64(randomInt)
-				}
+				// } else if randomInt == 4 {
+				// 	//inventory
+				// 	//set asset name
+				// 	daily_user_reward.AssetName = "egg_hat" //(can be random asset in future)
+				// 	daily_user_reward.Name = "egg_hat"
+				// 	daily_user_reward.Gain = 1
+				// } else if randomInt == 5 {
+				// 	//Chest
+				// 	//set chest level
+				// 	randomInt := rand.Intn(6)
+				// 	daily_user_reward.ChestType = int64(randomInt)
+				// 	daily_user_reward.Gain = 1
+				// } else {
+				randomIntgain := int(Multiplier) * (rand.Intn(100) + rand.Intn(50))
+				daily_user_reward.Gain = int64(randomIntgain)
+				// }
 				daily_user_reward.RewardType = int64(randomInt)
 
 				fmt.Println("entry created for user!!!")
@@ -207,6 +207,14 @@ func CreateStarterDailyRewards(userId string) error {
 			return err
 		}
 
+		// 	ENERGY = 1,
+		// 	COINS = 2,
+		// 	GEMS = 3,
+		// 	CHEST = 4,
+		// 	INVERNTORY = 5,
+		// 	EXPERIENCE = 6
+		// }
+
 		//create entry of first week  daily reward for this user
 		for i := 0; i < 7; i++ {
 			//create entry of this daily reward for this user
@@ -217,23 +225,23 @@ func CreateStarterDailyRewards(userId string) error {
 
 			//find random reward Type
 			//append the quantity into reward
-			randomInt := rand.Intn(6)
-			if randomInt == 5 {
-				//inventory
-				//set asset name
-				daily_user_reward.AssetName = "egg_hat" //(can be random asset in future)
-				daily_user_reward.Name = "egg_hat"
-				daily_user_reward.Gain = 1
-			} else if randomInt == 6 {
-				//Chest
-				//set chest level
-				randomInt := rand.Intn(6)
-				daily_user_reward.ChestType = int64(randomInt)
-				daily_user_reward.Gain = 1
-			} else {
-				randomInt := int(Multiplier) * (rand.Intn(100) + rand.Intn(50))
-				daily_user_reward.Gain = int64(randomInt)
-			}
+			randomInt := rand.Intn(7)
+			// if randomInt == 5 {
+			// 	//inventory
+			// 	//set asset name
+			// 	daily_user_reward.AssetName = "egg_hat" //(can be random asset in future)
+			// 	daily_user_reward.Name = "egg_hat"
+			// 	daily_user_reward.Gain = 1
+			// } else if randomInt == 4 {
+			// 	//Chest
+			// 	//set chest level
+			// 	randomInt := rand.Intn(6)
+			// 	daily_user_reward.ChestType = int64(randomInt)
+			// 	daily_user_reward.Gain = 1
+			// } else {
+			randomIntgain := int(Multiplier) * (rand.Intn(100) + rand.Intn(50))
+			daily_user_reward.Gain = int64(randomIntgain)
+			// }
 			daily_user_reward.Status = utils.UNAVAILABLE
 			daily_user_reward.RewardType = int64(randomInt)
 			if i == 0 {
@@ -381,15 +389,15 @@ func UpdateDailyRewardsData() {
 	for _, user := range users {
 
 		var dayCount int
-		query := "select daycount from users where emailverified =true and id=?"
+		query := "select day_count from users where email_verified =true and id=?"
 		db.QueryExecutor(query, &dayCount, user.Id)
 		if dayCount%7 != 0 {
 
 			//other than last day or first of daily reward weekly pack
 			//make the status missed if still unclaimed
 			var userDailyReward model.UserDailyRewards
-			query := "select * from user_daily_rewards where user_id=? and daycount=?"
-			err := db.QueryExecutor(query, userDailyReward, user.Id, dayCount)
+			query := "select * from user_daily_rewards where user_id=? and day_count=?"
+			err := db.QueryExecutor(query, &userDailyReward, user.Id, dayCount-1)
 			if err != nil {
 				fmt.Println("error ", err.Error())
 				return
@@ -404,9 +412,9 @@ func UpdateDailyRewardsData() {
 					return
 				}
 			}
-			//make the next day reward status from unavailbale to unclaimed
-			query = "select * from user_daily_rewards where user_id=? and daycount=?"
-			err = db.QueryExecutor(query, userDailyReward, user.Id, dayCount+1)
+			//make the next day reward status from unavailble to unclaimed
+			query = "select * from user_daily_rewards where user_id=? and day_count=?"
+			err = db.QueryExecutor(query, &userDailyReward, user.Id, dayCount)
 			if err != nil {
 				fmt.Println("error ", err.Error())
 				return
@@ -458,4 +466,21 @@ func TimeLeftUntilMidnight() (int, int, int) {
 	seconds := int(timeLeft.Seconds()) % 60
 
 	return hours, minutes, seconds
+}
+
+func TimeLeftUntilNextMinute() (int, int) {
+	// Get the current time
+	now := time.Now()
+
+	// Calculate the time of the next minute
+	nextMinute := time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute()+1, 0, 0, now.Location())
+
+	// Calculate the time difference
+	timeLeft := nextMinute.Sub(now)
+
+	// Extract minutes and seconds
+	minutes := int(timeLeft.Minutes()) % 60
+	seconds := int(timeLeft.Seconds()) % 60
+
+	return minutes, seconds
 }
