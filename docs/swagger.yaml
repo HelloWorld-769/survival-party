@@ -21,7 +21,7 @@ definitions:
     properties:
       user:
         properties:
-          email:
+          credential:
             type: string
           password:
             type: string
@@ -482,7 +482,7 @@ paths:
       parameters:
       - description: Id of the other player
         in: query
-        name: player_id
+        name: playerId
         required: true
         type: string
       produces:

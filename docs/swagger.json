@@ -592,7 +592,7 @@
                     {
                         "type": "string",
                         "description": "Id of the other player",
-                        "name": "player_id",
+                        "name": "playerId",
                         "in": "query",
                         "required": true
                     }
@@ -922,7 +922,7 @@
                 "user": {
                     "type": "object",
                     "properties": {
-                        "email": {
+                        "credential": {
                             "type": "string"
                         },
                         "password": {

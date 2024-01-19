@@ -25,7 +25,7 @@ func (a SigupRequest) Validate() error {
 
 type LoginRequest struct {
 	User struct {
-		Email    string `json:"email"`
+		Email    string `json:"credential"`
 		Password string `json:"password"`
 	} `json:"user"`
 }

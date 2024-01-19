@@ -599,7 +599,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Id of the other player",
-                        "name": "player_id",
+                        "name": "playerId",
                         "in": "query",
                         "required": true
                     }
@@ -929,7 +929,7 @@ const docTemplate = `{
                 "user": {
                     "type": "object",
                     "properties": {
-                        "email": {
+                        "credential": {
                             "type": "string"
                         },
                         "password": {

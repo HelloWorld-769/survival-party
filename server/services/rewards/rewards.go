@@ -259,6 +259,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	query := "select * from user_game_stats where user_id=?"
 	err := db.QueryExecutor(query, &userGameStats, userId)
 	if err != nil {
+		fmt.Println("here1")
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
@@ -267,6 +268,8 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 
 	user, err := utils.GetUserData(userId)
 	if err != nil {
+		fmt.Println("here2")
+
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
@@ -275,6 +278,8 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	query = "select * from user_daily_rewards where user_id=?"
 	err = db.QueryExecutor(query, &userRewardData, userId)
 	if err != nil {
+		fmt.Println("here3")
+
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
@@ -286,8 +291,10 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	} else {
 		//update this userRewardData as claimed true
 		userRewardData[user.DayCount].Status = utils.CLAIMED
-		err = db.UpdateRecord(&userRewardData, userId, "user_id").Error
+		err = db.UpdateRecord(&userRewardData[user.DayCount], userId, "user_id").Error
 		if err != nil {
+			fmt.Println("here4")
+
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
@@ -318,6 +325,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 
 	err = db.UpdateRecord(&userGameStats, userId, "user_id").Error
 	if err != nil {
+		fmt.Println("here5")
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
