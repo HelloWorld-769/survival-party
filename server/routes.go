@@ -5,6 +5,7 @@ import (
 	"main/server/gateway"
 	"main/server/handler"
 	"main/server/services/rewards"
+	"main/server/services/shop"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -52,5 +53,8 @@ func ConfigureRoutes(server *Server) {
 	server.engine.PUT("/api/v1/collect-daily-rewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
 	server.engine.GET("/api/v1/daily-rewards", gateway.UserAuthorization, handler.GetUserDailyRewardDataHandler)
 	server.engine.GET("/api/v1/time-left", rewards.DailyRewardTimeLeft)
+
+	//Energy refill
+	server.engine.GET("/api/v1/energy-refill", shop.EnergyRefillTimer)
 
 }

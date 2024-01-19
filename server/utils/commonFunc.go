@@ -111,6 +111,30 @@ func GetUserGameStatsData(userId string) (*model.UserGameStats, error) {
 
 }
 
+type TimeLeft struct {
+	Hours   int `json:"hours,omitempty"`
+	Minutes int `json:"minutes"`
+	Seconds int `json:"seconds"`
+}
+
+func TimeLeftUntilMidnight() (int, int, int) {
+	// Get the current time
+	now := time.Now()
+
+	// Get the time of the coming midnight
+	midnight := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, now.Location())
+
+	// Calculate the time difference
+	timeLeft := midnight.Sub(now)
+
+	// Extract hours, minutes, and seconds
+	hours := int(timeLeft.Hours())
+	minutes := int(timeLeft.Minutes()) % 60
+	seconds := int(timeLeft.Seconds()) % 60
+
+	return hours, minutes, seconds
+}
+
 func CalculateDays(timeValue time.Time) int64 {
 	// Get the current time in UTC
 	currentTime := time.Now().UTC()

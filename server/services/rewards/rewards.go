@@ -8,7 +8,6 @@ import (
 	"main/server/response"
 	"main/server/utils"
 	"math/rand"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -432,55 +431,14 @@ func UpdateDailyRewardsData() {
 
 }
 
-type TimeLeft struct {
-	Hours   int `json:"hours,omitempty"`
-	Minutes int `json:"minutes"`
-	Seconds int `json:"seconds"`
-}
-
 func DailyRewardTimeLeft(ctx *gin.Context) {
 
-	var timeLeft TimeLeft
-	hours, mins, seconds := TimeLeftUntilMidnight()
+	var timeLeft utils.TimeLeft
+	hours, mins, seconds := utils.TimeLeftUntilMidnight()
 	timeLeft.Hours = hours
 	timeLeft.Minutes = mins
 	timeLeft.Seconds = seconds
 
 	response.ShowResponse("time left successfully fetched", utils.HTTP_OK, utils.SUCCESS, timeLeft, ctx)
 
-}
-
-func TimeLeftUntilMidnight() (int, int, int) {
-	// Get the current time
-	now := time.Now()
-
-	// Get the time of the coming midnight
-	midnight := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, now.Location())
-
-	// Calculate the time difference
-	timeLeft := midnight.Sub(now)
-
-	// Extract hours, minutes, and seconds
-	hours := int(timeLeft.Hours())
-	minutes := int(timeLeft.Minutes()) % 60
-	seconds := int(timeLeft.Seconds()) % 60
-
-	return hours, minutes, seconds
-}
-
-func TimeLeftUntilNextMinute() (int, int) {
-	// Get the current time
-	now := time.Now()
-
-	// Calculate the time of the next minute
-	nextMinute := time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute()+1, 0, 0, now.Location())
-
-	// Calculate the time difference
-	timeLeft := nextMinute.Sub(now)
-
-	// Extract minutes and seconds
-	minutes := int(timeLeft.Minutes()) % 60
-	seconds := int(timeLeft.Seconds()) % 60
-
-	return minutes, seconds
 }
