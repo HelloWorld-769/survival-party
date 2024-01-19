@@ -234,12 +234,12 @@ func CreateStarterDailyRewards(userId string) error {
 				randomInt := int(Multiplier) * (rand.Intn(100) + rand.Intn(50))
 				daily_user_reward.Gain = int64(randomInt)
 			}
+			daily_user_reward.Status = utils.UNAVAILABLE
 			daily_user_reward.RewardType = int64(randomInt)
 			if i == 0 {
 				//for the first daly reward
 				daily_user_reward.Status = utils.UNCLAIMED
 			}
-			daily_user_reward.Status = utils.UNAVAILABLE
 
 			err = db.CreateRecord(&daily_user_reward)
 			if err != nil {
@@ -263,9 +263,9 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		return
 	}
 
-	//get the user data 
+	//get the user data
 
-	user,err:=utils.GetUserData(userId)
+	user, err := utils.GetUserData(userId)
 	//get daily reward data
 	var userRewardData []model.UserDailyRewards
 	query = "select * from user_daily_rewards where user_id=?"
@@ -274,21 +274,20 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
-	//check if already claimed 
-	if userRewardData[user.DayCount].Status==utils.CLAIMED{
+	//check if already claimed
+	if userRewardData[user.DayCount].Status == utils.CLAIMED {
 
-		response.ShowResponse("daily reward already claimed", utils.HTTP_BAD_REQUEST,utils.FAILURE,nil, ctx)
+		response.ShowResponse("daily reward already claimed", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
-	}else{
+	} else {
 		//update this userRewardData as claimed true
-		userRewardData[user.DayCount].Status=utils.CLAIMED
+		userRewardData[user.DayCount].Status = utils.CLAIMED
 		err = db.UpdateRecord(&userRewardData, userId, "user_id").Error
 		if err != nil {
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
 	}
-
 
 	switch userRewardData[user.DayCount].RewardType {
 	case 1:
