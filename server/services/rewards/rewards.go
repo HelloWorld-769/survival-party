@@ -285,7 +285,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	}
 	fmt.Println("user daycount:   ", user.DayCount)
 	//check if already claimed
-	if userRewardData[user.DayCount].Status == utils.CLAIMED {
+	if userRewardData[user.DayCount-1].Status == utils.CLAIMED {
 
 		response.ShowResponse("daily reward already claimed", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
