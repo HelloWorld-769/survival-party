@@ -240,7 +240,6 @@ func CreateStarterDailyRewards(userId string) error {
 				//for the first daly reward
 				daily_user_reward.Status = utils.UNCLAIMED
 			}
-			daily_user_reward.Status = utils.UNAVAILABLE
 
 			err = db.CreateRecord(&daily_user_reward)
 			if err != nil {
