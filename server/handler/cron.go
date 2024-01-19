@@ -25,13 +25,17 @@ func StartCron() {
 		formattedTime := currentTime.Format("15:04")
 		fmt.Println("formatted time is:", formattedTime)
 
-		user.UpdateDayCount()
-		rewards.UpdateDailyRewardsData()
+		if formattedTime == "11.59" {
 
-		//create User daily rewards (available to claim)
-		rewards.CreateUserDailyReward()
+			user.UpdateDayCount()
+		}
+		if formattedTime == "00:00" {
 
-		shop.GiveNewSpecialOffer()
+			rewards.UpdateDailyRewardsData()
+			//create User daily rewards (available to claim)
+			rewards.CreateUserDailyReward()
+			shop.GiveNewSpecialOffer()
+		}
 
 		if formattedTime == "14:20" {
 
