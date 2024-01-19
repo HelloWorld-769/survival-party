@@ -66,3 +66,21 @@ func ClaimDailyGoalHandler(ctx *gin.Context) {
 
 	dailygoal.ClaimDailyGoalService(ctx, userId.(string), input)
 }
+
+func UpdateDailyGoalHandler(ctx *gin.Context) {
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		response.ShowResponse("userId missing from ", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	var input request.UpdateGoalReq
+	err := utils.RequestDecoding(ctx, &input)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	dailygoal.UpdateGoalService(ctx, userId.(string), input)
+
+}

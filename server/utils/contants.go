@@ -89,7 +89,7 @@ const (
 // }
 
 const (
-	UNAVAILABLE = iota
+	UNAVAILABLE = iota + 1
 	CLAIMED
 	UNCLAIMED
 	MISSED

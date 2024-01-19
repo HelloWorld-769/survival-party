@@ -576,6 +576,48 @@
             }
         },
         "/user-data": {
+            "get": {
+                "description": "Get game stats of ther players",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Player"
+                ],
+                "summary": "Get game stats of ther players",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id of the other player",
+                        "name": "player_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            },
             "put": {
                 "description": "Updates player info like username and avatar",
                 "consumes": [

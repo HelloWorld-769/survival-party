@@ -60,3 +60,25 @@ func GetPlayerStatsHandler(ctx *gin.Context) {
 
 	user.GetPlayerStatsService(ctx, userId.(string))
 }
+
+// GetOtherPlayerStatsHandler Gets the player stats
+//
+// @Summary Get game stats of ther players
+// @Description Get game stats of ther players
+// @Tags Player
+// @Accept json
+// @Produce json
+// @Param playerId query string true "Id of the other player"
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /user-data [get]
+func GetOtherPlayerStatsHandler(ctx *gin.Context) {
+	userId := ctx.Query("playerId")
+	if userId == "" {
+		response.ShowResponse("User id not found", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	user.GetPlayerStatsService(ctx, userId)
+}

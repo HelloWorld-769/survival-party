@@ -478,3 +478,7 @@ func ClaimDailyGoalService(ctx *gin.Context, userId string, input request.GoalRe
 	response.ShowResponse(utils.SUCCESS, utils.HTTP_OK, utils.SUCCESS, res, ctx)
 
 }
+
+func UpdateGoalService(ctx *gin.Context, userId string, input request.UpdateGoalReq) {
+
+}
