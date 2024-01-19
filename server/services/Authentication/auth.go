@@ -39,7 +39,7 @@ func SignupService(ctx *gin.Context, input request.SigupRequest) {
 	userRecord := model.User{
 		Email:           input.User.Email,
 		Password:        *encryptedPassword,
-		Username:        input.User.Username,
+		Username:        strings.ToLower(input.User.Username),
 		Avatar:          input.User.Avatar,
 		EmailVerifiedAt: time.Now(),
 		DayCount:        1,
@@ -208,10 +208,10 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 
 	var user *model.User
 
+	input.User.Credential = strings.ToLower(input.User.Credential)
 	//Login using username and email
-	if utils.IsEmail(input.User.Email) {
-		input.User.Email = strings.ToLower(input.User.Email)
-		err := db.FindById(&user, input.User.Email, "email")
+	if utils.IsEmail(input.User.Credential) {
+		err := db.FindById(&user, input.User.Credential, "email")
 		if err != nil {
 			// If the player doesn't exist, return an error response.
 			response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
@@ -219,7 +219,7 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 		}
 
 	} else {
-		err := db.FindById(&user, input.User.Email, "username")
+		err := db.FindById(&user, input.User.Credential, "username")
 		if err != nil {
 			// If the player doesn't exist, return an error response.
 			response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
@@ -263,14 +263,25 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 		return
 	}
 
-	session := model.Session{
-		UserId: user.Id,
-		Token:  *accessToken,
-	}
-	err = db.CreateRecord(&session)
-	if err != nil {
-		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-		return
+	if db.RecordExist("sessions", user.Id, "user_id") {
+		//update the record
+		query := "UPDATE sessions SET token=? WHERE user_id=?"
+		err := db.RawExecutor(query, *accessToken, user.Id)
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+
+	} else {
+		session := model.Session{
+			UserId: user.Id,
+			Token:  *accessToken,
+		}
+		err = db.CreateRecord(&session)
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
 	}
 
 	response.ShowResponse(utils.LOGIN_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
@@ -314,7 +325,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			Email:           input.Email,
 			EmailVerified:   true,
 			Password:        "",
-			Username:        "Suvival_Party_" + strconv.Itoa(count),
+			Username:        strings.ToLower("Suvival_Party_" + strconv.Itoa(count)),
 			Avatar:          input.Avatar,
 			SocialId:        input.Uid,
 			EmailVerifiedAt: time.Now(),
@@ -427,14 +438,25 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			return
 		}
 
-		session := model.Session{
-			UserId: user.Id,
-			Token:  *accessToken,
-		}
-		err = db.CreateRecord(&session)
-		if err != nil {
-			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-			return
+		if db.RecordExist("sessions", user.Id, "user_id") {
+			//update the record
+			query := "UPDATE sessions SET token=? WHERE user_id=?"
+			err := db.RawExecutor(query, *accessToken, user.Id)
+			if err != nil {
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
+
+		} else {
+			session := model.Session{
+				UserId: user.Id,
+				Token:  *accessToken,
+			}
+			err = db.CreateRecord(&session)
+			if err != nil {
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
 		}
 
 		if user.DayCount == 0 {

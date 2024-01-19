@@ -25,14 +25,14 @@ func (a SigupRequest) Validate() error {
 
 type LoginRequest struct {
 	User struct {
-		Email    string `json:"credential"`
-		Password string `json:"password"`
+		Credential string `json:"credential"`
+		Password   string `json:"password"`
 	} `json:"user"`
 }
 
 func (a LoginRequest) Validate() error {
 	return validation.ValidateStruct(&a.User,
-		validation.Field(&a.User.Email, validation.Required),
+		validation.Field(&a.User.Credential, validation.Required),
 		validation.Field(&a.User.Password, validation.Required),
 	)
 }
