@@ -102,10 +102,7 @@ func SendEmailOtpService(context *gin.Context, req request.EmailRequest) {
 	response.ShowResponse("email sent successfully", 200, "Success", "", context)
 }
 
-func SendEmailService(context *gin.Context, link string, toEmail string) error {
-
-	utils.SetHeader(context)
-
+func SendEmailService(link string, toEmail string) error {
 	// Create a new message
 	m := gomail.NewMessage()
 

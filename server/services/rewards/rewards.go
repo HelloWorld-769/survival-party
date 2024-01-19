@@ -266,6 +266,10 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	//get the user data
 
 	user, err := utils.GetUserData(userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
 	//get daily reward data
 	var userRewardData []model.UserDailyRewards
 	query = "select * from user_daily_rewards where user_id=?"

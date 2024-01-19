@@ -36,7 +36,7 @@ func SignupHandler(ctx *gin.Context) {
 		return
 	}
 	//call the service with the inputRequest credentials
-	authentication.SignupService(ctx, &input)
+	authentication.SignupService(ctx, input)
 
 }
 

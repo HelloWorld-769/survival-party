@@ -22,7 +22,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func SignupService(ctx *gin.Context, input *request.SigupRequest) {
+func SignupService(ctx *gin.Context, input request.SigupRequest) {
 
 	err := utils.IsPassValid(input.User.Password)
 	if err != nil {
@@ -130,12 +130,12 @@ func SignupService(ctx *gin.Context, input *request.SigupRequest) {
 		return
 	}
 
-	fmt.Println(ctx.Request.Header.Get("Origin"))
+	// fmt.Println("hvasdas", ctx.Request.Header.Get("Origin"))
 	link := "http://192.180.2.127:" + os.Getenv("PORT") + "/api/v1/users/email-verify?token=" + *tokenString
 
 	fmt.Println("link is", link)
 
-	err = Gomail.SendEmailService(ctx, link, userRecord.Email)
+	err = Gomail.SendEmailService(link, userRecord.Email)
 	if err != nil {
 		tx.Rollback()
 		// If there is an error in generating the reset token, return an error response.

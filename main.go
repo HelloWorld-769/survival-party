@@ -30,6 +30,7 @@ func main() {
 	server.ConfigureRoutes(app)
 	handler.AddDummyDataHandler()
 	handler.StartCron()
+	handler.AddDummyUsers()
 
 	if err := app.Run(os.Getenv("PORT")); err != nil {
 		log.Print(err)
