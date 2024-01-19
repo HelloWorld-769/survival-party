@@ -292,7 +292,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	} else {
 		//update this userRewardData as claimed true
 		userRewardData[user.DayCount-1].Status = utils.CLAIMED
-		userRewardData[user.DayCount].Status = utils.UNCLAIMED
+
 		err = db.UpdateRecord(&userRewardData[user.DayCount-1], userId, "user_id").Error
 		if err != nil {
 			fmt.Println("here4")
@@ -300,13 +300,7 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
-		err = db.UpdateRecord(&userRewardData[user.DayCount], userId, "user_id").Error
-		if err != nil {
-			fmt.Println("here4")
 
-			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-			return
-		}
 	}
 
 	switch userRewardData[user.DayCount].RewardType {
