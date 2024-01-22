@@ -55,6 +55,6 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/api/v1/time-left", rewards.DailyRewardTimeLeft)
 
 	//Energy refill
-	server.engine.GET("/api/v1/energy-refill", shop.EnergyRefillTimer)
+	server.engine.GET("/api/v1/energy-refill-timer", shop.EnergyRefillTimer)
 
 }

@@ -390,7 +390,7 @@ func UpdateDailyRewardsData() {
 		var dayCount int
 		query := "select day_count from users where email_verified =true and id=?"
 		db.QueryExecutor(query, &dayCount, user.Id)
-		if dayCount%7 != 0 {
+		if dayCount%8 != 0 {
 
 			//other than last day or first of daily reward weekly pack
 			//make the status missed if still unclaimed

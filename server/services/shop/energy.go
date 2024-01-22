@@ -31,7 +31,7 @@ func EnergyRefillTimer(ctx *gin.Context) {
 
 	timeLeft := EnergyTimer()
 
-	response.ShowResponse("RefillEnergy Hit ", utils.HTTP_OK, utils.SUCCESS, timeLeft, ctx)
+	response.ShowResponse("RefillEnergy Timer ", utils.HTTP_OK, utils.SUCCESS, timeLeft, ctx)
 }
 
 func EnergyTimer() utils.TimeLeft {
@@ -46,7 +46,6 @@ func EnergyTimer() utils.TimeLeft {
 	minutesLeft := 2 - minutesSinceLastEvent - 1
 	secondsLeft := 60 - seconds
 
-	// Convert to a human-readable format
 	// timeleft := fmt.Sprintf("%d minute(s) and %d second(s) until the next event.", minutesLeft, secondsLeft)
 	var timeLeft utils.TimeLeft
 	timeLeft.Minutes = minutesLeft
