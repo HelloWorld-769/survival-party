@@ -67,14 +67,13 @@ func GetStoreService(ctx *gin.Context, userId string) {
 	fmt.Println("")
 
 	var shopDetails []model.Shop
-	query = "SELECT * FROM shops "
+	query = "SELECT * FROM shops where popup=false "
 	err = db.QueryExecutor(query, &shopDetails)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
 
-	fmt.Println("asjdhsad", utils.CalculateDays(specOfferRes.CreatedAt))
 	var res Res
 
 	res.SpecialOffer = struct {
@@ -101,29 +100,31 @@ func GetStoreService(ctx *gin.Context, userId string) {
 			}, {
 				RewardType: utils.Gems,
 				Quantity:   specOfferRes.Gems,
-			}, {
-				RewardType: utils.Inventory,
-				Quantity:   specOfferRes.Inventory,
-			}},
+			},
+			// }, {
+			// 	RewardType: utils.Inventory,
+			// 	Quantity:   specOfferRes.Inventory,
+			// }},
+		},
 	}
 	for _, data := range shopDetails {
 
 		if data.RewardType == utils.Energy {
 			res.Energy = Temp{
 				Name: "energyShopView",
-				Type: utils.Energy,
+				Type: 1,
 				Data: append(res.Energy.Data, data),
 			}
 		} else if data.RewardType == utils.Coins {
 			res.Coins = Temp{
 				Name: "coinShopView",
-				Type: utils.Coins,
+				Type: 1,
 				Data: append(res.Coins.Data, data),
 			}
 		} else if data.RewardType == utils.Gems {
 			res.Gems = Temp{
 				Name: "gemShopView",
-				Type: utils.Gems,
+				Type: 1,
 				Data: append(res.Gems.Data, data),
 			}
 		}
@@ -135,7 +136,23 @@ func GetStoreService(ctx *gin.Context, userId string) {
 }
 
 func BuyFromStoreService(ctx *gin.Context, userId string, input request.BuyStoreRequest) {
+
 	var shopData model.Shop
+	if input.Popup {
+		query := "SELECT * FROM shops WHERE product_id=? and popup=true"
+		err := db.QueryExecutor(query, &shopData, input.ProductId)
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+	} else {
+		query := "SELECT * FROM shops WHERE product_id=? and popup=false"
+		err := db.QueryExecutor(query, &shopData, input.ProductId)
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+	}
 	query := "SELECT * FROM shops WHERE product_id=?"
 	err := db.QueryExecutor(query, &shopData, input.ProductId)
 	if err != nil {
@@ -221,7 +238,15 @@ func BuyFromStoreService(ctx *gin.Context, userId string, input request.BuyStore
 		return
 	}
 
-	response.ShowResponse("Buy Success", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+	response.ShowResponse("Buy Success", utils.HTTP_OK, utils.SUCCESS, struct {
+		UpdatedCoins  int64 `json:"updatedCoins"`
+		UpdatedGems   int64 `json:"updatedGems"`
+		UpdatedEnergy int64 `json:"updatedEnergy"`
+	}{
+		UpdatedCoins:  userGameStats.CurrentCoins,
+		UpdatedGems:   userGameStats.CurrentGems,
+		UpdatedEnergy: userGameStats.Energy,
+	}, ctx)
 
 }
 
@@ -290,9 +315,10 @@ func GetPopupService(ctx *gin.Context, rewardId int64) {
 
 	var result struct {
 		Offers []struct {
-			CurrencyType int64 `json:"currencyType"`
-			Price        int64 `json:"price"`
-			Quantity     int64 `json:"quantity"`
+			Id           string `json:"id"`
+			CurrencyType int64  `json:"currencyType"`
+			Price        int64  `json:"price"`
+			Quantity     int64  `json:"quantity"`
 		} `json:"offers"`
 	}
 
@@ -306,10 +332,12 @@ func GetPopupService(ctx *gin.Context, rewardId int64) {
 
 	for _, data := range storeDetails {
 		result.Offers = append(result.Offers, struct {
-			CurrencyType int64 `json:"currencyType"`
-			Price        int64 `json:"price"`
-			Quantity     int64 `json:"quantity"`
+			Id           string `json:"id"`
+			CurrencyType int64  `json:"currencyType"`
+			Price        int64  `json:"price"`
+			Quantity     int64  `json:"quantity"`
 		}{
+			Id:           data.ProductId,
 			CurrencyType: data.CurrencyType,
 			Price:        data.Price,
 			Quantity:     data.Quantity,

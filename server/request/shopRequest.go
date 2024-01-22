@@ -7,6 +7,7 @@ import (
 type BuyStoreRequest struct {
 	ProductId string `json:"productId"`
 	Token     string `json:"token"`
+	Popup     bool   `json:"popup"`
 }
 
 func (a BuyStoreRequest) Validate() error {

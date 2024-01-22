@@ -27,6 +27,17 @@ func RefillEnergy() {
 	}
 }
 
+// EnergyRefillTimer Gives the time for energy renewal
+//
+// @Summary Get the time left for energy refill
+// @Description Get the time left for energy refill
+// @Tags Energy
+// @Accept json
+// @Produce json
+// @Success 200 {object} response.Success "Sucess"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /energy-refill-timer [get]
 func EnergyRefillTimer(ctx *gin.Context) {
 
 	timeLeft := EnergyTimer()

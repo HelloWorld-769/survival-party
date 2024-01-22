@@ -114,6 +114,182 @@ const docTemplate = `{
                 }
             }
         },
+        "/claim-daily-goal": {
+            "post": {
+                "description": "Claims the rewards when all daily goals are completed",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DailyGoal"
+                ],
+                "summary": "Claims the rewards",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Goal id",
+                        "name": "loginDetails",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.GoalRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucess",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/collect-daily-rewards": {
+            "post": {
+                "description": "Collect the daily reward of the  player",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DailyReward"
+                ],
+                "summary": "Collect the daily reward of the  player",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucess",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/daily-rewards": {
+            "get": {
+                "description": "Gets the list of daily reward for the  player",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DailyReward"
+                ],
+                "summary": "Gets the list of daily reward for the  player",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucess",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/energy-refill-timer": {
+            "get": {
+                "description": "Get the time left for energy refill",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Energy"
+                ],
+                "summary": "Get the time left for energy refill",
+                "responses": {
+                    "200": {
+                        "description": "Sucess",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/get-daily-goals": {
             "get": {
                 "description": "Gets the daily goals for given player",
@@ -441,6 +617,59 @@ const docTemplate = `{
                 }
             }
         },
+        "/skip-daily-goal": {
+            "post": {
+                "description": "Gets the daily goals for given player",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DailyGoal"
+                ],
+                "summary": "Get the daily goals",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Goal id",
+                        "name": "loginDetails",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.GoalRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucess",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/stats": {
             "get": {
                 "description": "Get the player game stats",
@@ -505,6 +734,59 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucess",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/update-daily-goal": {
+            "put": {
+                "description": "Updates the goal data in between of the game and gives the reward if the goal is completed",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DailyGoal"
+                ],
+                "summary": "Updates the goal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Update request",
+                        "name": "loginDetails",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateGoalReq"
+                        }
                     }
                 ],
                 "responses": {
@@ -899,6 +1181,9 @@ const docTemplate = `{
         "request.BuyStoreRequest": {
             "type": "object",
             "properties": {
+                "popup": {
+                    "type": "boolean"
+                },
                 "productId": {
                     "type": "string"
                 },
@@ -920,6 +1205,14 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        },
+        "request.GoalRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
                 }
             }
         },
@@ -1010,6 +1303,26 @@ const docTemplate = `{
                 },
                 "uid": {
                     "type": "string"
+                }
+            }
+        },
+        "request.UpdateGoalReq": {
+            "type": "object",
+            "properties": {
+                "isDead": {
+                    "type": "boolean"
+                },
+                "isZombie": {
+                    "type": "boolean"
+                },
+                "killsAsSurvivor": {
+                    "type": "integer"
+                },
+                "killsAsZombie": {
+                    "type": "integer"
+                },
+                "miniGamesCompleted": {
+                    "type": "integer"
                 }
             }
         },

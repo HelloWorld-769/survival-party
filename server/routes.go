@@ -38,6 +38,7 @@ func ConfigureRoutes(server *Server) {
 	//Store Roues
 	server.engine.GET("/api/v1/store", gateway.UserAuthorization, handler.GetStoreHandler)
 	server.engine.POST("/api/v1/buy-store", gateway.UserAuthorization, handler.BuyFromStoreHandler)
+	server.engine.GET("/api/v1/popupoffers", handler.GetPopupHandler)
 
 	//Player level rewards
 	server.engine.GET("/api/v1/get-level-rewards", gateway.UserAuthorization, handler.GetPlayerLevelRewardsHandler)

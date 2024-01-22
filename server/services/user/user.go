@@ -79,9 +79,6 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 		return
 	}
 
-	fmt.Printf("%+v", dbResposne)
-	fmt.Println("")
-
 	type resp struct {
 		Username        string  `json:"username"`
 		Avatar          int64   `json:"avatar"`

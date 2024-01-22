@@ -2,6 +2,8 @@ basePath: /api/v1/
 definitions:
   request.BuyStoreRequest:
     properties:
+      popup:
+        type: boolean
       productId:
         type: string
       token:
@@ -16,6 +18,11 @@ definitions:
         required:
         - email
         type: object
+    type: object
+  request.GoalRequest:
+    properties:
+      id:
+        type: string
     type: object
   request.LoginRequest:
     properties:
@@ -74,6 +81,19 @@ definitions:
         type: string
       uid:
         type: string
+    type: object
+  request.UpdateGoalReq:
+    properties:
+      isDead:
+        type: boolean
+      isZombie:
+        type: boolean
+      killsAsSurvivor:
+        type: integer
+      killsAsZombie:
+        type: integer
+      miniGamesCompleted:
+        type: integer
     type: object
   request.UpdatePlayer:
     properties:
@@ -166,6 +186,122 @@ paths:
       summary: Verifies OTP
       tags:
       - Authentication
+  /claim-daily-goal:
+    post:
+      consumes:
+      - application/json
+      description: Claims the rewards when all daily goals are completed
+      parameters:
+      - description: Player Access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Goal id
+        in: body
+        name: loginDetails
+        required: true
+        schema:
+          $ref: '#/definitions/request.GoalRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucess
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Claims the rewards
+      tags:
+      - DailyGoal
+  /collect-daily-rewards:
+    post:
+      consumes:
+      - application/json
+      description: Collect the daily reward of the  player
+      parameters:
+      - description: Player Access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucess
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Collect the daily reward of the  player
+      tags:
+      - DailyReward
+  /daily-rewards:
+    get:
+      consumes:
+      - application/json
+      description: Gets the list of daily reward for the  player
+      parameters:
+      - description: Player Access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucess
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Gets the list of daily reward for the  player
+      tags:
+      - DailyReward
+  /energy-refill-timer:
+    get:
+      consumes:
+      - application/json
+      description: Get the time left for energy refill
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucess
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Get the time left for energy refill
+      tags:
+      - Energy
   /get-daily-goals:
     get:
       consumes:
@@ -381,6 +517,41 @@ paths:
       summary: Sends OTP
       tags:
       - Authentication
+  /skip-daily-goal:
+    post:
+      consumes:
+      - application/json
+      description: Gets the daily goals for given player
+      parameters:
+      - description: Player Access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Goal id
+        in: body
+        name: loginDetails
+        required: true
+        schema:
+          $ref: '#/definitions/request.GoalRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucess
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Get the daily goals
+      tags:
+      - DailyGoal
   /stats:
     get:
       consumes:
@@ -439,6 +610,42 @@ paths:
       summary: Gets shop details
       tags:
       - Store
+  /update-daily-goal:
+    put:
+      consumes:
+      - application/json
+      description: Updates the goal data in between of the game and gives the reward
+        if the goal is completed
+      parameters:
+      - description: Player Access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Update request
+        in: body
+        name: loginDetails
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateGoalReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucess
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Updates the goal
+      tags:
+      - DailyGoal
   /update-settings:
     put:
       consumes:

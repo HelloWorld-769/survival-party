@@ -63,6 +63,18 @@ func PlayerLevelRewardCollectionHandler(ctx *gin.Context) {
 
 }
 
+// CollectDailyRewardHandler Collect the daily reward of the  player
+//
+// @Summary Collect the daily reward of the  player
+// @Description  Collect the daily reward of the  player
+// @Tags DailyReward
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Player Access token"
+// @Success 200 {object} response.Success "Sucess"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /collect-daily-rewards [post]
 func CollectDailyRewardHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")
@@ -74,6 +86,18 @@ func CollectDailyRewardHandler(ctx *gin.Context) {
 	rewards.CollectDailyReward(ctx, userId.(string))
 }
 
+// GetUserDailyRewardDataHandler Gets the list of daily reward for the  player
+//
+// @Summary Gets the list of daily reward for the  player
+// @Description  Gets the list of daily reward for the  player
+// @Tags DailyReward
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Player Access token"
+// @Success 200 {object} response.Success "Sucess"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /daily-rewards [get]
 func GetUserDailyRewardDataHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")
