@@ -24,6 +24,43 @@ func GetPlayerLevelRewards(ctx *gin.Context, userId string) {
 	response.ShowResponse("playerRewards Get success", utils.HTTP_OK, utils.SUCCESS, userReward, ctx)
 }
 
+func GenerateLevelReward(userId string) error {
+
+	//create user level reward for this user
+	var levelRewards []model.LevelRewards
+
+	//fetch all the level rewards from db
+	query := "select * from level_rewards"
+	err := db.QueryExecutor(query, &levelRewards)
+	if err != nil {
+		fmt.Println("error fetching level rewards", err)
+		return err
+	}
+
+	for _, r := range levelRewards {
+
+		var levelReward model.UserLevelRewards
+		levelReward.UserId = userId
+		levelReward.Status = utils.UNAVAILABLE
+		if r.LevelRequired == 0 {
+
+			levelReward.Status = utils.UNCLAIMED
+		}
+		levelReward.RewardType = r.RewardType
+		levelReward.Quantity = r.Quantity
+		levelReward.Level = r.LevelRequired
+
+		err := db.CreateRecord(&levelReward)
+		if err != nil {
+			return err
+		}
+
+	}
+
+	return nil
+
+}
+
 func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.PlayerLevelRewardCollectRequest) {
 
 	//check whether user has enough level to collect the levelReward
@@ -83,7 +120,7 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
-	userLevelRecord.Claimed = true
+	userLevelRecord.Status = utils.CLAIMED
 	err = db.UpdateRecord(&userLevelRecord, userId, "user_id").Error
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)

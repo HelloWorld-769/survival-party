@@ -17,14 +17,15 @@ type LevelRewards struct {
 }
 
 type UserLevelRewards struct {
-	UserId    string         `json:"userId"`
-	User      User           `json:"-" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
-	RewardId  string         `json:"rewardId"`
-	Rewards   LevelRewards   `json:"-" gorm:"foreignKey:RewardId;constraint:OnDelete:CASCADE"`
-	Claimed   bool           `json:"claimed"`
-	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"-"`
-	DeletedAt gorm.DeletedAt `json:"-"`
+	UserId     string         `json:"userId"`
+	User       User           `json:"-" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
+	RewardType int64          `json:"rewardType"`
+	Quantity   int64          `json:"quantity"`
+	Status     int64          `json:"status"`
+	Level      int64          `json:"level"`
+	CreatedAt  time.Time      `json:"-"`
+	UpdatedAt  time.Time      `json:"-"`
+	DeletedAt  gorm.DeletedAt `json:"-"`
 }
 
 type DailyRewards struct {

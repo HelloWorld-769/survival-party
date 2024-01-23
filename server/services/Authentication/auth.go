@@ -131,7 +131,7 @@ func SignupService(ctx *gin.Context, input request.SigupRequest) {
 	}
 
 	// fmt.Println("hvasdas", ctx.Request.Header.Get("Origin"))
-	link := "http://192.180.2.127:" + os.Getenv("PORT") + "/api/v1/users/email-verify?token=" + *tokenString
+	link := "http://192.180.2.109:" + os.Getenv("PORT") + "/api/v1/users/email-verify?token=" + *tokenString
 
 	fmt.Println("link is", link)
 
@@ -199,6 +199,8 @@ func VerifyEmail(ctx *gin.Context, tokenString string) {
 
 	//generating daily goals for user
 	go dailygoal.DailyGoalGeneration(true, &claims.Id)
+	//generating level reward for user
+	go rewards.GenerateLevelReward(claims.Id)
 
 	response.ShowResponse("Email verified succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 

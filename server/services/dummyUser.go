@@ -110,4 +110,6 @@ func AddDummyUsers(input request.SigupRequest) {
 	}
 	dailygoal.DailyGoalGeneration(true, &userRecord.Id)
 
+	rewards.GenerateLevelReward(userRecord.Id)
+
 }
