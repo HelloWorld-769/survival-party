@@ -6,6 +6,8 @@ import (
 	"main/server/services/rewards"
 	"main/server/services/shop"
 	"main/server/services/user"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/robfig/cron/v3"
@@ -42,6 +44,10 @@ func StartCron() {
 			dailygoal.DailyGoalGeneration(false, nil)
 
 		}
+		if isEvenMinutes(formattedTime) {
+
+			shop.RefillEnergy()
+		}
 
 		// dailygoal.DailyGoalGeneration()
 
@@ -54,4 +60,23 @@ func StartCron() {
 
 	c.Start()
 
+}
+
+func isEvenMinutes(timeString string) bool {
+	// Split the time string into hours and minutes
+	parts := strings.Split(timeString, ":")
+	if len(parts) != 2 {
+		// Invalid time format
+		return false
+	}
+
+	// Extract the minutes part
+	minutes, err := strconv.Atoi(parts[1])
+	if err != nil {
+		// Invalid minutes
+		return false
+	}
+
+	// Check if minutes is even
+	return minutes%2 == 0
 }

@@ -12,14 +12,20 @@ import (
 )
 
 func RefillEnergy() {
-
-	query := "select * from user_game_stats where energy <10 "
+	query := "select * from user_game_stats where energy < 10"
 	var users []model.UserGameStats
 	db.QueryExecutor(query, &users)
-	for _, user := range users {
 
-		user.Energy++
-		err := db.UpdateRecord(&user, user.Energy, "energy").Error
+	// Create a map to store column updates
+	updates := make(map[string]interface{})
+
+	// Iterate over users and update their energy in the map
+	for _, user := range users {
+		updates["energy"] = user.Energy + 1
+
+		query = "update user_game_stats set energy=energy+1 where user_id=?"
+		err := db.QueryExecutor(query, nil, user.UserId)
+
 		if err != nil {
 			fmt.Println("error updating", err)
 			return
