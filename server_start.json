@@ -1,0 +1,6 @@
+{
+    "apps" : [{
+      "name"        : "Survial-Party",
+      "script"      : "./main"
+    }]
+}
