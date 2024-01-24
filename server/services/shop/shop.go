@@ -137,6 +137,11 @@ func GetStoreService(ctx *gin.Context, userId string) {
 
 func BuyFromStoreService(ctx *gin.Context, userId string, input request.BuyStoreRequest) {
 
+	if !db.RecordExist("shops", input.ProductId, "product_id") {
+		response.ShowResponse(utils.RECORD_NOT_FOUND, utils.HTTP_NOT_FOUND, utils.FAILURE, nil, ctx)
+		return
+	}
+
 	var shopData model.Shop
 	if input.Popup {
 		query := "SELECT * FROM shops WHERE product_id=? and popup=true"
@@ -153,15 +158,9 @@ func BuyFromStoreService(ctx *gin.Context, userId string, input request.BuyStore
 			return
 		}
 	}
-	query := "SELECT * FROM shops WHERE product_id=?"
-	err := db.QueryExecutor(query, &shopData, input.ProductId)
-	if err != nil {
-		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-		return
-	}
 	var userGameStats model.UserGameStats
-	query = "SELECT * FROM user_game_stats WHERE user_id=?"
-	err = db.QueryExecutor(query, &userGameStats, userId)
+	query := "SELECT * FROM user_game_stats WHERE user_id=?"
+	err := db.QueryExecutor(query, &userGameStats, userId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
@@ -323,7 +322,7 @@ func GetPopupService(ctx *gin.Context, rewardId int64) {
 	}
 
 	var storeDetails []model.Shop
-	query := "SELECT * FROM shops WHERE reward_type=? AND popup=true"
+	query := "SELECT * FROM shops WHERE reward_type=? AND popup=true order by currency_type DESC"
 	err := db.QueryExecutor(query, &storeDetails, rewardId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)

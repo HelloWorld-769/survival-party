@@ -12,7 +12,7 @@
         "productId": "com.frimus.survivalparty.10energy",
         "rewardType": 1,
         "currencyType": 4,
-        "quantity": 10,
+        "quantity": 1,
         "price": 1,
         "popup":true,
         "isAvailable": true
@@ -21,7 +21,7 @@
         "productId": "com.frimus.survivalparty.50energy",
         "rewardType": 1,
         "currencyType": 2,
-        "quantity": 50,
+        "quantity": 1,
         "price": 5,
         "popup":true,
         "isAvailable": true
