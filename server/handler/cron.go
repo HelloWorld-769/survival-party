@@ -28,7 +28,7 @@ func StartCron() {
 		formattedTime := currentTime.Format("15:04")
 		fmt.Println("formatted time is:", formattedTime)
 
-		if formattedTime == "07:24" {
+		if formattedTime == "23:59" {
 
 			fmt.Println("Cron is working")
 
