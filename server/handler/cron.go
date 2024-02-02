@@ -27,7 +27,7 @@ func StartCron() {
 		formattedTime := currentTime.Format("15:04")
 		fmt.Println("formatted time is:", formattedTime)
 
-		if formattedTime == "05:17" {
+		if formattedTime == "05:45" {
 
 			user.UpdateDayCount()
 
