@@ -22,12 +22,14 @@ func StartCron() {
 	c.AddFunc("*/1 * * * *", func() {
 		fmt.Println(".....................Cron hit..................................")
 
-		currentTime := time.Now()
+		currentTime := time.Now().UTC()
 		// Format the time to HH:MM:SS
 		formattedTime := currentTime.Format("15:04")
 		fmt.Println("formatted time is:", formattedTime)
 
-		if formattedTime == "05:45" {
+		if formattedTime == "06:50" {
+
+			fmt.Println("Cron is working")
 
 			user.UpdateDayCount()
 
