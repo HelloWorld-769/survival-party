@@ -23,11 +23,12 @@ func StartCron() {
 		fmt.Println(".....................Cron hit..................................")
 
 		currentTime := time.Now().UTC()
+		fmt.Println("Current time is:", currentTime)
 		// Format the time to HH:MM:SS
 		formattedTime := currentTime.Format("15:04")
 		fmt.Println("formatted time is:", formattedTime)
 
-		if formattedTime == "06:50" {
+		if formattedTime == "07:24" {
 
 			fmt.Println("Cron is working")
 
