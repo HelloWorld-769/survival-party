@@ -4,6 +4,7 @@ import (
 	_ "main/docs"
 	"main/server/gateway"
 	"main/server/handler"
+	rooms "main/server/services/Rooms"
 	"main/server/services/rewards"
 	"main/server/services/shop"
 
@@ -57,5 +58,9 @@ func ConfigureRoutes(server *Server) {
 
 	//Energy refill
 	server.engine.GET("/api/v1/energy-refill-timer", shop.EnergyRefillTimer)
+
+	//Create room
+
+	server.engine.GET("/api/v1/get-room", gateway.UserAuthorization, rooms.GetRoom)
 
 }

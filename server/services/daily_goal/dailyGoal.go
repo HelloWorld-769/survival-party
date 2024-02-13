@@ -372,7 +372,7 @@ func SkipGoalService(ctx *gin.Context, userId string, input request.GoalRequest)
 
 	if dailyGoal.CurrencyType == utils.C_GEMS {
 		if userDetails.CurrentGems < dailyGoal.Price {
-			response.ShowResponse("Not enught gems", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			response.ShowResponse("Not enough gems", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 			return
 		}
 		userDetails.CurrentGems -= dailyGoal.Price
