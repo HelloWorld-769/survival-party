@@ -59,8 +59,11 @@ func ConfigureRoutes(server *Server) {
 	//Energy refill
 	server.engine.GET("/api/v1/energy-refill-timer", shop.EnergyRefillTimer)
 
-	//Create room
-
+	//room webhooks (photon)
+	server.engine.POST("/api/v1/leave-room", rooms.GameLeave)
+	server.engine.POST("/api/v1/game-start", rooms.GameStart)
+	server.engine.POST("/api/v1/game-join", rooms.GameJoin)
+	server.engine.POST("/api/v1/game-close", rooms.GameClose)
 	server.engine.GET("/api/v1/get-room", gateway.UserAuthorization, rooms.GetRoom)
 
 }

@@ -1,6 +1,7 @@
 package rooms
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"main/server/db"
@@ -11,6 +12,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/google/uuid"
 )
 
@@ -26,6 +28,200 @@ func generateUUID() (generatedUUID uuid.UUID, err error) {
 	// Attempt to generate a new UUID
 	generatedUUID = uuid.New()
 	return generatedUUID, nil
+}
+
+type GameLeaveReq struct {
+	ActorNr    int    `json:"ActorNr"`
+	AppVersion string `json:"AppVersion"`
+	AppId      string `json:"AppId"`
+	GameId     string `json:"GameId"`
+	IsInactive bool   `json:"IsInactive"`
+	Reason     string `json:"Reason"`
+	Region     string `json:"Region"`
+	Type       string `json:"Type"`
+	UserId     string `json:"UserId"`
+	Nickname   string `json:"Nickname"`
+}
+
+type GameCloseReq struct {
+	ActorCount int    `json:"ActorCount"`
+	AppVersion string `json:"AppVersion"`
+	AppId      string `json:"AppId"`
+	GameId     string `json:"GameId"`
+	Region     string `json:"Region"`
+}
+
+type GameJoinReq struct {
+	ActorNr    int    `json:"ActorNr"`
+	AppVersion string `json:"AppVersion"`
+	AppId      string `json:"AppId"`
+	GameId     string `json:"GameId"`
+	Region     string `json:"Region"`
+	Type       string `json:"Type"`
+	UserId     string `json:"UserId"`
+	Nickname   string `json:"Nickname"`
+}
+
+func GameClose(ctx *gin.Context) {
+
+	bodybytes, err := io.ReadAll(ctx.Request.Body)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+	var gameCloseReq GameCloseReq
+
+	err = json.Unmarshal(bodybytes, &gameCloseReq)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+
+	//destroy this room from Database
+
+	query := "delete from rooms where room_id =?"
+	err = db.RawExecutor(query, gameCloseReq.GameId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+
+	response.ShowResponse("room close succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+
+}
+
+type GameStartReq struct {
+	AppVersion string `json:"AppVersion"`
+	AppId      string `json:"AppId"`
+	// GameId     string    `json:"GameId"`
+	Region    string    `json:"Region"`
+	Type      string    `json:"Type"`
+	RpcParams RPCParams `json:"RpcParams"`
+	UserId    string    `json:"UserId"`
+}
+
+type RPCParams struct {
+	RoomId string `json:"roomId"`
+}
+
+func GameStart(ctx *gin.Context) {
+	bodybytes, err := io.ReadAll(ctx.Request.Body)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+	var gameStartReq GameStartReq
+
+	err = json.Unmarshal(bodybytes, &gameStartReq)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+	fmt.Println("req body:--------->", string(bodybytes))
+	fmt.Println("gameStartReq:--------> ", gameStartReq)
+
+	//update the room state
+	query := "update rooms set is_open=false where room_id=?"
+	err = db.RawExecutor(query, gameStartReq.RpcParams.RoomId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	response.ShowResponse("room close succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+
+}
+
+func GameJoin(ctx *gin.Context) {
+
+	bodybytes, err := io.ReadAll(ctx.Request.Body)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+	var gameJoinReq GameJoinReq
+
+	err = json.Unmarshal(bodybytes, &gameJoinReq)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+
+	//join this user to the game room
+	var userInRoom model.UsersInRooms
+	userInRoom.RoomId = gameJoinReq.GameId
+	userInRoom.UserId = gameJoinReq.UserId
+	userInRoom.Actor_Nr = gameJoinReq.ActorNr
+
+	err = db.CreateRecord(&userInRoom)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+	//decrease the capacity of the room
+	query := "update rooms set current_capacity=current_capacity-1 where room_id=?"
+	err = db.RawExecutor(query, gameJoinReq.GameId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+
+	response.ShowResponse("room join succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+
+}
+
+func GameLeave(ctx *gin.Context) {
+
+	fmt.Println("game leave called")
+
+	bodybytes, err := io.ReadAll(ctx.Request.Body)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+	var gameLeaveReq GameLeaveReq
+
+	err = json.Unmarshal(bodybytes, &gameLeaveReq)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+	fmt.Println("game leave req: ", gameLeaveReq)
+
+	query := "delete from users_in_rooms where user_id=? and room_id=?"
+	err = db.RawExecutor(query, gameLeaveReq.UserId, gameLeaveReq.GameId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+	//fetch the room information
+	//update the capacity of room in rooms table also
+	query = "update rooms set current_capacity=current_capacity+1 where room_id=?"
+	err = db.QueryExecutor(query, nil, gameLeaveReq.GameId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+	//check whether it reaches it full capacity (if yes destroy the room)
+	query = "delete from rooms where current_capacity=capacity"
+	err = db.RawExecutor(query)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
+
+	response.ShowResponse("room leave succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 }
 
 func GetRoom(ctx *gin.Context) {
@@ -72,26 +268,8 @@ func GetRoom(ctx *gin.Context) {
 			response.ShowResponse("user already in room", utils.HTTP_BAD_REQUEST, utils.FAILURE, room.RoomId, ctx)
 			return
 		}
-		var userInRoom model.UsersInRooms
-		userInRoom.RoomId = room.RoomId
-		userInRoom.UserId = userId.(string)
-		err = db.CreateRecord(&userInRoom)
-		if err != nil {
-			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-			return
-		}
 
-		//update the room current capacity
-		room.CurrentCapacity = room.CurrentCapacity - 1
-
-		err = db.UpdateRecord(&room, room.RoomId, "room_id").Error
-		if err != nil {
-			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-			return
-		}
-
-		response.ShowResponse("room get successfully", utils.HTTP_OK, utils.SUCCESS, newUUID.String(), ctx)
-
+		response.ShowResponse("room get successfully", utils.HTTP_OK, utils.SUCCESS, room.RoomId, ctx)
 		return
 	}
 	apiURL := os.Getenv("RoomCreateURL") + userId.(string) + "/" + newUUID.String()
@@ -131,22 +309,11 @@ func GetRoom(ctx *gin.Context) {
 		room.UserId = userId.(string)
 		room.Capacity = 5
 		room.Is_Open = true
-		room.CurrentCapacity = 4
+		room.CurrentCapacity = 5
 
 		err := db.CreateRecord(&room)
 		if err != nil {
 
-			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-			return
-		}
-		//create entry in userRoom table also
-
-		var userInRoom model.UsersInRooms
-
-		userInRoom.RoomId = newUUID.String()
-		userInRoom.UserId = userId.(string)
-		err = db.CreateRecord(&userInRoom)
-		if err != nil {
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
