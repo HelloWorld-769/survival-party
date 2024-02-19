@@ -360,6 +360,35 @@ paths:
       summary: Gets reward list
       tags:
       - Player
+  /get-room:
+    get:
+      consumes:
+      - application/json
+      description: get room for new game
+      parameters:
+      - description: Player Access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: get room for connection
+      tags:
+      - Rooms
   /get-settings:
     get:
       consumes:

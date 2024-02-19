@@ -224,6 +224,16 @@ func GameLeave(ctx *gin.Context) {
 	response.ShowResponse("room leave succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 }
 
+// @Summary get room for connection
+// @Description get room for new game
+// @Tags Rooms
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Player Access token"
+// @Success 200 {object} response.Success "successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /get-room [get]
 func GetRoom(ctx *gin.Context) {
 
 	//create a post request to send to node server for actual room creation
