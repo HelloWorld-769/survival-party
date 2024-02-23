@@ -131,7 +131,7 @@ func SignupService(ctx *gin.Context, input request.SigupRequest) {
 	}
 
 	// fmt.Println("hvasdas", ctx.Request.Header.Get("Origin"))
-	link := "http://192.180.2.109:" + os.Getenv("PORT") + "/api/v1/users/email-verify?token=" + *tokenString
+	link := "http://192.180.2.109:" + os.Getenv("PORT") + "/api/v1/users/email-verify?token=" + tokenString
 
 	fmt.Println("link is", link)
 
@@ -268,7 +268,7 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 	if db.RecordExist("sessions", user.Id, "user_id") {
 		//update the record
 		query := "UPDATE sessions SET token=? WHERE user_id=?"
-		err := db.RawExecutor(query, *accessToken, user.Id)
+		err := db.RawExecutor(query, accessToken, user.Id)
 		if err != nil {
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
@@ -277,7 +277,7 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 	} else {
 		session := model.Session{
 			UserId: user.Id,
-			Token:  *accessToken,
+			Token:  accessToken,
 		}
 		err = db.CreateRecord(&session)
 		if err != nil {
@@ -289,7 +289,7 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 	response.ShowResponse(utils.LOGIN_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
 		Token  string `json:"token"`
 		UserId string `json:"userId"`
-	}{Token: "Bearer " + *accessToken,
+	}{Token: "Bearer " + accessToken,
 		UserId: user.Id,
 	}, ctx)
 
@@ -312,7 +312,7 @@ func SignoutService(ctx *gin.Context, userId string) {
 
 func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 
-	var accessToken *string
+	var accessToken string
 	//if there is no entry in db then user is doing signup with social login
 	if !db.RecordExist("users", input.Email, "email") {
 		var count int
@@ -387,7 +387,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 
 		session := model.Session{
 			UserId: userRecord.Id,
-			Token:  *accessToken,
+			Token:  accessToken,
 		}
 		err = db.CreateRecord(&session)
 		if err != nil {
@@ -404,25 +404,37 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 	} else {
 		//user is trying to log in in using social login
 		var user *model.User
-		query := "SELECT * FROM users WHERE email=? AND social_id=?"
-		err := db.QueryExecutor(query, &user, input.Email, input.Uid)
-		if err != nil {
-			if user.DayCount == 0 {
-
-				user.DayCount = 1
-				err := db.UpdateRecord(&user, user.Id, "id").Error
-				if err != nil {
-					response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		if input.Email != "" {
+			query := "SELECT * FROM users WHERE email=? "
+			err := db.QueryExecutor(query, &user, input.Email)
+			if err != nil {
+				if errors.Is(err, gorm.ErrRecordNotFound) {
+					response.ShowResponse("User not found", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 					return
 				}
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
 			}
-			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-			return
+		} else if input.Uid != "" {
+			query := "SELECT * FROM users WHERE  social_id=?"
+			err := db.QueryExecutor(query, &user, input.Uid)
+			if err != nil {
+				if errors.Is(err, gorm.ErrRecordNotFound) {
+					response.ShowResponse("User not found", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+					return
+				}
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
 		}
 
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			response.ShowResponse("User not found", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-			return
+		if user.DayCount == 0 {
+			user.DayCount = 1
+			err := db.UpdateRecord(&user, user.Id, "id").Error
+			if err != nil {
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
 		}
 
 		accessTokenExpirationTime := time.Now().Add(48 * time.Hour)
@@ -434,16 +446,20 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			},
 		}
 
+		fmt.Println("accessTokenClaims", accessTokenClaims)
+		// accessToken = "asdbjasbd"
+		var err error
 		accessToken, err = token.GenerateToken(accessTokenClaims)
 		if err != nil {
 			response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 			return
 		}
 
+		fmt.Println("accessToken", accessToken)
 		if db.RecordExist("sessions", user.Id, "user_id") {
 			//update the record
 			query := "UPDATE sessions SET token=? WHERE user_id=?"
-			err := db.RawExecutor(query, *accessToken, user.Id)
+			err := db.RawExecutor(query, accessToken, user.Id)
 			if err != nil {
 				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 				return
@@ -452,7 +468,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		} else {
 			session := model.Session{
 				UserId: user.Id,
-				Token:  *accessToken,
+				Token:  accessToken,
 			}
 			err = db.CreateRecord(&session)
 			if err != nil {
@@ -473,9 +489,10 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 
 	}
 
+	fmt.Println("accessToken", accessToken)
 	response.ShowResponse(utils.LOGIN_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
 		Token string `json:"token"`
-	}{Token: "Bearer " + *accessToken}, ctx)
+	}{Token: "Bearer " + accessToken}, ctx)
 }
 func CheckOtpService(ctx *gin.Context, req request.OtpRequest) {
 

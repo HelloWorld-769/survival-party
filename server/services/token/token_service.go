@@ -9,7 +9,7 @@ import (
 )
 
 // Generate JWT Token
-func GenerateToken(claims model.Claims) (*string, error) {
+func GenerateToken(claims model.Claims) (string, error) {
 	//create user claims
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -17,9 +17,9 @@ func GenerateToken(claims model.Claims) (*string, error) {
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWTKEY")))
 
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return &tokenString, nil
+	return tokenString, nil
 }
 
 // Decode Token function
