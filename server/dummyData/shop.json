@@ -1,6 +1,6 @@
 [
     {
-        "productId": "com.frimus.survivalparty.50energy",
+        "productId": "com.frimustechnologies.survivalparty2.50energy",
         "rewardType": 1,
         "currencyType": 4,
         "quantity": 50,
@@ -9,7 +9,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.10energy",
+        "productId": "com.frimustechnologies.survivalparty2.10energy",
         "rewardType": 1,
         "currencyType": 4,
         "quantity": 1,
@@ -18,7 +18,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.50energy",
+        "productId": "com.frimustechnologies.survivalparty2.50energy",
         "rewardType": 1,
         "currencyType": 2,
         "quantity": 1,
@@ -27,7 +27,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.80energy",
+        "productId": "com.frimustechnologies.survivalparty2.80energy",
         "rewardType": 1,
         "currencyType": 2,
         "quantity": 80,
@@ -36,7 +36,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.100energy",
+        "productId": "com.frimustechnologies.survivalparty2.100energy",
         "rewardType": 1,
         "currencyType": 2,
         "quantity": 100,
@@ -45,7 +45,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.180energy",
+        "productId": "com.frimustechnologies.survivalparty2.180energy",
         "rewardType": 1,
         "currencyType": 3,
         "quantity": 180,
@@ -54,7 +54,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.315energy",
+        "productId": "com.frimustechnologies.survivalparty2.315energy",
         "rewardType": 1,
         "currencyType": 3,
         "quantity": 315,
@@ -65,7 +65,7 @@
 
 
     {
-        "productId": "com.frimus.survivalparty.25coins",
+        "productId": "com.frimustechnologies.survivalparty2.25coins",
         "rewardType": 2,
         "currencyType": 4,
         "quantity": 25,
@@ -75,7 +75,7 @@
     },
 
     {
-        "productId": "com.frimus.survivalparty.150coins",
+        "productId": "com.frimustechnologies.survivalparty2.150coins",
         "rewardType": 2,
         "currencyType": 2,
         "quantity": 150,
@@ -88,7 +88,7 @@
 
 
     {
-        "productId": "com.frimus.survivalparty.10000coins",
+        "productId": "com.frimustechnologies.survivalparty2.10000coins",
         "rewardType": 2,
         "currencyType": 3,
         "quantity": 10000,
@@ -97,7 +97,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.25000coins",
+        "productId": "com.frimustechnologies.survivalparty2.25000coins",
         "rewardType": 2,
         "currencyType": 3,
         "quantity": 25000,
@@ -106,7 +106,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.100000coins",
+        "productId": "com.frimustechnologies.survivalparty2.100000coins",
         "rewardType": 2,
         "currencyType": 3,
         "quantity": 100000,
@@ -114,7 +114,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.250000coins",
+        "productId": "com.frimustechnologies.survivalparty2.250000coins",
         "rewardType": 2,
         "currencyType": 3,
         "quantity": 250000,
@@ -123,7 +123,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.50000coins",
+        "productId": "com.frimustechnologies.survivalparty2.50000coins",
         "rewardType": 2,
         "currencyType": 3,
         "quantity": 50000,
@@ -134,7 +134,7 @@
 
 
     {
-        "productId": "com.frimus.survivalparty.50gems",
+        "productId": "com.frimustechnologies.survivalparty2.50gems",
         "rewardType": 3,
         "currencyType": 4,
         "quantity": 50,
@@ -144,7 +144,7 @@
     },
 
     {
-        "productId": "com.frimus.survivalparty.200gems",
+        "productId": "com.frimustechnologies.survivalparty2.200gems",
         "rewardType": 3,
         "currencyType": 2,
         "quantity": 200,
@@ -154,7 +154,7 @@
     },
 
     {
-        "productId": "com.frimus.survivalparty.1000gems",
+        "productId": "com.frimustechnologies.survivalparty2.1000gems",
         "rewardType": 3,
         "currencyType": 3,
         "quantity": 1000,
@@ -163,7 +163,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.2500gems",
+        "productId": "com.frimustechnologies.survivalparty2.2500gems",
         "rewardType": 3,
         "currencyType": 3,
         "quantity": 2500,
@@ -172,7 +172,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.5000gems",
+        "productId": "com.frimustechnologies.survivalparty2.5000gems",
         "rewardType": 3,
         "currencyType": 3,
         "quantity": 5000,
@@ -181,7 +181,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.10000gems",
+        "productId": "com.frimustechnologies.survivalparty2.10000gems",
         "rewardType": 3,
         "currencyType": 3,
         "quantity": 10000,
@@ -190,7 +190,7 @@
         "isAvailable": true
     },
     {
-        "productId": "com.frimus.survivalparty.25000gems",
+        "productId": "com.frimustechnologies.survivalparty2.25000gems",
         "rewardType": 3,
         "currencyType": 3,
         "quantity": 25000,

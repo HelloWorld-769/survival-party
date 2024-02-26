@@ -155,10 +155,8 @@ func CreateUserDailyReward() {
 			fmt.Println("error ", err.Error())
 			return
 		}
-		fmt.Println("user ", user.Id)
-		fmt.Println("day Count: ", dayCount)
 
-		if dayCount%8 == 0 && dayCount >= 7 {
+		if dayCount%7 == 1 && dayCount >= 7 {
 
 			//delete previous 7 daily reward entries for this user
 			query := "delete from user_daily_rewards where user_id =?"
@@ -171,6 +169,7 @@ func CreateUserDailyReward() {
 
 				//generate daily reward based on formula
 				//formula based on users gameplay_time and users created_at
+
 				Multiplier := utils.UserMultipler(user.Id)
 
 				//create entry of this daily reward for this user
@@ -206,10 +205,6 @@ func CreateUserDailyReward() {
 				daily_user_reward.Gain = int64(randomIntgain)
 				// }
 				daily_user_reward.RewardType = int64(randomInt)
-
-				fmt.Println("entry created for user!!!")
-
-				fmt.Println("reward ", i+1, daily_user_reward)
 				err = db.CreateRecord(&daily_user_reward)
 				if err != nil {
 					fmt.Println("error in creating", err.Error())
@@ -428,13 +423,14 @@ func UpdateDailyRewardsData() {
 		var dayCount int
 		query := "select day_count from users where email_verified =true and id=?"
 		db.QueryExecutor(query, &dayCount, user.Id)
-		if dayCount%8 != 0 {
+
+		if dayCount%7 != 1 {
 
 			//other than last day or first of daily reward weekly pack
 			//make the status missed if still unclaimed
 			var userDailyReward model.UserDailyRewards
 			query := "select * from user_daily_rewards where user_id=? and day_count=?"
-			err := db.QueryExecutor(query, &userDailyReward, user.Id, dayCount-1)
+			err := db.QueryExecutor(query, &userDailyReward, user.Id, dayCount%7-1)
 			if err != nil {
 				fmt.Println("error ", err.Error())
 				return
@@ -451,7 +447,7 @@ func UpdateDailyRewardsData() {
 			}
 			//make the next day reward status from unavailble to unclaimed
 			query = "select * from user_daily_rewards where user_id=? and day_count=?"
-			err = db.QueryExecutor(query, &userDailyReward, user.Id, dayCount)
+			err = db.QueryExecutor(query, &userDailyReward, user.Id, dayCount%7)
 			if err != nil {
 				fmt.Println("error ", err.Error())
 				return
