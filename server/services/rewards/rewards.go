@@ -328,16 +328,17 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		return
 	}
 	fmt.Println("user daycount:   ", user.DayCount)
+	fmt.Println("user daycount mod 7:   ", (user.DayCount % 7))
 	//check if already claimed
-	if userRewardData[user.DayCount-1].Status == utils.CLAIMED {
+	if userRewardData[(user.DayCount%7)-1].Status == utils.CLAIMED {
 
 		response.ShowResponse("daily reward already claimed", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
 	} else {
 		//update this userRewardData as claimed true
-		userRewardData[user.DayCount-1].Status = utils.CLAIMED
+		userRewardData[(user.DayCount%7)-1].Status = utils.CLAIMED
 
-		err = db.UpdateRecord(&userRewardData[user.DayCount-1], userId, "user_id").Error
+		err = db.UpdateRecord(&userRewardData[(user.DayCount%7)-1], userId, "user_id").Error
 		if err != nil {
 			fmt.Println("here4")
 
@@ -347,18 +348,18 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 
 	}
 
-	switch userRewardData[user.DayCount].RewardType {
+	switch userRewardData[user.DayCount%7].RewardType {
 	case 1:
 		fmt.Println("Energy")
-		userGameStats.Energy += userRewardData[user.DayCount].Gain
+		userGameStats.Energy += userRewardData[user.DayCount%7].Gain
 	case 2:
 		fmt.Println("Coins")
-		userGameStats.CurrentCoins += userRewardData[user.DayCount].Gain
-		userGameStats.TotalCoins += userRewardData[user.DayCount].Gain
+		userGameStats.CurrentCoins += userRewardData[user.DayCount%7].Gain
+		userGameStats.TotalCoins += userRewardData[user.DayCount%7].Gain
 	case 3:
 		fmt.Println("Gems")
-		userGameStats.CurrentGems += userRewardData[user.DayCount].Gain
-		userGameStats.TotalGems += userRewardData[user.DayCount].Gain
+		userGameStats.CurrentGems += userRewardData[user.DayCount%7].Gain
+		userGameStats.TotalGems += userRewardData[user.DayCount%7].Gain
 
 	case 4:
 		fmt.Println("Inventory")
