@@ -1,6 +1,6 @@
 [
     {
-        "rewardType": 4,
+        "rewardType": 2,
         "quantity": 10,
         "levelRequired": 0
     },
@@ -30,27 +30,27 @@
         "levelRequired": 5
     },
     {
-        "rewardType": 4,
+        "rewardType": 3,
         "quantity": 10,
         "levelRequired": 6
     },
     {
-        "rewardType": 4,
+        "rewardType": 2,
         "quantity": 10,
         "levelRequired":7
     },
     {
-        "rewardType": 4,
+        "rewardType": 2,
         "quantity": 10,
         "levelRequired": 8
     },
     {
-        "rewardType": 4,
+        "rewardType": 3,
         "quantity": 10,
         "levelRequired": 9
     },
     {
-        "rewardType": 4,
+        "rewardType": 2,
         "quantity": 10,
         "levelRequired": 10
     }
