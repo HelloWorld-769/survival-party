@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"main/server/db"
 	"main/server/model"
 	"main/server/request"
@@ -98,12 +99,6 @@ func AddDummyUsers(input request.SigupRequest) {
 		tx.Rollback()
 		return
 	}
-	err = tx.Commit().Error
-	if err != nil {
-		tx.Rollback()
-		return
-	}
-
 	err = rewards.CreateStarterDailyRewards(userRecord.Id)
 	if err != nil {
 		return
@@ -111,5 +106,13 @@ func AddDummyUsers(input request.SigupRequest) {
 	dailygoal.DailyGoalGeneration(true, &userRecord.Id)
 
 	rewards.GenerateLevelReward(userRecord.Id)
+
+	fmt.Println("Transaction edy to commit")
+
+	err = tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
+		return
+	}
 
 }
