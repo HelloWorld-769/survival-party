@@ -38,12 +38,10 @@ func StartCron() {
 			//create User daily rewards (available to claim)
 			rewards.CreateUserDailyReward()
 			shop.GiveNewSpecialOffer()
-		}
 
-		if formattedTime == "14:20" {
-
+			//Daily goal generation
+			dailygoal.DeleteAllGoals()
 			dailygoal.DailyGoalGeneration(false, nil)
-
 		}
 		if isEvenMinutes(formattedTime) {
 
@@ -51,11 +49,6 @@ func StartCron() {
 		}
 
 		// dailygoal.DailyGoalGeneration()
-
-		// if formattedTime == "17:48" {
-
-		// 	dailygoal.DeleteAllGoals()
-		// }
 
 	})
 

@@ -17,6 +17,7 @@ import (
 func DailyGoalGeneration(isNew bool, userId *string) {
 	noOfGoalsMin := 4
 	noOfGoalsMax := 6
+	rand.Seed(time.Now().UnixNano())
 	noOfGoals := rand.Intn(noOfGoalsMax-noOfGoalsMin+1) + noOfGoalsMin
 
 	var data []struct {
@@ -61,7 +62,7 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 			// Generate a unique random goal type
 			var randGoalType int
 			for {
-				randGoalType = rand.Intn(6) + 1
+				randGoalType = rand.Intn(5) + 1
 				if !usedValues[randGoalType] {
 					usedValues[randGoalType] = true
 					break
@@ -168,18 +169,6 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 				record.TotalProgress = gamPlay
 				sum += gamPlay
 
-			} else if val == int(utils.COMPLETED_TASKS) {
-				min := 2
-				max := 3
-				baseCoins := 250
-				baseGems := 25
-
-				gamPlay := generateRandomNumber(int(it.Level), min, max)
-				record.Coins = int64(baseCoins) * gamPlay
-				record.Gems = int64(baseGems) * gamPlay
-				record.TotalProgress = gamPlay
-				sum += gamPlay
-
 			}
 			record.DailyRewardId = rewardId
 
@@ -230,6 +219,13 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 func DeleteAllGoals() {
 	query := "DELETE FROM user_daily_goals"
 	err := db.RawExecutor(query)
+	if err != nil {
+		fmt.Println("Error in deleting the records from the tabale")
+		return
+	}
+
+	query = "DELETE FROM daily_goal_rewards"
+	err = db.RawExecutor(query)
 	if err != nil {
 		fmt.Println("Error in deleting the records from the tabale")
 		return
@@ -304,11 +300,11 @@ func GetDailyGoalsService(ctx *gin.Context, userId string) {
 		Minute: int64(totalReward.CreatedAt.Add(24*time.Hour).Sub(time.Now()).Minutes()) % 60,
 	}
 
-	if totalReward.Energy != 0 {
-		res.Rewards = append(res.Rewards, response.RewardResponse{RewardType: utils.Chest,
-			Quantity: totalReward.Chest,
-		})
-	}
+	// if totalReward.Energy != 0 {
+	// 	res.Rewards = append(res.Rewards, response.RewardResponse{RewardType: utils.Chest,
+	// 		Quantity: totalReward.Chest,
+	// 	})
+	// }
 	res.Claimed = totalReward.Claimed
 
 	for _, data := range singleDailyGoal {
@@ -613,39 +609,6 @@ func UpdateGoalService(ctx *gin.Context, userId string, input request.UpdateGoal
 			{
 
 				goal.CurrentProgress += input.KillAsSur
-				if goal.CurrentProgress >= goal.TotalProgress {
-					completeCount++
-					goal.CurrentProgress = goal.TotalProgress
-					res = append(res, struct {
-						Id              string                    "json:\"id\""
-						GoalType        int64                     "json:\"goalType\""
-						CurrentProgress int64                     "json:\"currentProgress\""
-						TotalProgress   int64                     "json:\"totalProgress\""
-						CurrencyType    int64                     "json:\"currencyType\""
-						Price           int64                     "json:\"price\""
-						RewardData      []response.RewardResponse "json:\"rewardData\""
-					}{
-						Id:              goal.Id,
-						GoalType:        goal.GoalType,
-						CurrentProgress: goal.CurrentProgress,
-						TotalProgress:   goal.TotalProgress,
-						CurrencyType:    goal.CurrencyType,
-						Price:           goal.Price,
-						RewardData: []response.RewardResponse{
-							{
-								RewardType: utils.Coins,
-								Quantity:   goal.Coins,
-							}, {
-								RewardType: utils.Gems,
-								Quantity:   goal.Gems,
-							},
-						},
-					})
-				}
-			}
-		case int64(utils.COMPLETED_TASKS):
-			{
-				goal.CurrentProgress += int64(completeCount)
 				if goal.CurrentProgress >= goal.TotalProgress {
 					completeCount++
 					goal.CurrentProgress = goal.TotalProgress
