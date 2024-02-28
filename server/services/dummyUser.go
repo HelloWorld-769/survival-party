@@ -99,6 +99,13 @@ func AddDummyUsers(input request.SigupRequest) {
 		tx.Rollback()
 		return
 	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
 	err = rewards.CreateStarterDailyRewards(userRecord.Id)
 	if err != nil {
 		return
@@ -108,11 +115,5 @@ func AddDummyUsers(input request.SigupRequest) {
 	rewards.GenerateLevelReward(userRecord.Id)
 
 	fmt.Println("Transaction edy to commit")
-
-	err = tx.Commit().Error
-	if err != nil {
-		tx.Rollback()
-		return
-	}
 
 }
