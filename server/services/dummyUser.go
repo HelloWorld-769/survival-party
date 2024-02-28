@@ -37,16 +37,16 @@ func AddDummyUsers(input request.SigupRequest) {
 		DayCount:        1,
 	}
 
-	tx := db.BeginTransaction()
-	err = tx.Create(&userRecord).Error
+	err = db.CreateRecord(&userRecord)
 	if err != nil {
-		tx.Rollback()
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
 
 			return
 		}
 		return
 	}
+
+	fmt.Println("User id is", userRecord.Id)
 
 	userGameStats := model.UserGameStats{
 		UserId:         userRecord.Id,
@@ -67,15 +67,13 @@ func AddDummyUsers(input request.SigupRequest) {
 		Language:       "english",
 	}
 
-	err = tx.Create(&userSettings).Error
+	err = db.CreateRecord(&userSettings)
 	if err != nil {
-		tx.Rollback()
 		return
 	}
 
-	err = tx.Create(&userGameStats).Error
+	err = db.CreateRecord(&userGameStats)
 	if err != nil {
-		tx.Rollback()
 		return
 	}
 
@@ -94,25 +92,22 @@ func AddDummyUsers(input request.SigupRequest) {
 		Purchased:      false,
 	}
 
-	err = tx.Create(&userStartPack).Error
-	if err != nil {
-		tx.Rollback()
-		return
-	}
-
-	err = tx.Commit().Error
-	if err != nil {
-		tx.Rollback()
-		return
-	}
-
-	err = rewards.CreateStarterDailyRewards(userRecord.Id)
+	err = db.CreateRecord(&userStartPack)
 	if err != nil {
 		return
 	}
-	dailygoal.DailyGoalGeneration(true, &userRecord.Id)
 
-	rewards.GenerateLevelReward(userRecord.Id)
+	go func() {
+		err = rewards.CreateStarterDailyRewards(userRecord.Id)
+		if err != nil {
+			return
+		}
+
+	}()
+
+	go dailygoal.DailyGoalGeneration(true, &userRecord.Id)
+
+	go rewards.GenerateLevelReward(userRecord.Id)
 
 	fmt.Println("Transaction edy to commit")
 
