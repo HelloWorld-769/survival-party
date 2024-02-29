@@ -400,13 +400,13 @@ func SkipGoalService(ctx *gin.Context, userId string, input request.GoalRequest)
 
 }
 
-func ClaimDailyGoalService(ctx *gin.Context, userId string, input request.GoalRequest) {
+func ClaimDailyGoalService(ctx *gin.Context, userId string) {
 
 	var completed bool
 	query := ` SELECT
-	(SELECT COUNT(*) FROM user_daily_goals WHERE daily_reward_id = ? AND total_progress = current_progress) =
-	(SELECT COUNT(*) FROM user_daily_goals WHERE daily_reward_id = ?) AS result;`
-	err := db.QueryExecutor(query, &completed, input.Id, input.Id)
+		(SELECT COUNT(*) FROM user_daily_goals WHERE user_id = ? AND total_progress = current_progress) =
+		(SELECT COUNT(*) FROM user_daily_goals WHERE user_id = ?) AS result;`
+	err := db.QueryExecutor(query, &completed, userId, userId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
@@ -425,9 +425,17 @@ func ClaimDailyGoalService(ctx *gin.Context, userId string, input request.GoalRe
 		return
 	}
 
+	var id string
+	query = "SELECT daily_reward_id from user_daily_goals WHERE user_id=? limit 1"
+	err = db.QueryExecutor(query, &id, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
 	var dailyGoalReward model.DailyGoalRewards
-	query = "SELECT * FROM daily_goal_rewards WHERE user_id=? AND id=?"
-	err = db.QueryExecutor(query, &dailyGoalReward, userId, input.Id)
+	query = "SELECT * FROM daily_goal_rewards WHERE id=?"
+	err = db.QueryExecutor(query, &dailyGoalReward, id)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
@@ -447,7 +455,7 @@ func ClaimDailyGoalService(ctx *gin.Context, userId string, input request.GoalRe
 	}
 
 	query = "UPDATE daily_goal_rewards SET claimed=true WHERE id=?"
-	err = db.RawExecutor(query, input.Id)
+	err = db.RawExecutor(query, id)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return

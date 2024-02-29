@@ -71,7 +71,6 @@ func SkipGoalHandler(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Player Access token"
-// @Param loginDetails body request.GoalRequest true "Goal id"
 // @Success 200 {object} response.Success "Sucess"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
@@ -83,14 +82,7 @@ func ClaimDailyGoalHandler(ctx *gin.Context) {
 		return
 	}
 
-	var input request.GoalRequest
-	err := utils.RequestDecoding(ctx, &input)
-	if err != nil {
-		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
-		return
-	}
-
-	dailygoal.ClaimDailyGoalService(ctx, userId.(string), input)
+	dailygoal.ClaimDailyGoalService(ctx, userId.(string))
 }
 
 // UpdateDailyGoalHandler Updates the goal data in between of the game

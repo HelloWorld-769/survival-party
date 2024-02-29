@@ -134,15 +134,6 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
-                    },
-                    {
-                        "description": "Goal id",
-                        "name": "loginDetails",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.GoalRequest"
-                        }
                     }
                 ],
                 "responses": {

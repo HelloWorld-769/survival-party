@@ -197,12 +197,6 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: Goal id
-        in: body
-        name: loginDetails
-        required: true
-        schema:
-          $ref: '#/definitions/request.GoalRequest'
       produces:
       - application/json
       responses:
