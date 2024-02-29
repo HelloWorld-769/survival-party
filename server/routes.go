@@ -65,5 +65,6 @@ func ConfigureRoutes(server *Server) {
 	server.engine.POST("/api/v1/game-join", rooms.GameJoin)
 	server.engine.POST("/api/v1/game-close", rooms.GameClose)
 	server.engine.GET("/api/v1/get-room", gateway.UserAuthorization, rooms.GetRoom)
+	server.engine.POST("/api/v1/game-create", rooms.GameCreate)
 
 }

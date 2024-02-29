@@ -182,7 +182,7 @@ func CreateUserDailyReward() {
 				if i == 0 {
 					daily_user_reward.Status = utils.UNCLAIMED
 				}
-				randomInt := rand.Intn(4)
+				randomInt := 1 + rand.Intn(3)
 				// if randomInt == 3 {
 				// 	//gems
 				// 	randomInt := int(Multiplier) * (rand.Intn(10))
@@ -237,15 +237,6 @@ func CreateStarterDailyRewards(userId string) error {
 			fmt.Println("error in fetching", err.Error())
 			return err
 		}
-
-		// 	ENERGY = 1,
-		// 	COINS = 2,
-		// 	GEMS = 3,
-		// 	CHEST = 4,
-		// 	INVERNTORY = 5,
-		// 	EXPERIENCE = 6
-		// }
-
 		//create entry of first week  daily reward for this user
 		for i := 0; i < 7; i++ {
 			//create entry of this daily reward for this user
@@ -257,6 +248,8 @@ func CreateStarterDailyRewards(userId string) error {
 			//find random reward Type
 			//append the quantity into reward
 			randomInt := rand.Intn(7)
+			//DO NOT REMOVE THESE COMMENTS (MAY BE NEEDED IN FUTURE CODE)
+
 			// if randomInt == 5 {
 			// 	//inventory
 			// 	//set asset name
@@ -426,8 +419,7 @@ func UpdateDailyRewardsData() {
 
 		if dayCount%7 != 1 {
 
-			//other than last day or first of daily reward weekly pack
-			//make the status missed if still unclaimed
+			//other than first of daily reward weekly pack
 			var userDailyReward model.UserDailyRewards
 			query := "select * from user_daily_rewards where user_id=? and day_count=?"
 			err := db.QueryExecutor(query, &userDailyReward, user.Id, dayCount%7-1)
@@ -435,6 +427,8 @@ func UpdateDailyRewardsData() {
 				fmt.Println("error ", err.Error())
 				return
 			}
+			//TODO merge the below if condition into sql query
+			//make the status missed if still unclaimed
 			if userDailyReward.Status == utils.UNCLAIMED {
 
 				//mark as Missed
@@ -445,6 +439,8 @@ func UpdateDailyRewardsData() {
 					return
 				}
 			}
+
+			//TODO merge the below if condition into sql query
 			//make the next day reward status from unavailble to unclaimed
 			query = "select * from user_daily_rewards where user_id=? and day_count=?"
 			err = db.QueryExecutor(query, &userDailyReward, user.Id, dayCount%7)

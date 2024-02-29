@@ -16,6 +16,7 @@ import (
 	"github.com/google/uuid"
 )
 
+//TODO: Shift response messages to another file
 func generateUUID() (generatedUUID uuid.UUID, err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -267,6 +268,8 @@ func GetRoom(ctx *gin.Context) {
 		//room already exists with some capacity
 		//check wether this user is already connected to this room
 		//add the user to the room and return the room id
+
+		//TODO : Rewrite the query properly
 		var exists bool
 		query := "select exists(select *from users_in_rooms where user_id='" + userId.(string) + "' and room_id='" + room.RoomId + "')"
 		err := db.QueryExecutor(query, &exists)
@@ -306,6 +309,7 @@ func GetRoom(ctx *gin.Context) {
 		return
 	}
 
+	//TODO: Handle error
 	body, err := io.ReadAll(resp.Body)
 	fmt.Println("response: ", string(body))
 	defer resp.Body.Close()
@@ -314,6 +318,7 @@ func GetRoom(ctx *gin.Context) {
 
 		//create a new room in database with above uuid and userId
 
+		//TODO: refactor it
 		var room model.Rooms
 		room.RoomId = newUUID.String()
 		room.UserId = userId.(string)
@@ -336,5 +341,23 @@ func GetRoom(ctx *gin.Context) {
 		response.ShowResponse(string(body), int64(resp.StatusCode), utils.FAILURE, nil, ctx)
 		return
 	}
+
+}
+
+type DefaultSuccessResponse struct {
+	ResultCode int    `json:"ResultCode"`
+	Message    string `json:"Message"`
+}
+
+func GameCreate(ctx *gin.Context) {
+
+	//default success response
+
+	resp := &DefaultSuccessResponse{
+		ResultCode: 0,
+		Message:    "OK",
+	}
+
+	response.ShowResponse("success", utils.HTTP_OK, utils.SUCCESS, resp, ctx)
 
 }
