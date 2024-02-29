@@ -358,6 +358,6 @@ func GameCreate(ctx *gin.Context) {
 		Message:    "OK",
 	}
 
-	response.ShowResponse("success", utils.HTTP_OK, utils.SUCCESS, resp, ctx)
+	ctx.JSON(200, resp)
 
 }
