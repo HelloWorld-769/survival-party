@@ -13,7 +13,6 @@ type User struct {
 	Password        string         `json:"password"`
 	Username        string         `json:"username"  gorm:"unique"`
 	Avatar          int64          `json:"avatar"`
-	Level           int64          `json:"level"`
 	SocialId        string         `json:"socialId"`
 	DayCount        int64          `json:"dayCount"`
 	EmailVerifiedAt time.Time      `json:"emailVerifiedAt"`

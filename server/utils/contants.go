@@ -106,3 +106,12 @@ const (
 )
 
 const TOTAL_LEVELS = 10
+
+type ACTION_TYPE float64
+
+const (
+	KILL_PLAYER ACTION_TYPE = iota + 1
+	MAKE_ZOMBIE
+	KILL_ZOMBIE
+	MINI_GAME_COMPLETION
+)

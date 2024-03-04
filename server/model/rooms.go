@@ -19,8 +19,8 @@ type Rooms struct {
 }
 
 type UsersInRooms struct {
-	RoomId    string         `json:"roomId"`
-	Room      Rooms          `json:"-" gorm:"foreignKey:RoomId;constraint:OnDelete:CASCADE"`
+	RoomId string `json:"roomId"`
+	// Room      Rooms          `json:"-" gorm:"foreignKey:RoomId;constraint:OnDelete:CASCADE"`
 	UserId    string         `json:"userId"`
 	User      User           `json:"-" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
 	Actor_Nr  int            `json:"actor_nr"`

@@ -5,6 +5,7 @@ import (
 	"main/server/gateway"
 	"main/server/handler"
 	rooms "main/server/services/Rooms"
+	gameplay "main/server/services/gamePlay"
 	"main/server/services/rewards"
 	"main/server/services/shop"
 
@@ -49,7 +50,6 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/api/v1/get-daily-goals", gateway.UserAuthorization, handler.GetDailyGoalsHandler)
 	server.engine.POST("/api/v1/skip-daily-goal", gateway.UserAuthorization, handler.SkipGoalHandler)
 	server.engine.POST("/api/v1/claim-daily-goal", gateway.UserAuthorization, handler.ClaimDailyGoalHandler)
-	server.engine.PUT("/api/v1/update-daily-goal", gateway.UserAuthorization, handler.UpdateDailyGoalHandler)
 
 	//daily rewards
 	server.engine.PUT("/api/v1/collect-daily-rewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
@@ -66,5 +66,10 @@ func ConfigureRoutes(server *Server) {
 	server.engine.POST("/api/v1/game-close", rooms.GameClose)
 	server.engine.GET("/api/v1/get-room", gateway.UserAuthorization, rooms.GetRoom)
 	server.engine.POST("/api/v1/game-create", rooms.GameCreate)
+
+	// server.engine.POST("/api/v1/zombieSelection", gameplay.ZombieSelection)
+
+	//WebRpc
+	server.engine.POST("/api/v1/gameStateChange", gameplay.InGameState)
 
 }
