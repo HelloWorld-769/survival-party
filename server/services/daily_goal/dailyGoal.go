@@ -441,6 +441,12 @@ func ClaimDailyGoalService(ctx *gin.Context, userId string) {
 		return
 	}
 
+	if dailyGoalReward.Claimed {
+		response.ShowResponse("Reward already claimed", utils.HTTP_BAD_REQUEST, utils.SUCCESS, nil, ctx)
+		return
+
+	}
+
 	userDetails.TotalCoins += dailyGoalReward.Coins
 	userDetails.TotalGems += dailyGoalReward.Gems
 
@@ -473,10 +479,10 @@ func ClaimDailyGoalService(ctx *gin.Context, userId string) {
 			RewardType: utils.Energy,
 			Quantity:   dailyGoalReward.Energy,
 		},
-		{
-			RewardType: utils.Chest,
-			Quantity:   dailyGoalReward.Chest,
-		},
+		// {
+		// 	RewardType: utils.Chest,
+		// 	Quantity:   dailyGoalReward.Chest,
+		// },
 	}
 
 	response.ShowResponse(utils.SUCCESS, utils.HTTP_OK, utils.SUCCESS, res, ctx)
