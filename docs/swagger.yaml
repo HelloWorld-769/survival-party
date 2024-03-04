@@ -447,6 +447,35 @@ paths:
       summary: Collects Reward
       tags:
       - Player
+  /name-time-left:
+    get:
+      consumes:
+      - application/json
+      description: Get time left for name change
+      parameters:
+      - description: Player Access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Get time left for name change
+      tags:
+      - Player
   /popupoffers:
     get:
       consumes:
