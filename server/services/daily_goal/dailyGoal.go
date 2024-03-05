@@ -14,11 +14,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func DailyGoalGeneration(isNew bool, userId *string) {
+func DailyGoalGeneration(isNew bool, userId *string) error {
 	noOfGoalsMin := 4
 	noOfGoalsMax := 6
 	rand.Seed(time.Now().UnixNano())
 	noOfGoals := rand.Intn(noOfGoalsMax-noOfGoalsMin+1) + noOfGoalsMin
+
+	fmt.Println("No.OfGoals", noOfGoals)
 
 	var data []struct {
 		Id    string
@@ -30,7 +32,7 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 
 		if err != nil {
 			fmt.Println("Error in getting the users from the database")
-			return
+			return err
 		}
 
 	} else {
@@ -39,7 +41,7 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 
 		if err != nil {
 			fmt.Println("Error in getting the users from the database")
-			return
+			return err
 		}
 	}
 
@@ -202,17 +204,19 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 		err := db.CreateRecord(&record)
 		if err != nil {
 			fmt.Println("Error in creting the entry in db.")
-			return
+			return err
 		}
 
 		err = db.CreateRecord(&temp)
 		if err != nil {
 			fmt.Println("Error in creting the entry in db.")
-			return
+			return err
 		}
 	}
 
 	fmt.Println("Sucessfully generated daily goals for all the users")
+
+	return nil
 
 }
 

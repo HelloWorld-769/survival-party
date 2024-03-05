@@ -104,7 +104,11 @@ func AddDummyUsers(input request.SigupRequest) {
 	}
 
 	fmt.Println("Daily goal generation")
-	dailygoal.DailyGoalGeneration(true, &userRecord.Id)
+	err = dailygoal.DailyGoalGeneration(true, &userRecord.Id)
+	if err != nil {
+		fmt.Println("Error in daily goal generation", err)
+		return
+	}
 	fmt.Println("Daily goal generation done")
 
 	fmt.Println("Level reward generation")
