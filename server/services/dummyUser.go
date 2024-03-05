@@ -103,10 +103,14 @@ func AddDummyUsers(input request.SigupRequest) {
 		return
 	}
 
+	fmt.Println("Daily goal generation")
 	dailygoal.DailyGoalGeneration(true, &userRecord.Id)
+	fmt.Println("Daily goal generation done")
 
+	fmt.Println("Level reward generation")
 	rewards.GenerateLevelReward(userRecord.Id)
+	fmt.Println("Level reward generation done")
 
-	fmt.Println("Transaction edy to commit")
+	// fmt.Println("Transaction edy to commit")
 
 }
