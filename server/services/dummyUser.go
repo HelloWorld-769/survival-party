@@ -98,17 +98,14 @@ func AddDummyUsers(input request.SigupRequest) {
 		return
 	}
 
-	go func() {
-		err = rewards.CreateStarterDailyRewards(userRecord.Id)
-		if err != nil {
-			return
-		}
+	err = rewards.CreateStarterDailyRewards(userRecord.Id)
+	if err != nil {
+		return
+	}
 
-	}()
+	dailygoal.DailyGoalGeneration(true, &userRecord.Id)
 
-	go dailygoal.DailyGoalGeneration(true, &userRecord.Id)
-
-	go rewards.GenerateLevelReward(userRecord.Id)
+	rewards.GenerateLevelReward(userRecord.Id)
 
 	fmt.Println("Transaction edy to commit")
 
