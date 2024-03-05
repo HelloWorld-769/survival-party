@@ -45,6 +45,8 @@ func DailyGoalGeneration(isNew bool, userId *string) error {
 		}
 	}
 
+	fmt.Println("Data is ", data)
+
 	// Iterate over each user in the data slice
 	for _, it := range data {
 
@@ -74,6 +76,7 @@ func DailyGoalGeneration(isNew bool, userId *string) error {
 			// Add the random goal type to the map
 			mp[i] = randGoalType
 		}
+		fmt.Println("Map is ", mp)
 
 		// Initialize a variable to store the sum of progress for all goals
 		var sum int64
@@ -122,6 +125,8 @@ func DailyGoalGeneration(isNew bool, userId *string) error {
 				baseCoins := 25
 				baseGems := 8
 
+				fmt.Println("Generating mini game played goal")
+
 				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
 				record.Gems = int64(baseGems) * gamPlay
@@ -133,6 +138,7 @@ func DailyGoalGeneration(isNew bool, userId *string) error {
 				min := 30
 				max := 90
 
+				fmt.Println("Generating zombies killed goal")
 				lowerRange := min + (int(it.Level-1) * ((max - min) / utils.TOTAL_LEVELS))
 				upperRange := min + (int(it.Level) * ((max - min) / utils.TOTAL_LEVELS))
 
@@ -152,6 +158,8 @@ func DailyGoalGeneration(isNew bool, userId *string) error {
 				baseCoins := 20
 				baseGems := 2
 
+				fmt.Println("Generating became zombie goal")
+
 				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
 				record.Gems = int64(baseGems) * gamPlay
@@ -164,6 +172,7 @@ func DailyGoalGeneration(isNew bool, userId *string) error {
 				max := 10
 				baseCoins := 50
 				baseGems := 15
+				fmt.Println("Generating escape survivor goal")
 
 				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
@@ -177,6 +186,8 @@ func DailyGoalGeneration(isNew bool, userId *string) error {
 			temp = append(temp, record)
 		}
 
+		// fmt.Println("Sum is ", sum)
+
 		MaxCoins := 1000
 		Maxgems := 100
 		MaxEnergy := 8
@@ -186,9 +197,9 @@ func DailyGoalGeneration(isNew bool, userId *string) error {
 		baseGems := float64(float64(Maxgems) / 200)
 		baseEnergy := float64(float64(MaxEnergy) / 200)
 
-		fmt.Println("base coins is ", baseCoins)
-		fmt.Println("base gems is ", baseGems)
-		fmt.Println("base energy is", baseEnergy)
+		// fmt.Println("base coins is ", baseCoins)
+		// fmt.Println("base gems is ", baseGems)
+		// fmt.Println("base energy is", baseEnergy)
 		record := model.DailyGoalRewards{
 			Id:     rewardId,
 			Coins:  (utils.RoundToNearestMultiple(int64((baseCoins)*float64(sum)), 10)),
