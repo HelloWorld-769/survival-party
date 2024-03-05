@@ -137,14 +137,16 @@ func TimeLeftUntilMidnight() (int, int, int) {
 
 func CalculateDays(timeValue time.Time) int64 {
 	// Get the current time in UTC
-	currentTime := time.Now().UTC()
+	currentTime := time.Now()
 
 	// Calculate the duration between the two time values
 	duration := currentTime.Sub(timeValue)
 
 	// Convert the duration to days
-	days := int64(duration.Hours() / 24)
-
+	var days int64
+	if duration.Hours() > 0 {
+		days = int64(duration.Hours() / 24)
+	}
 	return days
 }
 
@@ -193,4 +195,15 @@ func UserMultipler(userId string) int64 {
 
 	multiplier := int64((dayCount * 2)) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
 	return multiplier
+}
+
+func GetTimeDifference(currentTimeUTC, expirationTimeUTC time.Time) (int, int) {
+	// Calculate the time difference in hours
+	timeDifference := expirationTimeUTC.Sub(currentTimeUTC)
+
+	// Convert duration to days and hours
+	days := int(timeDifference.Hours()) / 24
+	hours := int(timeDifference.Hours()) % 24
+
+	return days, hours
 }

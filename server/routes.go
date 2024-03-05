@@ -35,6 +35,7 @@ func ConfigureRoutes(server *Server) {
 	server.engine.PUT("/api/v1/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/api/v1/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 	server.engine.GET("/api/v1/user-data", handler.GetOtherPlayerStatsHandler)
+	server.engine.GET("api/v1/name-time-left", gateway.UserAuthorization, handler.GetNameChangeTimeLeftHandler)
 
 	//Store Roues
 	server.engine.GET("/api/v1/store", gateway.UserAuthorization, handler.GetStoreHandler)

@@ -31,6 +31,7 @@ func UpdatePlayerService(ctx *gin.Context, userId string, input request.UpdatePl
 	}
 
 	//update the record
+	user.UsernameUpdatedAt = time.Now()
 	err = db.UpdateRecord(&user, userId, "id").Error
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
@@ -153,4 +154,38 @@ func UpdateDayCount() {
 		}
 	}
 
+}
+
+func GetNameChangeTimeLeftService(ctx *gin.Context, userId string) {
+
+	var user model.User
+
+	query := "SELECT * from users WHERE id=?"
+	err := db.QueryExecutor(query, &user, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	var days, hours int
+	if user.CreatedAt.Truncate(time.Second).Equal(user.UsernameUpdatedAt.Truncate(time.Second)) {
+		fmt.Println("Times are equal")
+	} else {
+		timeLeft := user.UsernameUpdatedAt.Add(time.Hour * 48)
+		fmt.Println("Time left", timeLeft)
+
+		// daysLeft = int64(timeLeft.Sub(time.Now()).Hours() / 24)
+
+		days, hours = utils.GetTimeDifference(time.Now(), timeLeft)
+		// fmt.Println("Days left", daysLeft)
+
+	}
+
+	response.ShowResponse(utils.DATA_FETCH_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
+		Days  int `json:"days"`
+		Hours int `json:"hours"`
+	}{
+		Days:  days,
+		Hours: hours,
+	}, ctx)
 }

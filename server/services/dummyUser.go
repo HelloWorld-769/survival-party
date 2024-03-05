@@ -28,13 +28,14 @@ func AddDummyUsers(input request.SigupRequest) {
 	}
 
 	userRecord := model.User{
-		Email:           input.User.Email,
-		Password:        *encryptedPassword,
-		Username:        strings.ToLower(input.User.Username),
-		Avatar:          input.User.Avatar,
-		EmailVerifiedAt: time.Now(),
-		EmailVerified:   true,
-		DayCount:        1,
+		Email:             input.User.Email,
+		Password:          *encryptedPassword,
+		Username:          strings.ToLower(input.User.Username),
+		Avatar:            input.User.Avatar,
+		EmailVerifiedAt:   time.Now(),
+		UsernameUpdatedAt: time.Now(),
+		EmailVerified:     true,
+		DayCount:          1,
 	}
 
 	err = db.CreateRecord(&userRecord)
