@@ -15,8 +15,8 @@ import (
 )
 
 func DailyGoalGeneration(isNew bool, userId *string) {
-	noOfGoalsMin := 4
-	noOfGoalsMax := 6
+	noOfGoalsMin := 3
+	noOfGoalsMax := 5
 	rand.Seed(time.Now().UnixNano())
 	noOfGoals := rand.Intn(noOfGoalsMax-noOfGoalsMin+1) + noOfGoalsMin
 

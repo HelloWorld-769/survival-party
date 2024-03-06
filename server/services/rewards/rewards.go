@@ -108,6 +108,7 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 	default:
 		fmt.Println("nothing for reward")
 	}
+
 	err = db.UpdateRecord(&userData, userId, "user_id").Error
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
@@ -318,52 +319,104 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	fmt.Println("user daycount:   ", user.DayCount)
 	fmt.Println("user daycount mod 7:   ", (user.DayCount % 7))
 	//check if already claimed
-	if userRewardData[(user.DayCount%7)-1].Status == utils.CLAIMED {
+	if user.DayCount > 7 && user.DayCount%7 != 0 {
 
-		response.ShowResponse("daily reward already claimed", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
-		return
-	} else {
-		//update this userRewardData as claimed true
-		userRewardData[(user.DayCount%7)-1].Status = utils.CLAIMED
+		if userRewardData[(user.DayCount%7)-1].Status == utils.CLAIMED {
 
-		err = db.UpdateRecord(&userRewardData[(user.DayCount%7)-1], userId, "user_id").Error
+			response.ShowResponse("daily reward already claimed", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			return
+		} else {
+			//update this userRewardData as claimed true
+			userRewardData[(user.DayCount%7)-1].Status = utils.CLAIMED
+
+			err = db.UpdateRecord(&userRewardData[(user.DayCount%7)-1], userId, "user_id").Error
+			if err != nil {
+				fmt.Println("here4")
+
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
+
+		}
+
+		switch userRewardData[(user.DayCount%7)-1].RewardType {
+		case 1:
+			fmt.Println("Energy")
+			userGameStats.Energy += userRewardData[(user.DayCount%7)-1].Gain
+		case 2:
+			fmt.Println("Coins")
+			userGameStats.CurrentCoins += userRewardData[(user.DayCount%7)-1].Gain
+			userGameStats.TotalCoins += userRewardData[(user.DayCount%7)-1].Gain
+		case 3:
+			fmt.Println("Gems")
+			userGameStats.CurrentGems += userRewardData[(user.DayCount%7)-1].Gain
+			userGameStats.TotalGems += userRewardData[(user.DayCount%7)-1].Gain
+
+		case 4:
+			fmt.Println("Inventory")
+		case 5:
+			fmt.Println("Chest")
+		default:
+			fmt.Println("Invalid")
+		}
+
+		//update user game stats with reward data
+
+		err = db.UpdateRecord(&userGameStats, userId, "user_id").Error
 		if err != nil {
-			fmt.Println("here4")
-
+			fmt.Println("here5")
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
 
-	}
+	} else {
+		if userRewardData[(user.DayCount)-1].Status == utils.CLAIMED {
 
-	switch userRewardData[user.DayCount%7].RewardType {
-	case 1:
-		fmt.Println("Energy")
-		userGameStats.Energy += userRewardData[user.DayCount%7].Gain
-	case 2:
-		fmt.Println("Coins")
-		userGameStats.CurrentCoins += userRewardData[user.DayCount%7].Gain
-		userGameStats.TotalCoins += userRewardData[user.DayCount%7].Gain
-	case 3:
-		fmt.Println("Gems")
-		userGameStats.CurrentGems += userRewardData[user.DayCount%7].Gain
-		userGameStats.TotalGems += userRewardData[user.DayCount%7].Gain
+			response.ShowResponse("daily reward already claimed", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			return
+		} else {
+			//update this userRewardData as claimed true
+			userRewardData[(user.DayCount)-1].Status = utils.CLAIMED
 
-	case 4:
-		fmt.Println("Inventory")
-	case 5:
-		fmt.Println("Chest")
-	default:
-		fmt.Println("Invalid")
-	}
+			err = db.UpdateRecord(&userRewardData[(user.DayCount%7)-1], userId, "user_id").Error
+			if err != nil {
+				fmt.Println("here4")
 
-	//update user game stats with reward data
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
 
-	err = db.UpdateRecord(&userGameStats, userId, "user_id").Error
-	if err != nil {
-		fmt.Println("here5")
-		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-		return
+		}
+
+		switch userRewardData[(user.DayCount)-1].RewardType {
+		case 1:
+			fmt.Println("Energy")
+			userGameStats.Energy += userRewardData[(user.DayCount)-1].Gain
+		case 2:
+			fmt.Println("Coins")
+			userGameStats.CurrentCoins += userRewardData[(user.DayCount)-1].Gain
+			userGameStats.TotalCoins += userRewardData[(user.DayCount)-1].Gain
+		case 3:
+			fmt.Println("Gems")
+			userGameStats.CurrentGems += userRewardData[(user.DayCount)-1].Gain
+			userGameStats.TotalGems += userRewardData[(user.DayCount)-1].Gain
+
+		case 4:
+			fmt.Println("Inventory")
+		case 5:
+			fmt.Println("Chest")
+		default:
+			fmt.Println("Invalid")
+		}
+
+		//update user game stats with reward data
+
+		err = db.UpdateRecord(&userGameStats, userId, "user_id").Error
+		if err != nil {
+			fmt.Println("here5")
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
 	}
 
 	//fetch the updated daily rewards and give in response

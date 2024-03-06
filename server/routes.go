@@ -9,6 +9,7 @@ import (
 	"main/server/services/rewards"
 	"main/server/services/shop"
 
+	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -19,6 +20,13 @@ func ConfigureRoutes(server *Server) {
 	server.engine.Use(gateway.CORSMiddleware())
 	//swagger route
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	//Check if the server is running
+	server.engine.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "Sever listening",
+		})
+	})
 
 	//Auth routes
 	server.engine.POST("/api/v1/users/sign-up", handler.SignupHandler)

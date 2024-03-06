@@ -379,14 +379,14 @@ func InGameState(ctx *gin.Context) {
 			//increase the xp of zombie who attacked the player
 
 			query = "UPDATE game_states SET xp=xp+? WHERE game_id=? AND user_id=?"
-			err = db.QueryExecutor(query, 50, data.RpcParams.GameId, data.UserId)
+			err = db.RawExecutor(query, 50, data.RpcParams.GameId, data.UserId)
 			if err != nil {
 
 				fmt.Println("Error in processing the game_stats")
 				return
 			}
 
-			reward, err := ProcessDailyGoal(int64(utils.MAKE_ZOMBIE), data.UserId, &userStats)
+			reward, err := ProcessDailyGoal(int64(utils.BECAME_ZOMBIE), data.UserId, &userStats)
 			if err != nil {
 
 				fmt.Println("Error in processing the daily goal")
@@ -420,7 +420,7 @@ func InGameState(ctx *gin.Context) {
 			query := "UPDATE game_states SET xp=xp+?,is_zombie=true WHERE game_id=? AND actor_nr=?"
 
 			zombieAttack := 5
-			err = db.QueryExecutor(query, -zombieAttack, data.RpcParams.GameId, data.RpcParams.Data.ActorNr)
+			err = db.RawExecutor(query, -zombieAttack, data.RpcParams.GameId, data.RpcParams.Data.ActorNr)
 			if err != nil {
 
 				fmt.Println("Error in processing the game_stats")
@@ -453,7 +453,7 @@ func InGameState(ctx *gin.Context) {
 			query = "UPDATE game_states SET xp=xp+? WHERE game_id=? AND actor_nr=?"
 
 			zombieAttack := 5
-			err = db.QueryExecutor(query, -zombieAttack, data.RpcParams.GameId, data.RpcParams.Data.ActorNr)
+			err = db.RawExecutor(query, -zombieAttack, data.RpcParams.GameId, data.RpcParams.Data.ActorNr)
 			if err != nil {
 
 				fmt.Println("Error in processing the game_stats")
@@ -464,14 +464,14 @@ func InGameState(ctx *gin.Context) {
 			//increase the xp of zombie who attacked the player
 
 			query = "UPDATE game_states SET xp=xp+? WHERE game_id=? AND user_id=?"
-			err = db.QueryExecutor(query, zombieAttack, data.RpcParams.GameId, data.UserId)
+			err = db.RawExecutor(query, zombieAttack, data.RpcParams.GameId, data.UserId)
 			if err != nil {
 
 				fmt.Println("Error in processing the game_stats")
 				return
 			}
 
-			reward, err := ProcessDailyGoal(int64(utils.MAKE_ZOMBIE), data.UserId, &userStats)
+			reward, err := ProcessDailyGoal(int64(utils.BECAME_ZOMBIE), data.UserId, &userStats)
 			if err != nil {
 
 				fmt.Println("Error in processing the daily goal")
