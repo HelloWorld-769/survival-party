@@ -9,6 +9,15 @@ definitions:
       token:
         type: string
     type: object
+  request.DeductAmount:
+    properties:
+      coins:
+        type: boolean
+      energy:
+        type: boolean
+      gems:
+        type: boolean
+    type: object
   request.EmailRequest:
     properties:
       user:
@@ -273,6 +282,41 @@ paths:
       summary: Gets the list of daily reward for the  player
       tags:
       - DailyReward
+  /deduct-amount:
+    put:
+      consumes:
+      - application/json
+      description: Deducts the specified amount from the user's account
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Deduct Amount Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.DeductAmount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Success'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Success'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Success'
+      summary: Deduct Amount
+      tags:
+      - Game
   /energy-refill-timer:
     get:
       consumes:

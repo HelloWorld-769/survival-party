@@ -68,4 +68,7 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/api/v1/get-room", gateway.UserAuthorization, rooms.GetRoom)
 	server.engine.POST("/api/v1/game-create", rooms.GameCreate)
 
+	//Game route
+	server.engine.PUT("/api/v1/deduct-amount", gateway.UserAuthorization, handler.DeductAmountHandler)
+
 }
