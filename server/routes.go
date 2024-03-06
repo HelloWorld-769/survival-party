@@ -79,5 +79,6 @@ func ConfigureRoutes(server *Server) {
 
 	//WebRpc
 	server.engine.POST("/api/v1/gameStateChange", gameplay.InGameState)
+	server.engine.POST("/api/v1/game-end", gameplay.GameEnd)
 
 }
