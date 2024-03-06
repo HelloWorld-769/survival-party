@@ -569,3 +569,116 @@ func ProcessDailyGoal(goalType int64, userId string, userGameStats *model.UserGa
 
 	return res, nil
 }
+
+type GameEndRpc struct {
+	UserId    string
+	RpcParams struct {
+		GameId     string  `json:"gameId"`
+		ActionType float64 `json:"actionType"`
+		Data       struct {
+			Bots []struct {
+				BotName           string `json:"botName"`
+				Kills             int    `json:"kills"`
+				MiniGameCompleted int    `json:"miniGameCompleted"`
+				IsZombie          bool   `json:"isZombie"`
+			} `json:"bots"`
+			//1 for survivors and 2 for zombies
+			Win int `json:"win"`
+		} `json:"data"`
+	}
+}
+
+func GameEnd(ctx *gin.Context) {
+	var data GameEndRpc
+	body, _ := io.ReadAll(ctx.Request.Body)
+
+	fmt.Println("Body is", string(body))
+
+	err := json.Unmarshal(body, &data)
+	if err != nil {
+		fmt.Println("Error in unmarshalling the resposne from the hook")
+		return
+	}
+
+	//Get all the players in the game
+	var players []model.GameState
+	query := `SELECT * FROM game_states WHERE game_id=? AND is_running='true'`
+	err = db.QueryExecutor(query, &players, data.RpcParams.GameId)
+	if err != nil {
+		fmt.Println("Error in getting the players")
+		return
+	}
+
+	//Get the user game stas for each  user and add the xp and kills gained in a game
+	for _, player := range players {
+		var userStats model.UserGameStats
+		query := "SELECT * FROM user_game_stats WHERE user_id=?"
+		err = db.QueryExecutor(query, &userStats, player.UserId)
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+
+		userStats.XP += player.Xp
+		userStats.TotalKills += int64(player.Kills)
+		if data.RpcParams.Data.Win == 1 && !player.IsZombie {
+			userStats.MatchesWon++
+		} else if data.RpcParams.Data.Win == 2 && player.IsZombie {
+			userStats.MatchesWon++
+		} else {
+			userStats.MatchesLost++
+		}
+
+		//Check after adding the xp player level is increased or not if yes then unlock the rewards
+		//and update the user level
+		var playerLevel model.LevelRewards
+		query = "select * from level_rewards WHERE xp_required<=?  ORDER By level  DESC LIMIT 1	"
+		err := db.QueryExecutor(query, &playerLevel, userStats.XP)
+		if err != nil {
+			fmt.Println("Error in getting the level rewards")
+			return
+		}
+		if playerLevel.LevelRequired != userStats.Level {
+			//Mark status of the level_rward for that player as UNCLAIMED till that level
+			for i := userStats.Level; i < playerLevel.LevelRequired; i++ {
+				query = "UPDATE user_level_rewards SET status=? WHERE user_id=? AND level=?"
+				err = db.RawExecutor(query, utils.UNCLAIMED, player.UserId, i)
+				if err != nil {
+					fmt.Println("Error in updating the level rewards")
+					return
+				}
+
+			}
+
+			userStats.Level = playerLevel.LevelRequired
+
+		}
+
+		err = db.UpdateRecord(&userStats, player.UserId, "user_id").Error
+		if err != nil {
+			fmt.Println("Error in updating the game stats")
+			return
+		}
+
+	}
+
+}
+
+/*
+
+
+for _, bot := range data.RpcParams.Data.Bots {
+			if player.UserId == bot.BotName {
+				player.Xp += 5
+				player.Kills += bot.Kills
+				player.GamesCompleted += bot.MiniGameCompleted
+				if bot.IsZombie {
+					player.IsZombie = true
+				}
+				err = db.UpdateRecord(&player, player.UserId, "user_id").Error
+				if err != nil {
+					fmt.Println("Error in updating the game stats")
+					return
+				}
+			}
+		}*/
