@@ -246,6 +246,59 @@ const docTemplate = `{
                 }
             }
         },
+        "/deduct-amount": {
+            "put": {
+                "description": "Deducts the specified amount from the user's account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Game"
+                ],
+                "summary": "Deduct Amount",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Deduct Amount Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DeductAmount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/energy-refill-timer": {
             "get": {
                 "description": "Get the time left for energy refill",
@@ -1268,6 +1321,20 @@ const docTemplate = `{
                 },
                 "token": {
                     "type": "string"
+                }
+            }
+        },
+        "request.DeductAmount": {
+            "type": "object",
+            "properties": {
+                "coins": {
+                    "type": "boolean"
+                },
+                "energy": {
+                    "type": "boolean"
+                },
+                "gems": {
+                    "type": "boolean"
                 }
             }
         },
