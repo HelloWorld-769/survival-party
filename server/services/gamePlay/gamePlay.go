@@ -73,6 +73,9 @@ func InGameState(ctx *gin.Context) {
 
 	err := json.Unmarshal(body, &data)
 	if err != nil {
+		ctx.JSON(int(utils.HTTP_INTERNAL_SERVER_ERROR), map[string]interface{}{
+			"ResultCode": "0",
+		})
 		fmt.Println("Error in unmarshalling the resposne from the hook")
 		return
 	}
