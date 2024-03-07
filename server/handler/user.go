@@ -82,3 +82,26 @@ func GetOtherPlayerStatsHandler(ctx *gin.Context) {
 
 	user.GetPlayerStatsService(ctx, userId)
 }
+
+//Making Swagger
+// GetNameChangeTimeLeftHandler Gets the time left for the user to change the name
+//
+// @Summary Get time left for name change
+// @Description Get time left for name change
+// @Tags Player
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Player Access token"
+// @Success 200 {object} response.Success "Login successful"
+// @Failure 400 {object} response.Success "Bad request"
+// @Failure 500 {object} response.Success "Internal server error"
+// @Router /name-time-left [get]
+func GetNameChangeTimeLeftHandler(ctx *gin.Context) {
+	userId, exists := ctx.Get("userId")
+	if !exists {
+		response.ShowResponse(utils.UNAUTHORIZED, utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	user.GetNameChangeTimeLeftService(ctx, userId.(string))
+}

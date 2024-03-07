@@ -44,6 +44,7 @@ func ConfigureRoutes(server *Server) {
 	server.engine.PUT("/api/v1/update-settings", gateway.UserAuthorization, handler.UpdateSettingsHandler)
 	server.engine.GET("/api/v1/stats", gateway.UserAuthorization, handler.GetPlayerStatsHandler)
 	server.engine.GET("/api/v1/user-data", handler.GetOtherPlayerStatsHandler)
+	server.engine.GET("api/v1/name-time-left", gateway.UserAuthorization, handler.GetNameChangeTimeLeftHandler)
 
 	//Store Roues
 	server.engine.GET("/api/v1/store", gateway.UserAuthorization, handler.GetStoreHandler)
@@ -75,9 +76,12 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/api/v1/get-room", gateway.UserAuthorization, rooms.GetRoom)
 	server.engine.POST("/api/v1/game-create", rooms.GameCreate)
 
-	// server.engine.POST("/api/v1/zombieSelection", gameplay.ZombieSelection)
 
 	//WebRpc
 	server.engine.POST("/api/v1/gameStateChange", gameplay.InGameState)
+
+	//Game route
+	server.engine.PUT("/api/v1/deduct-amount", gateway.UserAuthorization, handler.DeductAmountHandler)
+
 
 }
