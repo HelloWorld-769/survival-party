@@ -159,7 +159,7 @@ const docTemplate = `{
             }
         },
         "/collect-daily-rewards": {
-            "post": {
+            "put": {
                 "description": "Collect the daily reward of the  player",
                 "consumes": [
                     "application/json"
@@ -178,6 +178,15 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "Reward Details",
+                        "name": "rewardType",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DailyRewardMuti"
+                        }
                     }
                 ],
                 "responses": {
@@ -239,6 +248,59 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/deduct-amount": {
+            "put": {
+                "description": "Deducts the specified amount from the user's account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Game"
+                ],
+                "summary": "Deduct Amount",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Deduct Amount Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DeductAmount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/response.Success"
                         }
@@ -486,6 +548,50 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.PlayerLevelRewardCollectRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/name-time-left": {
+            "get": {
+                "description": "Get time left for name change",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Player"
+                ],
+                "summary": "Get time left for name change",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -769,59 +875,6 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Sucess",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    }
-                }
-            }
-        },
-        "/update-daily-goal": {
-            "put": {
-                "description": "Updates the goal data in between of the game and gives the reward if the goal is completed",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "DailyGoal"
-                ],
-                "summary": "Updates the goal",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Player Access token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "Update request",
-                        "name": "loginDetails",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UpdateGoalReq"
-                        }
                     }
                 ],
                 "responses": {
@@ -1227,6 +1280,28 @@ const docTemplate = `{
                 }
             }
         },
+        "request.DailyRewardMuti": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.DeductAmount": {
+            "type": "object",
+            "properties": {
+                "coins": {
+                    "type": "boolean"
+                },
+                "energy": {
+                    "type": "boolean"
+                },
+                "gems": {
+                    "type": "boolean"
+                }
+            }
+        },
         "request.EmailRequest": {
             "type": "object",
             "properties": {
@@ -1338,26 +1413,6 @@ const docTemplate = `{
                 },
                 "uid": {
                     "type": "string"
-                }
-            }
-        },
-        "request.UpdateGoalReq": {
-            "type": "object",
-            "properties": {
-                "isDead": {
-                    "type": "boolean"
-                },
-                "isZombie": {
-                    "type": "boolean"
-                },
-                "killsAsSurvivor": {
-                    "type": "integer"
-                },
-                "killsAsZombie": {
-                    "type": "integer"
-                },
-                "miniGamesCompleted": {
-                    "type": "integer"
                 }
             }
         },

@@ -71,3 +71,15 @@ func RawExecutor(querry string, args ...interface{}) error {
 	}
 	return nil
 }
+
+func UpdateZeroVals(tableName interface{}, colName string, colValue interface{}, data interface{}) error {
+	// column := columName + "=?"
+	err := db.Model(tableName).Where(colName+"=?", colValue).Updates(data).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+	

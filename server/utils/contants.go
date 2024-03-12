@@ -119,3 +119,12 @@ const (
 // Game End multipliers
 const WIN_MULTIPLIER = 4
 const LOST_MULTIPLIER = 2
+
+type REWARD_MULTIPLIER int
+
+const (
+	ONE REWARD_MULTIPLIER = iota + 1
+	TWO
+	THREE
+)
+

@@ -14,11 +14,15 @@ import (
 	"github.com/google/uuid"
 )
 
-func DailyGoalGeneration(isNew bool, userId *string) {
-	noOfGoalsMin := 4
-	noOfGoalsMax := 6
+
+func DailyGoalGeneration(isNew bool, userId *string) error {
+
+	noOfGoalsMin := 3
+	noOfGoalsMax := 5
 	rand.Seed(time.Now().UnixNano())
 	noOfGoals := rand.Intn(noOfGoalsMax-noOfGoalsMin+1) + noOfGoalsMin
+
+	fmt.Println("No.OfGoals", noOfGoals)
 
 	var data []struct {
 		Id    string
@@ -30,7 +34,7 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 
 		if err != nil {
 			fmt.Println("Error in getting the users from the database")
-			return
+			return err
 		}
 
 	} else {
@@ -39,9 +43,11 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 
 		if err != nil {
 			fmt.Println("Error in getting the users from the database")
-			return
+			return err
 		}
 	}
+
+	fmt.Println("Data is ", data)
 
 	// Iterate over each user in the data slice
 	for _, it := range data {
@@ -72,6 +78,7 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 			// Add the random goal type to the map
 			mp[i] = randGoalType
 		}
+		fmt.Println("Map is ", mp)
 
 		// Initialize a variable to store the sum of progress for all goals
 		var sum int64
@@ -120,6 +127,8 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 				baseCoins := 25
 				baseGems := 8
 
+				fmt.Println("Generating mini game played goal")
+
 				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
 				record.Gems = int64(baseGems) * gamPlay
@@ -131,6 +140,7 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 				min := 30
 				max := 90
 
+				fmt.Println("Generating zombies killed goal")
 				lowerRange := min + (int(it.Level-1) * ((max - min) / utils.TOTAL_LEVELS))
 				upperRange := min + (int(it.Level) * ((max - min) / utils.TOTAL_LEVELS))
 
@@ -150,6 +160,8 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 				baseCoins := 20
 				baseGems := 2
 
+				fmt.Println("Generating became zombie goal")
+
 				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
 				record.Gems = int64(baseGems) * gamPlay
@@ -162,6 +174,7 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 				max := 10
 				baseCoins := 50
 				baseGems := 15
+				fmt.Println("Generating escape survivor goal")
 
 				gamPlay := generateRandomNumber(int(it.Level), min, max)
 				record.Coins = int64(baseCoins) * gamPlay
@@ -175,6 +188,8 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 			temp = append(temp, record)
 		}
 
+		// fmt.Println("Sum is ", sum)
+
 		MaxCoins := 1000
 		Maxgems := 100
 		MaxEnergy := 8
@@ -184,9 +199,9 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 		baseGems := float64(float64(Maxgems) / 200)
 		baseEnergy := float64(float64(MaxEnergy) / 200)
 
-		fmt.Println("base coins is ", baseCoins)
-		fmt.Println("base gems is ", baseGems)
-		fmt.Println("base energy is", baseEnergy)
+		// fmt.Println("base coins is ", baseCoins)
+		// fmt.Println("base gems is ", baseGems)
+		// fmt.Println("base energy is", baseEnergy)
 		record := model.DailyGoalRewards{
 			Id:     rewardId,
 			Coins:  (utils.RoundToNearestMultiple(int64((baseCoins)*float64(sum)), 10)),
@@ -202,17 +217,19 @@ func DailyGoalGeneration(isNew bool, userId *string) {
 		err := db.CreateRecord(&record)
 		if err != nil {
 			fmt.Println("Error in creting the entry in db.")
-			return
+			return err
 		}
 
 		err = db.CreateRecord(&temp)
 		if err != nil {
 			fmt.Println("Error in creting the entry in db.")
-			return
+			return err
 		}
 	}
 
 	fmt.Println("Sucessfully generated daily goals for all the users")
+
+	return nil
 
 }
 

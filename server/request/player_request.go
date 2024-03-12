@@ -43,3 +43,7 @@ type PlayerLevelRewardCollectRequest struct {
 type CollectDailyRewardsRequest struct {
 	RewardId string `json:"reward_id"`
 }
+
+type DailyRewardMuti struct {
+	Type int `json:"type"`
+}

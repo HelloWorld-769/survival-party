@@ -7,18 +7,20 @@ import (
 )
 
 type User struct {
-	Id              string         `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
-	Email           string         `json:"email"  gorm:"unique"`
-	EmailVerified   bool           `json:"emailverified"`
-	Password        string         `json:"password"`
-	Username        string         `json:"username"  gorm:"unique"`
-	Avatar          int64          `json:"avatar"`
-	SocialId        string         `json:"socialId"`
-	DayCount        int64          `json:"dayCount"`
-	EmailVerifiedAt time.Time      `json:"emailVerifiedAt"`
-	CreatedAt       time.Time      `json:"-"`
-	UpdatedAt       time.Time      `json:"-"`
-	DeletedAt       gorm.DeletedAt `json:"-"`
+	Id                string         `json:"id" gorm:"unique;default:uuid_generate_v4();primaryKey,omitempty"`
+	Email             string         `json:"email"  gorm:"unique"`
+	EmailVerified     bool           `json:"emailverified"`
+	Password          string         `json:"password"`
+	Username          string         `json:"username"  gorm:"unique"`
+	Avatar            int64          `json:"avatar"`
+	Level             int64          `json:"level"`
+	SocialId          string         `json:"socialId"`
+	DayCount          int64          `json:"dayCount"`
+	EmailVerifiedAt   time.Time      `json:"emailVerifiedAt"`
+	UsernameUpdatedAt time.Time      `json:"usernameUpdatedAt"`
+	CreatedAt         time.Time      `json:"-"`
+	UpdatedAt         time.Time      `json:"-"`
+	DeletedAt         gorm.DeletedAt `json:"-"`
 }
 
 type UserGameStats struct {
