@@ -1280,13 +1280,14 @@ const docTemplate = `{
                 }
             }
         },
-
         "request.DailyRewardMuti": {
             "type": "object",
             "properties": {
                 "type": {
                     "type": "integer"
-
+                }
+            }
+        },
         "request.DeductAmount": {
             "type": "object",
             "properties": {
@@ -1298,7 +1299,6 @@ const docTemplate = `{
                 },
                 "gems": {
                     "type": "boolean"
-
                 }
             }
         },

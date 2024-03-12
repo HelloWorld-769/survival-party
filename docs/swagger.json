@@ -1273,13 +1273,14 @@
                 }
             }
         },
-
         "request.DailyRewardMuti": {
             "type": "object",
             "properties": {
                 "type": {
                     "type": "integer"
-
+                }
+            }
+        },
         "request.DeductAmount": {
             "type": "object",
             "properties": {
@@ -1291,7 +1292,6 @@
                 },
                 "gems": {
                     "type": "boolean"
-
                 }
             }
         },

@@ -9,12 +9,11 @@ definitions:
       token:
         type: string
     type: object
-
   request.DailyRewardMuti:
     properties:
       type:
         type: integer
-
+    type: object
   request.DeductAmount:
     properties:
       coins:
@@ -23,7 +22,6 @@ definitions:
         type: boolean
       gems:
         type: boolean
-
     type: object
   request.EmailRequest:
     properties:
