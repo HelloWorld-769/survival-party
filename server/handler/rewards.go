@@ -71,10 +71,11 @@ func PlayerLevelRewardCollectionHandler(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Player Access token"
+// @Param rewardType body request.DailyRewardMuti true "Reward Details"
 // @Success 200 {object} response.Success "Sucess"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"
-// @Router /collect-daily-rewards [post]
+// @Router /collect-daily-rewards [put]
 func CollectDailyRewardHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")
@@ -83,7 +84,13 @@ func CollectDailyRewardHandler(ctx *gin.Context) {
 		return
 	}
 
-	rewards.CollectDailyReward(ctx, userId.(string))
+	var input request.DailyRewardMuti
+	err := utils.RequestDecoding(ctx, &input)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
+	rewards.CollectDailyReward(ctx, userId.(string), input)
 }
 
 // GetUserDailyRewardDataHandler Gets the list of daily reward for the  player

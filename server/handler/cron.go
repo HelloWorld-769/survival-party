@@ -44,10 +44,10 @@ func StartCron() {
 			dailygoal.DailyGoalGeneration(false, nil)
 		}
 
-		if formattedTime == "08:31" {
-			dailygoal.DeleteAllGoals()
-			dailygoal.DailyGoalGeneration(false, nil)
-		}
+		// if formattedTime == "08:51" {
+		// 	dailygoal.DeleteAllGoals()
+		// 	dailygoal.DailyGoalGeneration(false, nil)
+		// }
 		if isEvenMinutes(formattedTime) {
 
 			shop.RefillEnergy()

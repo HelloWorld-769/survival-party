@@ -10,6 +10,7 @@ type LevelRewards struct {
 	RewardId      string         `json:"rewardId" gorm:"default:uuid_generate_v4();unique;primaryKey"`
 	RewardType    int64          `json:"rewardType"`
 	Quantity      int64          `json:"quantity"`
+	XpRequired    int64          `json:"xpRequired"`
 	LevelRequired int64          `json:"levelRequired"`
 	CreatedAt     time.Time      `json:"-"`
 	UpdatedAt     time.Time      `json:"-"`

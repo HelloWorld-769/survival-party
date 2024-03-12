@@ -16,7 +16,7 @@ import (
 	"github.com/google/uuid"
 )
 
-//TODO: Shift response messages to another file
+// TODO: Shift response messages to another file
 func generateUUID() (generatedUUID uuid.UUID, err error) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -80,15 +80,25 @@ func GameClose(ctx *gin.Context) {
 
 	}
 
+	query := "UPDATE game_states SET is_running =false WHERE game_id=?"
+	err = db.RawExecutor(query, gameCloseReq.GameId)
+	if err != nil {
+		fmt.Println("Error in updating the game state")
+		return
+	}
+
 	//destroy this room from Database
 
-	query := "delete from rooms where room_id =?"
+	query = "delete from rooms where room_id =?"
 	err = db.RawExecutor(query, gameCloseReq.GameId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 
 	}
+
+	// query = "SELECT * FROM game_sates WHERE game_id=?"
+	// err = db.QueryExecutor(query, nil, gameCloseReq.GameId)
 
 	response.ShowResponse("room close succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 
@@ -153,6 +163,38 @@ func GameJoin(ctx *gin.Context) {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 
+	}
+
+	// var exists bool
+	// query := "SELECT EXISTS (SELECT * FROm game_states WHERE game_id =? AND is_running=true)"
+	// db.QueryExecutor(query, &exists, gameJoinReq.GameId)
+
+	// if exists {
+	// 	query := "UPDATE game_states set actor_nr=? where game_id =? AND is_running=true and user_id=?"
+	// 	err = db.RawExecutor(query, gameJoinReq.ActorNr, gameJoinReq.GameId, gameJoinReq.UserId)
+	// 	if err != nil {
+	// 		fmt.Println("error is", err)
+	// 		return
+	// 	}
+	// } else {
+	gameData := model.GameState{
+		ActorNr:        gameJoinReq.ActorNr,
+		GameId:         gameJoinReq.GameId,
+		Time:           10,
+		UserId:         gameJoinReq.UserId,
+		TotalGames:     3,
+		GamesCompleted: 0,
+		IsDead:         false,
+		IsZombie:       false,
+		Xp:             0,
+		Kills:          0,
+		IsRunning:      true,
+	}
+
+	err = db.CreateRecord(&gameData)
+	if err != nil {
+		fmt.Println("Error in creating the record")
+		return
 	}
 
 	//join this user to the game room
@@ -344,6 +386,11 @@ func GetRoom(ctx *gin.Context) {
 
 }
 
+type GameDataHook struct {
+	ActorNr int
+	GameId  string
+	UserID  string
+}
 type DefaultSuccessResponse struct {
 	ResultCode int    `json:"ResultCode"`
 	Message    string `json:"Message"`
@@ -352,6 +399,35 @@ type DefaultSuccessResponse struct {
 func GameCreate(ctx *gin.Context) {
 
 	//default success response
+	var data GameDataHook
+	body, _ := io.ReadAll(ctx.Request.Body)
+
+	err := json.Unmarshal(body, &data)
+	if err != nil {
+		fmt.Println("Error in unmarshalling the resposne from the hook")
+		return
+	}
+	fmt.Println(string(body))
+
+	gameData := model.GameState{
+		ActorNr:        data.ActorNr,
+		GameId:         data.GameId,
+		Time:           10,
+		UserId:         data.UserID,
+		TotalGames:     3,
+		GamesCompleted: 0,
+		IsDead:         false,
+		IsZombie:       false,
+		Xp:             0,
+		Kills:          0,
+		IsRunning:      true,
+	}
+
+	err = db.CreateRecord(&gameData)
+	if err != nil {
+		fmt.Println("Error in creating the record")
+		return
+	}
 
 	resp := &DefaultSuccessResponse{
 		ResultCode: 0,

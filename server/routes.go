@@ -5,9 +5,11 @@ import (
 	"main/server/gateway"
 	"main/server/handler"
 	rooms "main/server/services/Rooms"
+	gameplay "main/server/services/gamePlay"
 	"main/server/services/rewards"
 	"main/server/services/shop"
 
+	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -18,6 +20,13 @@ func ConfigureRoutes(server *Server) {
 	server.engine.Use(gateway.CORSMiddleware())
 	//swagger route
 	server.engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	//Check if the server is running
+	server.engine.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
+			"message": "Sever listening",
+		})
+	})
 
 	//Auth routes
 	server.engine.POST("/api/v1/users/sign-up", handler.SignupHandler)
@@ -50,7 +59,6 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/api/v1/get-daily-goals", gateway.UserAuthorization, handler.GetDailyGoalsHandler)
 	server.engine.POST("/api/v1/skip-daily-goal", gateway.UserAuthorization, handler.SkipGoalHandler)
 	server.engine.POST("/api/v1/claim-daily-goal", gateway.UserAuthorization, handler.ClaimDailyGoalHandler)
-	server.engine.PUT("/api/v1/update-daily-goal", gateway.UserAuthorization, handler.UpdateDailyGoalHandler)
 
 	//daily rewards
 	server.engine.PUT("/api/v1/collect-daily-rewards", gateway.UserAuthorization, handler.CollectDailyRewardHandler)
@@ -68,7 +76,13 @@ func ConfigureRoutes(server *Server) {
 	server.engine.GET("/api/v1/get-room", gateway.UserAuthorization, rooms.GetRoom)
 	server.engine.POST("/api/v1/game-create", rooms.GameCreate)
 
+
+	//WebRpc
+	server.engine.POST("/api/v1/gameStateChange", gameplay.InGameState)
+	server.engine.POST("/api/v1/game-end", gameplay.GameEnd)
+
 	//Game route
 	server.engine.PUT("/api/v1/deduct-amount", gateway.UserAuthorization, handler.DeductAmountHandler)
+
 
 }

@@ -84,34 +84,3 @@ func ClaimDailyGoalHandler(ctx *gin.Context) {
 
 	dailygoal.ClaimDailyGoalService(ctx, userId.(string))
 }
-
-// UpdateDailyGoalHandler Updates the goal data in between of the game
-//
-// @Summary Updates the goal
-// @Description  Updates the goal data in between of the game and gives the reward if the goal is completed
-// @Tags DailyGoal
-// @Accept json
-// @Produce json
-// @Param Authorization header string true "Player Access token"
-// @Param loginDetails body request.UpdateGoalReq true "Update request"
-// @Success 200 {object} response.Success "Sucess"
-// @Failure 400 {object} response.Success "Bad request"
-// @Failure 500 {object} response.Success "Internal server error"
-// @Router /update-daily-goal [put]
-func UpdateDailyGoalHandler(ctx *gin.Context) {
-	userId, exists := ctx.Get("userId")
-	if !exists {
-		response.ShowResponse("userId missing from ", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
-		return
-	}
-
-	var input request.UpdateGoalReq
-	err := utils.RequestDecoding(ctx, &input)
-	if err != nil {
-		response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
-		return
-	}
-
-	dailygoal.UpdateGoalService(ctx, userId.(string), input)
-
-}

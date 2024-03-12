@@ -26,7 +26,7 @@ func AddDummyDataHandler() {
 		filePath  string
 		dataPtr   interface{}
 	}{
-		{"level_rewards", "server/dummyData/rewards.json", &[]model.LevelRewards{}},
+		{"level_rewards", "server/dummyData/level_rewards.json", &[]model.LevelRewards{}},
 		{"daily_rewards", "server/dummyData/dailyRewards.json", &[]model.DailyRewards{}},
 		{"shops", "server/dummyData/shop.json", &[]model.Shop{}},
 		{"special_offers", "server/dummyData/specialOffer.json", &[]model.SpecialOffer{}},
