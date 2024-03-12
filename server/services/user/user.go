@@ -31,6 +31,7 @@ func UpdatePlayerService(ctx *gin.Context, userId string, input request.UpdatePl
 	}
 
 	//update the record
+	user.UsernameUpdatedAt = time.Now()
 	err = db.UpdateRecord(&user, userId, "id").Error
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
@@ -152,5 +153,97 @@ func UpdateDayCount() {
 			return
 		}
 	}
+
+}
+
+func GetNameChangeTimeLeftService(ctx *gin.Context, userId string) {
+
+	var user model.User
+
+	query := "SELECT * from users WHERE id=?"
+	err := db.QueryExecutor(query, &user, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	var days, hours int
+	if user.CreatedAt.Truncate(time.Second).Equal(user.UsernameUpdatedAt.Truncate(time.Second)) {
+		fmt.Println("Times are equal")
+	} else {
+		timeLeft := user.UsernameUpdatedAt.Add(time.Hour * 48)
+		fmt.Println("Time left", timeLeft)
+
+		// daysLeft = int64(timeLeft.Sub(time.Now()).Hours() / 24)
+
+		days, hours = utils.GetTimeDifference(time.Now(), timeLeft)
+		// fmt.Println("Days left", daysLeft)
+
+	}
+
+	response.ShowResponse(utils.DATA_FETCH_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
+		Days  int `json:"days"`
+		Hours int `json:"hours"`
+	}{
+		Days:  days,
+		Hours: hours,
+	}, ctx)
+}
+
+func DeductAmountService(ctx *gin.Context, userId string, input request.DeductAmount) {
+
+	var user model.UserGameStats
+	query := "SELECT * from user_game_stats WHERE user_id=?"
+	err := db.QueryExecutor(query, &user, userId)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+	amount := 1
+
+	if input.Coins == true {
+		if user.CurrentCoins < int64(amount) {
+			response.ShowResponse("Insufficient coins", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			return
+		}
+		user.CurrentCoins -= int64(amount)
+		// user.
+
+	}
+	if input.Gems == true {
+		if user.CurrentGems < int64(amount) {
+			response.ShowResponse("Insufficient gems", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			return
+		}
+		user.CurrentGems -= int64(amount)
+	}
+	if input.Energy == true {
+		if user.Energy < int64(amount) {
+			response.ShowResponse("Insufficient energy", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			return
+		}
+		user.Energy -= int64(amount)
+	}
+
+	updateFields := map[string]interface{}{
+		"current_coins": user.CurrentCoins,
+		"current_gems":  user.CurrentGems,
+		"energy":        user.Energy,
+	}
+	err = db.UpdateZeroVals(&model.UserGameStats{}, "user_id", userId, updateFields)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	response.ShowResponse(utils.SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
+		UpdatedCoins  int64 `json:"updatedCoins"`
+		UpdatedGems   int64 `json:"updatedGems"`
+		UpdatedEnergy int64 `json:"updatedEnergy"`
+	}{
+		UpdatedCoins:  user.CurrentCoins,
+		UpdatedGems:   user.CurrentGems,
+		UpdatedEnergy: user.Energy,
+	}, ctx)
 
 }

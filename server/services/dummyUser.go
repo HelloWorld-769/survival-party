@@ -28,13 +28,14 @@ func AddDummyUsers(input request.SigupRequest) {
 	}
 
 	userRecord := model.User{
-		Email:           input.User.Email,
-		Password:        *encryptedPassword,
-		Username:        strings.ToLower(input.User.Username),
-		Avatar:          input.User.Avatar,
-		EmailVerifiedAt: time.Now(),
-		EmailVerified:   true,
-		DayCount:        1,
+		Email:             input.User.Email,
+		Password:          *encryptedPassword,
+		Username:          strings.ToLower(input.User.Username),
+		Avatar:            input.User.Avatar,
+		EmailVerifiedAt:   time.Now(),
+		UsernameUpdatedAt: time.Now(),
+		EmailVerified:     true,
+		DayCount:          1,
 	}
 
 	err = db.CreateRecord(&userRecord)
@@ -97,18 +98,23 @@ func AddDummyUsers(input request.SigupRequest) {
 		return
 	}
 
-	go func() {
-		err = rewards.CreateStarterDailyRewards(userRecord.Id)
-		if err != nil {
-			return
-		}
+	err = rewards.CreateStarterDailyRewards(userRecord.Id)
+	if err != nil {
+		return
+	}
 
-	}()
+	fmt.Println("Daily goal generation")
+	err = dailygoal.DailyGoalGeneration(true, &userRecord.Id)
+	if err != nil {
+		fmt.Println("Error in daily goal generation", err)
+		return
+	}
+	fmt.Println("Daily goal generation done")
 
-	go dailygoal.DailyGoalGeneration(true, &userRecord.Id)
+	fmt.Println("Level reward generation")
+	rewards.GenerateLevelReward(userRecord.Id)
+	fmt.Println("Level reward generation done")
 
-	go rewards.GenerateLevelReward(userRecord.Id)
-
-	fmt.Println("Transaction edy to commit")
+	// fmt.Println("Transaction edy to commit")
 
 }

@@ -255,6 +255,59 @@ const docTemplate = `{
                 }
             }
         },
+        "/deduct-amount": {
+            "put": {
+                "description": "Deducts the specified amount from the user's account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Game"
+                ],
+                "summary": "Deduct Amount",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Deduct Amount Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DeductAmount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
         "/energy-refill-timer": {
             "get": {
                 "description": "Get the time left for energy refill",
@@ -495,6 +548,50 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/request.PlayerLevelRewardCollectRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/name-time-left": {
+            "get": {
+                "description": "Get time left for name change",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Player"
+                ],
+                "summary": "Get time left for name change",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Player Access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1183,11 +1280,25 @@ const docTemplate = `{
                 }
             }
         },
+
         "request.DailyRewardMuti": {
             "type": "object",
             "properties": {
                 "type": {
                     "type": "integer"
+
+        "request.DeductAmount": {
+            "type": "object",
+            "properties": {
+                "coins": {
+                    "type": "boolean"
+                },
+                "energy": {
+                    "type": "boolean"
+                },
+                "gems": {
+                    "type": "boolean"
+
                 }
             }
         },
