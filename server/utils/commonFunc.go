@@ -197,6 +197,10 @@ func UserMultipler(userId string) int64 {
 	return multiplier
 }
 
+
+func RoundToNearestMultipleOf5(value float64) float64 {
+	return float64(int((value+2.5)/5.0) * 5)
+
 func GetTimeDifference(currentTimeUTC, expirationTimeUTC time.Time) (int, int) {
 	// Calculate the time difference in hours
 	timeDifference := expirationTimeUTC.Sub(currentTimeUTC)
@@ -206,4 +210,5 @@ func GetTimeDifference(currentTimeUTC, expirationTimeUTC time.Time) (int, int) {
 	hours := int(timeDifference.Hours()) % 24
 
 	return days, hours
+
 }

@@ -6,7 +6,7 @@ import (
 	"io"
 	"main/server/db"
 	"main/server/response"
-	"math/rand"
+	"sort"
 
 	"main/server/model"
 	"main/server/utils"
@@ -23,45 +23,6 @@ type WebRpc struct {
 			ActorNr int `json:"actorNr"`
 		} `json:"data"`
 	}
-}
-
-func ZombieSelection(ctx *gin.Context) {
-
-	var data WebRpc
-	body, _ := io.ReadAll(ctx.Request.Body)
-
-	err := json.Unmarshal(body, &data)
-	if err != nil {
-		fmt.Println("Error in unmarshalling the resposne from the hook")
-		return
-	}
-
-	var players []string
-	query := `SELECT user_id FROM game_states WHERE game_id=? AND is_running='true'`
-	err = db.QueryExecutor(query, &players, data.RpcParams.GameId)
-	if err != nil {
-		fmt.Println("Error", err.Error())
-		return
-	}
-
-	randZomb := players[rand.Intn(len(players))]
-
-	query = "UPDATE game_states SET is_zombie=true WHERE user_id=? AND game_id=?"
-	err = db.RawExecutor(query, randZomb, data.RpcParams.GameId)
-	if err != nil {
-		fmt.Println("Error", err.Error())
-		return
-	}
-
-	ctx.JSON(200, map[string]interface{}{
-		"ResultCode": "0",
-		"Data": map[string]interface{}{
-			"zombie": randZomb,
-		},
-	})
-
-	// response.ShowResponse(utils.SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct{ Zombie string }{Zombie: randZomb.UserId}, ctx)
-
 }
 
 // This is the func that is used to chnge the state of pplayer like if player kills a player or zombie or complete a game
@@ -90,8 +51,11 @@ func InGameState(ctx *gin.Context) {
 			return
 		}
 
-		userGameData.GamesCompleted++
-		userGameData.Xp += 5
+		if userGameData.GamesCompleted < userGameData.TotalGames {
+
+			userGameData.GamesCompleted++
+			userGameData.Xp += 5
+		}
 
 		query = "UPDATE game_states SET xp=?,games_completed=? WHERE user_id=? AND game_id=?"
 		err = db.RawExecutor(query, userGameData.Xp, userGameData.GamesCompleted, data.UserId, data.RpcParams.GameId)
@@ -173,7 +137,7 @@ func InGameState(ctx *gin.Context) {
 				return
 			}
 
-			userGameData.Xp += 2
+			userGameData.Xp += 3
 			userGameData.Kills++
 
 			//update userGameData
@@ -574,6 +538,28 @@ func ProcessDailyGoal(goalType int64, userId string, userGameStats *model.UserGa
 }
 
 type GameEndRpc struct {
+
+	RpcParams struct {
+		GameId string `json:"GameId"`
+		Data   struct {
+			Bots []struct {
+				BotName           string  `json:"botName"`
+				KillsAsSurvivor   float64 `json:"killsAsSurvivor"`
+				KillsAsZombie     float64 `json:"killsAsZombie"`
+				MiniGameCompleted float64 `json:"miniGamesCompleted"`
+				Avatar            float64 `json:"avatar"`
+				IsZombie          bool    `json:"isZombie"`
+			} `json:"bots"`
+			//1 for survivors and 2 for zombies
+			Win float64 `json:"wins"`
+		} `json:"data"`
+	}
+}
+type Rewards struct {
+	UserId      string                    `json:"userId"`
+	RewardsData []response.RewardResponse `json:"rewards"`
+}
+
 	UserId    string
 	RpcParams struct {
 		GameId     string  `json:"gameId"`
@@ -591,6 +577,7 @@ type GameEndRpc struct {
 	}
 }
 
+
 func GameEnd(ctx *gin.Context) {
 	var data GameEndRpc
 	body, _ := io.ReadAll(ctx.Request.Body)
@@ -599,6 +586,156 @@ func GameEnd(ctx *gin.Context) {
 
 	err := json.Unmarshal(body, &data)
 	if err != nil {
+
+		fmt.Println("Error in unmarshalling the resposne from the hook", err)
+		return
+	}
+
+	fmt.Println("data", data)
+	//Cehck whether the game id is present in the db or not
+
+	var queryRes []struct {
+		ActorNr        int    `json:"ActorNr"`
+		GameId         string `json:"gameId"`
+		Time           int    `json:"time"`
+		UserId         string `json:"userId"`
+		TotalGames     int    `json:"totalGames"`
+		GamesCompleted int    `json:"gamesCompleted"`
+		IsZombie       bool   `json:"isZombie"`
+		Xp             int64  `json:"xp" `
+		Kills          int    `json:"kills"`
+		IsRunning      bool   `json:"isRunning"`
+		XP             int64  `json:"xp"`
+		Level          int64  `json:"level"`
+		Energy         int64  `json:"energy"`
+		TotalCoins     int64  `json:"totalCoins"`
+		CurrentCoins   int64  `json:"currentCoins"`
+		TotalGems      int64  `json:"totalGems"`
+		CurrentGems    int64  `json:"currentGems"`
+		MatchesWon     int64  `json:"matchesWon"`
+		MatchesLost    int64  `json:"matchesLost"`
+		TotalKills     int64  `json:"totalKills"`
+		Username       string `json:"username"`
+		Avatar         int    `json:"avatar"`
+	}
+
+	query := ` SELECT gs.*, ugs.* ,u.username,u.avatar
+	FROM game_states gs 
+	JOIN user_game_stats ugs ON gs.user_id = ugs.user_id 
+	JOIN users u ON ugs.user_id=u.id
+	WHERE gs.game_id = ? AND gs.is_running = 'true'`
+
+	err = db.QueryExecutor(query, &queryRes, data.RpcParams.GameId)
+	if err != nil {
+
+		fmt.Println("error in query form the db", err)
+		return
+	}
+
+	fmt.Println("Query res is", queryRes)
+	var rewards []Rewards
+	var scoreBoard []response.Scoreboard
+
+	//Get the user game stas for each  user and add the xp and kills gained in a game
+	// Update user game stats for each player
+	for _, player := range queryRes {
+
+		winCoins := utils.RoundToNearestMultipleOf5(float64(player.Xp * utils.WIN_MULTIPLIER))
+		winGems := 1
+		winEnergy := 0
+
+		lostCoins := utils.RoundToNearestMultipleOf5(float64(player.Xp * utils.LOST_MULTIPLIER))
+		lostGems := 0
+		lostEnergy := 0
+
+		player.XP += player.Xp
+		player.TotalKills += int64(player.Kills)
+		if data.RpcParams.Data.Win == 1 && !player.IsZombie {
+			fmt.Println("asvdjhasjdhsffggghhh")
+			player.MatchesWon++
+			player.CurrentCoins += int64(winCoins)
+			player.TotalCoins += int64(winCoins)
+			player.CurrentGems += int64(winGems)
+			player.TotalGems += int64(winGems)
+			player.Energy += int64(winEnergy)
+
+			rewards = append(rewards, Rewards{
+				UserId: player.UserId,
+				RewardsData: []response.RewardResponse{
+					{
+						RewardType: utils.Coins,
+						Quantity:   int64(winCoins),
+					},
+					{
+						RewardType: utils.Gems,
+						Quantity:   int64(winGems),
+					},
+					{
+						RewardType: utils.Energy,
+						Quantity:   int64(winEnergy),
+					},
+				},
+			})
+		} else if data.RpcParams.Data.Win == 2 && player.IsZombie {
+			fmt.Println("askvdjhasjdad")
+			player.MatchesWon++
+			player.CurrentCoins += int64(winCoins)
+			player.TotalCoins += int64(winCoins)
+			player.CurrentGems += int64(winGems)
+			player.TotalGems += int64(winGems)
+			player.Energy += int64(winEnergy)
+
+			rewards = append(rewards, Rewards{
+				UserId: player.UserId,
+				RewardsData: []response.RewardResponse{
+					{
+						RewardType: utils.Coins,
+						Quantity:   int64(winCoins),
+					},
+					{
+						RewardType: utils.Gems,
+						Quantity:   int64(winGems),
+					},
+					{
+						RewardType: utils.Energy,
+						Quantity:   int64(winEnergy),
+					},
+				},
+			})
+		} else {
+			fmt.Println("ajdvjav,,,,,,,jdas")
+			player.MatchesLost++
+			player.CurrentCoins += int64(lostCoins)
+			player.TotalCoins += int64(lostCoins)
+			player.CurrentGems += int64(lostGems)
+			player.TotalGems += int64(lostGems)
+			player.Energy += int64(lostEnergy)
+
+			rewards = append(rewards, Rewards{
+				UserId: player.UserId,
+				RewardsData: []response.RewardResponse{
+					{
+						RewardType: utils.Coins,
+						Quantity:   int64(lostCoins),
+					},
+					{
+						RewardType: utils.Gems,
+						Quantity:   int64(lostGems),
+					},
+					{
+						RewardType: utils.Energy,
+						Quantity:   int64(lostEnergy),
+					},
+				},
+			})
+		}
+
+		// Check after adding the XP if player level is increased or not
+		// If yes, unlock the rewards and update the user level
+		var playerLevel model.LevelRewards
+		query = "SELECT * FROM level_rewards WHERE xp_required <= ? ORDER BY level_required DESC LIMIT 1"
+		err := db.QueryExecutor(query, &playerLevel, player.XP)
+
 		fmt.Println("Error in unmarshalling the resposne from the hook")
 		return
 	}
@@ -637,19 +774,83 @@ func GameEnd(ctx *gin.Context) {
 		var playerLevel model.LevelRewards
 		query = "select * from level_rewards WHERE xp_required<=?  ORDER By level  DESC LIMIT 1	"
 		err := db.QueryExecutor(query, &playerLevel, userStats.XP)
+
 		if err != nil {
 			fmt.Println("Error in getting the level rewards")
 			return
 		}
-		if playerLevel.LevelRequired != userStats.Level {
-			//Mark status of the level_rward for that player as UNCLAIMED till that level
-			for i := userStats.Level; i < playerLevel.LevelRequired; i++ {
-				query = "UPDATE user_level_rewards SET status=? WHERE user_id=? AND level=?"
+
+		if playerLevel.LevelRequired != player.Level {
+			// Mark status of the level_reward for that player as UNCLAIMED till that level
+			for i := player.Level; i <= playerLevel.LevelRequired; i++ {
+				query = "UPDATE user_level_rewards SET status = ? WHERE user_id = ? AND level = ?"
+
 				err = db.RawExecutor(query, utils.UNCLAIMED, player.UserId, i)
 				if err != nil {
 					fmt.Println("Error in updating the level rewards")
 					return
 				}
+
+			}
+
+			player.Level = playerLevel.LevelRequired
+
+		}
+
+		//Query to update user game states
+		query = "UPDATE user_game_stats set xp=?,level=?,matches_lost=?,matches_won=?,energy=?,total_coins=?,total_gems=?,current_gems=?,current_coins=?,total_kills=? WHERE user_id=?"
+		err = db.RawExecutor(query, player.XP, player.Level, player.MatchesLost, player.MatchesWon, player.Energy, player.TotalCoins, player.TotalGems, player.CurrentGems, player.CurrentCoins, player.TotalKills, player.UserId)
+		if err != nil {
+			fmt.Println("Error in updating the records of the player", err)
+			return
+		}
+		// err = db.UpdateRecord(&player, player.UserId, "user_id").Error
+		// if err != nil {
+		// 	fmt.Println("Error in updating the game stats")
+		// 	return
+		// }
+		scoreBoard = append(scoreBoard, response.Scoreboard{
+			Name:     player.Username,
+			XPGained: player.Xp,
+			Avatar:   player.Avatar,
+			Level:    player.Level,
+		})
+
+	}
+
+	// The rest of the code remains the same
+	if data.RpcParams.Data.Bots != nil {
+		for i, bot := range data.RpcParams.Data.Bots {
+			scoreBoard = append(scoreBoard, response.Scoreboard{
+				Name:     bot.BotName,
+				XPGained: int64((bot.KillsAsSurvivor * 2) + (bot.KillsAsZombie * 1) + (bot.MiniGameCompleted * 5)),
+				Avatar:   int(data.RpcParams.Data.Bots[i].Avatar),
+				Level:    1,
+			})
+		}
+	}
+	// fmt.Println("Scoreboard is before sorting", scoreBoard)
+
+	//Sorting on the basis of the XP gained
+	sort.SliceStable(scoreBoard, func(i, j int) bool {
+		return (scoreBoard[i].XPGained) > scoreBoard[j].XPGained
+	})
+
+	//Giving rewads to the player on wins
+
+	fmt.Println("ScoreBorad data:", scoreBoard)
+	fmt.Println("Rewards data:", rewards)
+
+	ctx.JSON(200, map[string]interface{}{
+		"Result": 1,
+		"Data": map[string]interface{}{
+			"scoreboard": scoreBoard,
+			"rewards":    rewards,
+		},
+	})
+
+}
+
 
 			}
 
@@ -667,21 +868,4 @@ func GameEnd(ctx *gin.Context) {
 
 }
 
-/*
 
-
-for _, bot := range data.RpcParams.Data.Bots {
-			if player.UserId == bot.BotName {
-				player.Xp += 5
-				player.Kills += bot.Kills
-				player.GamesCompleted += bot.MiniGameCompleted
-				if bot.IsZombie {
-					player.IsZombie = true
-				}
-				err = db.UpdateRecord(&player, player.UserId, "user_id").Error
-				if err != nil {
-					fmt.Println("Error in updating the game stats")
-					return
-				}
-			}
-		}*/

@@ -177,24 +177,28 @@ func GameJoin(ctx *gin.Context) {
 	// 		return
 	// 	}
 	// } else {
-	gameData := model.GameState{
-		ActorNr:        gameJoinReq.ActorNr,
-		GameId:         gameJoinReq.GameId,
-		Time:           10,
-		UserId:         gameJoinReq.UserId,
-		TotalGames:     3,
-		GamesCompleted: 0,
-		IsDead:         false,
-		IsZombie:       false,
-		Xp:             0,
-		Kills:          0,
-		IsRunning:      true,
-	}
 
-	err = db.CreateRecord(&gameData)
-	if err != nil {
-		fmt.Println("Error in creating the record")
-		return
+	if gameJoinReq.Nickname != "GameManager" {
+
+		gameData := model.GameState{
+			ActorNr:        gameJoinReq.ActorNr,
+			GameId:         gameJoinReq.GameId,
+			Time:           10,
+			UserId:         gameJoinReq.UserId,
+			TotalGames:     3,
+			GamesCompleted: 0,
+			IsDead:         false,
+			IsZombie:       false,
+			Xp:             1,
+			Kills:          0,
+			IsRunning:      true,
+		}
+
+		err = db.CreateRecord(&gameData)
+		if err != nil {
+			fmt.Println("Error in creating the record")
+			return
+		}
 	}
 
 	//join this user to the game room
@@ -351,8 +355,12 @@ func GetRoom(ctx *gin.Context) {
 		return
 	}
 
-	//TODO: Handle error
 	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+
+	}
 	fmt.Println("response: ", string(body))
 	defer resp.Body.Close()
 

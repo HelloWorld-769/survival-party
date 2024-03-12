@@ -18,7 +18,7 @@ type LevelRewards struct {
 }
 
 type UserLevelRewards struct {
-	UserId     string         `json:"userId"`
+	UserId     string         `json:"-"`
 	User       User           `json:"-" gorm:"foreignKey:UserId;constraint:OnDelete:CASCADE"`
 	RewardType int64          `json:"rewardType"`
 	Quantity   int64          `json:"quantity"`

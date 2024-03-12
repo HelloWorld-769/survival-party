@@ -116,6 +116,10 @@ const (
 	MINI_GAME_COMPLETION
 )
 
+// Game End multipliers
+const WIN_MULTIPLIER = 4
+const LOST_MULTIPLIER = 2
+
 type REWARD_MULTIPLIER int
 
 const (
@@ -123,3 +127,4 @@ const (
 	TWO
 	THREE
 )
+
