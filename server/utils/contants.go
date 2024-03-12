@@ -115,3 +115,11 @@ const (
 	KILL_ZOMBIE
 	MINI_GAME_COMPLETION
 )
+
+type REWARD_MULTIPLIER int
+
+const (
+	ONE REWARD_MULTIPLIER = iota + 1
+	TWO
+	THREE
+)

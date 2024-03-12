@@ -285,7 +285,7 @@ func CreateStarterDailyRewards(userId string) error {
 
 }
 
-func CollectDailyReward(ctx *gin.Context, userId string) {
+func CollectDailyReward(ctx *gin.Context, userId string, input request.DailyRewardMuti) {
 
 	//get user gamestats data
 	var userGameStats model.UserGameStats
@@ -318,7 +318,22 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 	}
 	fmt.Println("user daycount:   ", user.DayCount)
 	fmt.Println("user daycount mod 7:   ", (user.DayCount % 7))
+
+	var muliplier int64
+	switch input.Type {
+	case int(utils.ONE):
+		muliplier = 1
+	case int(utils.TWO):
+		muliplier = 2
+	case int(utils.THREE):
+		muliplier = 3
+	default:
+		response.ShowResponse("Invalid Type", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		return
+	}
+
 	//check if already claimed
+	var gains int64
 	if user.DayCount > 7 && user.DayCount%7 != 0 {
 
 		if userRewardData[(user.DayCount%7)-1].Status == utils.CLAIMED {
@@ -339,18 +354,23 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 
 		}
 
-		switch userRewardData[(user.DayCount%7)-1].RewardType {
+		switch userRewardData[user.DayCount%7].RewardType {
 		case 1:
 			fmt.Println("Energy")
-			userGameStats.Energy += userRewardData[(user.DayCount%7)-1].Gain
+			userGameStats.Energy += muliplier * userRewardData[(user.DayCount%7)-1].Gain
+			gains = muliplier * userRewardData[(user.DayCount%7)-1].Gain
+
 		case 2:
 			fmt.Println("Coins")
-			userGameStats.CurrentCoins += userRewardData[(user.DayCount%7)-1].Gain
-			userGameStats.TotalCoins += userRewardData[(user.DayCount%7)-1].Gain
+			userGameStats.CurrentCoins += muliplier * userRewardData[(user.DayCount%7)-1].Gain
+			userGameStats.TotalCoins += muliplier * userRewardData[(user.DayCount%7)-1].Gain
+			gains = muliplier * userRewardData[(user.DayCount%7)-1].Gain
+
 		case 3:
 			fmt.Println("Gems")
-			userGameStats.CurrentGems += userRewardData[(user.DayCount%7)-1].Gain
-			userGameStats.TotalGems += userRewardData[(user.DayCount%7)-1].Gain
+			userGameStats.CurrentGems += muliplier * userRewardData[(user.DayCount%7)-1].Gain
+			userGameStats.TotalGems += muliplier * userRewardData[(user.DayCount%7)-1].Gain
+			gains = muliplier * userRewardData[(user.DayCount%7)-1].Gain
 
 		case 4:
 			fmt.Println("Inventory")
@@ -391,15 +411,20 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		switch userRewardData[(user.DayCount)-1].RewardType {
 		case 1:
 			fmt.Println("Energy")
-			userGameStats.Energy += userRewardData[(user.DayCount)-1].Gain
+			userGameStats.Energy += muliplier * userRewardData[(user.DayCount)-1].Gain
+			gains = muliplier * userRewardData[(user.DayCount%7)-1].Gain
+
 		case 2:
 			fmt.Println("Coins")
-			userGameStats.CurrentCoins += userRewardData[(user.DayCount)-1].Gain
-			userGameStats.TotalCoins += userRewardData[(user.DayCount)-1].Gain
+			userGameStats.CurrentCoins += muliplier * userRewardData[(user.DayCount)-1].Gain
+			userGameStats.TotalCoins += muliplier * userRewardData[(user.DayCount)-1].Gain
+			gains = muliplier * userRewardData[(user.DayCount%7)-1].Gain
+
 		case 3:
 			fmt.Println("Gems")
-			userGameStats.CurrentGems += userRewardData[(user.DayCount)-1].Gain
-			userGameStats.TotalGems += userRewardData[(user.DayCount)-1].Gain
+			userGameStats.CurrentGems += muliplier * userRewardData[(user.DayCount)-1].Gain
+			userGameStats.TotalGems += muliplier * userRewardData[(user.DayCount)-1].Gain
+			gains = muliplier * userRewardData[(user.DayCount%7)-1].Gain
 
 		case 4:
 			fmt.Println("Inventory")
@@ -419,20 +444,15 @@ func CollectDailyReward(ctx *gin.Context, userId string) {
 		}
 	}
 
-	//fetch the updated daily rewards and give in response
-	var dailyRewards []model.UserDailyRewards
-	query = "select * from user_daily_rewards where user_id=? order by day_count"
-	err = db.QueryExecutor(query, &dailyRewards, userId)
-	if err != nil {
-		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-		return
-	}
-
-	response.ShowResponse("reward claimed successfully ", utils.HTTP_OK, utils.SUCCESS, dailyRewards, ctx)
-
+	response.ShowResponse("reward claimed successfully ", utils.HTTP_OK, utils.SUCCESS, struct {
+		UserDailyRewards []model.UserDailyRewards `json:"userDailyRewards"`
+		Gains            int64                    `json:"gains"`
+	}{
+		UserDailyRewards: userRewardData,
+		Gains:            gains,
+	}, ctx)
 }
 
-// todo
 // get user daily reward data
 func GetUserDailyRewardData(ctx *gin.Context, userId string) {
 
