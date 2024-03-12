@@ -194,3 +194,7 @@ func UserMultipler(userId string) int64 {
 	multiplier := int64((dayCount * 2)) - (MilliSecondsToHours(user_game_stats.TotalTimeSpent / 24))
 	return multiplier
 }
+
+func RoundToNearestMultipleOf5(value float64) float64 {
+	return float64(int((value+2.5)/5.0) * 5)
+}

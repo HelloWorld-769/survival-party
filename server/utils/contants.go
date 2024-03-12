@@ -115,3 +115,7 @@ const (
 	KILL_ZOMBIE
 	MINI_GAME_COMPLETION
 )
+
+// Game End multipliers
+const WIN_MULTIPLIER = 4
+const LOST_MULTIPLIER = 2
