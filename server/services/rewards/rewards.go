@@ -15,7 +15,7 @@ import (
 func GetPlayerLevelRewards(ctx *gin.Context, userId string) {
 
 	var userReward []model.UserLevelRewards
-	query := "select * from user_level_rewards where user_id=?"
+	query := "select * from user_level_rewards where user_id=? order by level"
 	err := db.QueryExecutor(query, &userReward, userId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
@@ -65,7 +65,6 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 
 	//check whether user has enough level to collect the levelReward
 	//user level reward dummy for testing
-	var userLevelRecord model.UserLevelRewards
 	userData, err := utils.GetUserGameStatsData(userId)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
@@ -115,14 +114,8 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 		return
 	}
 	//update the claimed field in user level reward
-	query = "select * from user_level_rewards where user_id=?"
-	err = db.QueryExecutor(query, &userLevelRecord, userId)
-	if err != nil {
-		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-		return
-	}
-	userLevelRecord.Status = utils.CLAIMED
-	err = db.UpdateRecord(&userLevelRecord, userId, "user_id").Error
+	query = "UPDATE user_level_rewards SET status=? WHERE user_id=? AND level=?"
+	db.RawExecutor(query, utils.CLAIMED, userId, req.Level)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
