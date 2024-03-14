@@ -44,7 +44,7 @@ const (
 	HTTP_NO_CONTENT                      int64 = 204
 )
 
-const PACKAGE_NAME string = "com.frimus.survivalparty2"
+const PACKAGE_NAME string = "com.frimustechnologies.survivalparty"
 
 const (
 	FAILURE       string = "Failure"
@@ -127,4 +127,3 @@ const (
 	TWO
 	THREE
 )
-

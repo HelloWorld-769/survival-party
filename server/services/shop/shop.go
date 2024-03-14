@@ -9,11 +9,11 @@ import (
 	"main/server/response"
 	"main/server/utils"
 	"math/rand"
-	"net/http"
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/oauth2/google"
+	"google.golang.org/api/androidpublisher/v2"
 )
 
 type Res struct {
@@ -178,27 +178,41 @@ func BuyFromStoreService(ctx *gin.Context, userId string, input request.BuyStore
 		}
 		userGameStats.CurrentCoins -= shopData.Price
 	} else if shopData.CurrencyType == utils.C_MONEY {
+
 		//hit the google api
 
-		link := os.Getenv("GOOGLE_API") + "/" + utils.PACKAGE_NAME + "/purchases/products/" + input.ProductId + "/tokens/" + input.Token
+		jsonKeyFile := "server/survival.json"
 
-		req, err := http.NewRequest("GET", link, nil)
+		// Load the service account key file
+		jsonKey, err := ioutil.ReadFile(jsonKeyFile)
 		if err != nil {
-			response.ShowResponse("Error from creating google api request"+err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			response.ShowResponse("Error reading file"+err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
 
-		resp, err := http.DefaultClient.Do(req)
+		conf, err := google.JWTConfigFromJSON(jsonKey, androidpublisher.AndroidpublisherScope)
 		if err != nil {
-			response.ShowResponse("Error from hitting google api request"+err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			response.ShowResponse("Error"+err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
-		resBody, _ := ioutil.ReadAll(resp.Body)
-		resp.Body.Close()
-		if resp.StatusCode != 200 {
-			response.ShowResponse(string(resBody), int64(resp.StatusCode), utils.FAILURE, nil, ctx)
+
+		client := conf.Client(ctx)
+
+		service, err := androidpublisher.New(client)
+		if err != nil {
+			response.ShowResponse("Error in making client"+err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
+
+		// Verify the purchase token
+		resp, err := service.Purchases.Products.Get(utils.PACKAGE_NAME, shopData.ProductId, input.Token).Do()
+		if err != nil {
+			response.ShowResponse("Error in getting the data from api"+err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+
+		fmt.Printf("Purchase state: %v\n", resp.PurchaseState)
+
 	}
 
 	if shopData.RewardType == utils.Energy {
