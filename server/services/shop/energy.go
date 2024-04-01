@@ -33,6 +33,12 @@ func RefillEnergy() {
 	}
 }
 
+type EnergyTimeLeftResponse struct {
+
+	TotalTime utils.TimeLeft `json:"totalTime"`
+	TimeLeft utils.TimeLeft `json:"timeLeft"`
+}
+
 // EnergyRefillTimer Gives the time for energy renewal
 //
 // @Summary Get the time left for energy refill
@@ -47,8 +53,11 @@ func RefillEnergy() {
 func EnergyRefillTimer(ctx *gin.Context) {
 
 	timeLeft := EnergyTimer()
+	totalTime:=utils.TimeLeft{Hours: 0,Minutes: 2,Seconds: 0}
 
-	response.ShowResponse("RefillEnergy Timer ", utils.HTTP_OK, utils.SUCCESS, timeLeft, ctx)
+	resp:=EnergyTimeLeftResponse{TotalTime: totalTime,TimeLeft: timeLeft}
+
+	response.ShowResponse("RefillEnergy Timer ", utils.HTTP_OK, utils.SUCCESS, resp, ctx)
 }
 
 func EnergyTimer() utils.TimeLeft {
