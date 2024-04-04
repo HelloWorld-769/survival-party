@@ -340,7 +340,7 @@ func GetRoom(ctx *gin.Context) {
 			return
 		}
 
-		mutex.Unlock()
+		// mutex.Unlock()
 
 		response.ShowResponse("room get successfully", utils.HTTP_OK, utils.SUCCESS, room.RoomId, ctx)
 		return
