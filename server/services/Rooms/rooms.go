@@ -318,6 +318,8 @@ func GetRoom(ctx *gin.Context) {
 		return
 
 	}
+
+	fmt.Println("existing room -------------->", room)
 	if room.RoomId != "" {
 
 		//room already exists with some capacity
@@ -333,6 +335,7 @@ func GetRoom(ctx *gin.Context) {
 			return
 		}
 		if exists {
+			fmt.Println("already in room -------------->")
 			response.ShowResponse("user already in room", utils.HTTP_BAD_REQUEST, utils.FAILURE, room.RoomId, ctx)
 			return
 		}
@@ -360,7 +363,6 @@ func GetRoom(ctx *gin.Context) {
 	resp, err := client.Do(request)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-
 		return
 	}
 
@@ -370,7 +372,7 @@ func GetRoom(ctx *gin.Context) {
 		return
 
 	}
-	fmt.Println("response: ", string(body))
+	fmt.Println("response:--------------> ", string(body))
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 201 || resp.StatusCode == 200 {
