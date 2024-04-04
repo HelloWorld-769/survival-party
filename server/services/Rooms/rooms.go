@@ -288,7 +288,7 @@ func GetRoom(ctx *gin.Context) {
 
 	//create a post request to send to node server for actual room creation
 	//create a uuid to send to node server of room
-
+	fmt.Println("starting of GET room ----------->")
 	newUUID, err := generateUUID()
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -301,7 +301,10 @@ func GetRoom(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Println("JUST BEFORE LOCK APPLICATION------>")
 	mutex.Lock()
+
+	fmt.Println("LOCK APPLIED----------> ")
 	//check in the db whether a room is available with some capacity left
 
 	var room model.Rooms
@@ -390,15 +393,18 @@ func GetRoom(ctx *gin.Context) {
 		//update the room current capacity
 
 		mutex.Unlock()
+		fmt.Println("LOCK RELEASED")
+
 		response.ShowResponse("room created successfully", utils.HTTP_OK, utils.SUCCESS, newUUID.String(), ctx)
 		return
 	} else {
-
-		response.ShowResponse(string(body), int64(resp.StatusCode), utils.FAILURE, nil, ctx)
+		fmt.Println("LOCK RELEASED")
 		mutex.Unlock()
+		response.ShowResponse(string(body), int64(resp.StatusCode), utils.FAILURE, nil, ctx)
 
 		return
 	}
+	// mutex.Unlock()
 
 }
 
