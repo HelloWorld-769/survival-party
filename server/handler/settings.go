@@ -43,7 +43,7 @@ func GetSettingsHandler(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Player Access token"
-// @Param loginDetails body request.PlayerLevelRewardCollectRequest true "Player Details"
+// @Param settings body request.UpdatePlayerSettingsRequest true "Player Settings"
 // @Success 200 {object} response.Success "Sucess"
 // @Failure 400 {object} response.Success "Bad request"
 // @Failure 500 {object} response.Success "Internal server error"

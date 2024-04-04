@@ -10,8 +10,8 @@ type UserSettings struct {
 	Id             string         `json:"Id" gorm:"default:uuid_generate_v4();unique;primaryKey"`
 	UserId         string         `json:"userId"`
 	User           User           `json:"-" gorm:"references:Id;constraint:OnDelete:CASCADE"`
-	Sound          int64          `json:"sound"`
-	Music          int64          `json:"music"`
+	Sound          float64        `json:"sound"`
+	Music          float64        `json:"music"`
 	Vibration      bool           `json:"vibration"`
 	VoicePack      bool           `json:"voicePack"`
 	Notifications  bool           `json:"notifications"`

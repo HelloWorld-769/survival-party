@@ -68,8 +68,9 @@ func SignupService(ctx *gin.Context, input request.SigupRequest) {
 
 	userSettings := model.UserSettings{
 		UserId:         userRecord.Id,
-		Sound:          1,
-		Music:          1,
+		Sound:          0.5,
+		Music:          0.5,
+		JoystickSize:   0.5,
 		Vibration:      false,
 		VoicePack:      false,
 		Notifications:  false,
@@ -325,15 +326,15 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		}
 		//give a random userNmae to that user
 		userRecord := model.User{
-			Email:           input.Email,
-			EmailVerified:   true,
-			Password:        "",
-			Username:        strings.ToLower("Suvival_Party_" + strconv.Itoa(count)),
-			Avatar:          input.Avatar,
-			SocialId:        input.Uid,
-			EmailVerifiedAt: time.Now(),
+			Email:             input.Email,
+			EmailVerified:     true,
+			Password:          "",
+			Username:          strings.ToLower("Suvival_Party_" + strconv.Itoa(count)),
+			Avatar:            input.Avatar,
+			SocialId:          input.Uid,
+			EmailVerifiedAt:   time.Now(),
 			UsernameUpdatedAt: time.Now(),
-			DayCount:        1,
+			DayCount:          1,
 		}
 
 		err = db.CreateRecord(&userRecord)

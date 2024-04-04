@@ -59,8 +59,9 @@ func AddDummyUsers(input request.SigupRequest) {
 
 	userSettings := model.UserSettings{
 		UserId:         userRecord.Id,
-		Sound:          1,
-		Music:          1,
+		Sound:          0.5,
+		Music:          0.5,
+		JoystickSize:   0.5,
 		Vibration:      false,
 		VoicePack:      false,
 		Notifications:  false,

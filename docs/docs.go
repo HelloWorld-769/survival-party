@@ -921,12 +921,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Player Details",
-                        "name": "loginDetails",
+                        "description": "Player Settings",
+                        "name": "settings",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/request.PlayerLevelRewardCollectRequest"
+                            "$ref": "#/definitions/request.UpdatePlayerSettingsRequest"
                         }
                     }
                 ],
@@ -1424,6 +1424,35 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "request.UpdatePlayerSettingsRequest": {
+            "type": "object",
+            "properties": {
+                "friendRequests": {
+                    "type": "boolean"
+                },
+                "joystick_size": {
+                    "type": "number"
+                },
+                "language": {
+                    "type": "string"
+                },
+                "music": {
+                    "type": "number"
+                },
+                "notifications": {
+                    "type": "boolean"
+                },
+                "sound": {
+                    "type": "number"
+                },
+                "vibration": {
+                    "type": "boolean"
+                },
+                "voicePack": {
+                    "type": "boolean"
                 }
             }
         },

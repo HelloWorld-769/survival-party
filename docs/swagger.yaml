@@ -103,6 +103,25 @@ definitions:
       username:
         type: string
     type: object
+  request.UpdatePlayerSettingsRequest:
+    properties:
+      friendRequests:
+        type: boolean
+      joystick_size:
+        type: number
+      language:
+        type: string
+      music:
+        type: number
+      notifications:
+        type: boolean
+      sound:
+        type: number
+      vibration:
+        type: boolean
+      voicePack:
+        type: boolean
+    type: object
   response.Status:
     properties:
       code:
@@ -715,12 +734,12 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: Player Details
+      - description: Player Settings
         in: body
-        name: loginDetails
+        name: settings
         required: true
         schema:
-          $ref: '#/definitions/request.PlayerLevelRewardCollectRequest'
+          $ref: '#/definitions/request.UpdatePlayerSettingsRequest'
       produces:
       - application/json
       responses:

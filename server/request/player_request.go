@@ -8,10 +8,11 @@ type UpdatePlayer struct {
 }
 
 type UpdatePlayerSettingsRequest struct {
-	Sound          int64   `json:"sound"`
-	Music          int64   `json:"music"`
+	Sound          float64 `json:"sound"`
+	Music          float64 `json:"music"`
 	JoystickSize   float64 `json:"joystick_size"`
 	Vibration      bool    `json:"vibration"`
+	VoicePack      bool    `json:"voicePack"`
 	Language       string  `json:"language"`
 	FriendRequests bool    `json:"friendRequests"`
 	Notifications  bool    `json:"notifications"`
