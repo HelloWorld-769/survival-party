@@ -303,6 +303,7 @@ func GetRoom(ctx *gin.Context) {
 
 	fmt.Println("JUST BEFORE LOCK APPLICATION------>")
 	mutex.Lock()
+	defer mutex.Unlock()
 
 	fmt.Println("LOCK APPLIED----------> ")
 	//check in the db whether a room is available with some capacity left
@@ -392,14 +393,13 @@ func GetRoom(ctx *gin.Context) {
 		}
 		//update the room current capacity
 
-		mutex.Unlock()
 		fmt.Println("LOCK RELEASED")
 
 		response.ShowResponse("room created successfully", utils.HTTP_OK, utils.SUCCESS, newUUID.String(), ctx)
 		return
 	} else {
 		fmt.Println("LOCK RELEASED")
-		mutex.Unlock()
+
 		response.ShowResponse(string(body), int64(resp.StatusCode), utils.FAILURE, nil, ctx)
 
 		return
