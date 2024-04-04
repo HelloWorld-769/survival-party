@@ -10,6 +10,7 @@ import (
 	"main/server/utils"
 	"net/http"
 	"os"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 
@@ -271,6 +272,8 @@ func GameLeave(ctx *gin.Context) {
 	response.ShowResponse("room leave succesfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 }
 
+var mutex = &sync.Mutex{}
+
 // @Summary get room for connection
 // @Description get room for new game
 // @Tags Rooms
@@ -297,6 +300,8 @@ func GetRoom(ctx *gin.Context) {
 		response.ShowResponse("userId missing from ", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
 		return
 	}
+
+	mutex.Lock()
 	//check in the db whether a room is available with some capacity left
 
 	var room model.Rooms
@@ -384,11 +389,14 @@ func GetRoom(ctx *gin.Context) {
 		}
 		//update the room current capacity
 
+		mutex.Unlock()
 		response.ShowResponse("room created successfully", utils.HTTP_OK, utils.SUCCESS, newUUID.String(), ctx)
 		return
 	} else {
 
 		response.ShowResponse(string(body), int64(resp.StatusCode), utils.FAILURE, nil, ctx)
+		mutex.Unlock()
+
 		return
 	}
 
