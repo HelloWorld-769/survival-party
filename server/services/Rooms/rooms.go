@@ -364,6 +364,8 @@ func GetRoom(ctx *gin.Context) {
 	client := &http.Client{}
 	resp, err := client.Do(request)
 	if err != nil {
+
+		fmt.Println("error in request", err.Error())
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}

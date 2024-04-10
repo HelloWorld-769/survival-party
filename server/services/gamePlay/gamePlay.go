@@ -307,6 +307,8 @@ func InGameState(ctx *gin.Context) {
 			return
 		}
 
+		fmt.Println("Rewards:", reward)
+
 		if reward != nil {
 
 			ctx.JSON(200, map[string]interface{}{
@@ -315,7 +317,9 @@ func InGameState(ctx *gin.Context) {
 					"achievments": reward,
 				},
 			})
+			return
 		}
+
 		ctx.JSON(200, map[string]interface{}{
 			"ResultCode": "0",
 			"Data":       "Data updated sucessfully",
@@ -350,7 +354,7 @@ func InGameState(ctx *gin.Context) {
 				return
 			}
 
-			reward, err := ProcessDailyGoal(int64(utils.MAKE_ZOMBIE), data.UserId, &userStats)
+			reward, err := ProcessDailyGoal(int64(utils.BECAME_ZOMBIE), data.UserId, &userStats)
 			if err != nil {
 
 				fmt.Println("Error in processing the daily goal")
@@ -372,6 +376,7 @@ func InGameState(ctx *gin.Context) {
 						"achievments": reward,
 					},
 				})
+				return
 			}
 			ctx.JSON(200, map[string]interface{}{
 				"ResultCode": "0",
@@ -394,6 +399,7 @@ func InGameState(ctx *gin.Context) {
 				"ResultCode": "0",
 				"Data":       "Data updated sucessfully",
 			})
+
 		} else {
 			var userGameData model.GameState
 			query := "SELECT * FROM game_states WHERE user_id=? AND game_id=?"
@@ -457,6 +463,7 @@ func InGameState(ctx *gin.Context) {
 						"achievments": reward,
 					},
 				})
+				return
 			}
 			ctx.JSON(200, map[string]interface{}{
 				"ResultCode": "0",

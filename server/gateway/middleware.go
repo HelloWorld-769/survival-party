@@ -24,6 +24,11 @@ func UserAuthorization(ctx *gin.Context) {
 	} else if ctx.Request.Header.Get("Authorization") != "" {
 
 		bearerToken := ctx.Request.Header.Get("Authorization")
+		if len(strings.Split(bearerToken, " ")) != 2 {
+			response.ShowResponse("Invalid/Malformed auth token", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			ctx.Abort()
+			return
+		}
 
 		tokenString = strings.Split(bearerToken, " ")[1]
 	}
