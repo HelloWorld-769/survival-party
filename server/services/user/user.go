@@ -48,6 +48,7 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 		Avatar          int64     `json:"avatar"`
 		UserId          string    `json:"userId"`
 		XP              int64     `json:"xp"`
+		XPRequired      int64     `json:"xpRequired"`
 		Level           int64     `json:"level"`
 		Energy          int64     `json:"energy"`
 		TotalCoins      int64     `json:"totalCoins"`
@@ -68,7 +69,8 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 
 	// var playerResponse model.UserGameStats
 	query := `
-		SELECT u.username,u.avatar, ugs.*,ub.badge
+		SELECT u.username,u.avatar, ugs.*,ub.badge,
+		(SELECT COALESCE((SELECT xp_required FROM level_rewards WHERE level_required = ugs.level + 1), 0)) AS XP_required
 		FROM users u 
 		JOIN user_game_stats ugs ON ugs.user_id=u.id
 		LEFT JOIN user_badges ub ON ub.user_id = u.id
@@ -85,6 +87,7 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 		Avatar          int64   `json:"avatar"`
 		UserId          string  `json:"userId"`
 		XP              int64   `json:"xp"`
+		XpRequired      int64   `json:"xpRequired"`
 		Level           int64   `json:"level"`
 		Energy          int64   `json:"energy"`
 		TotalCoins      int64   `json:"totalCoins"`
@@ -108,6 +111,7 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 			Avatar:          data.Avatar,
 			UserId:          data.UserId,
 			XP:              data.XP,
+			XpRequired:      data.XPRequired,
 			Level:           data.Level,
 			Energy:          data.Energy,
 			TotalCoins:      data.TotalCoins,

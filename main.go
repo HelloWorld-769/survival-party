@@ -5,7 +5,9 @@ import (
 	"main/server"
 	"main/server/db"
 	"main/server/handler"
+	"main/server/services"
 	"main/server/services/alert_service/twilio"
+	"main/server/services/rewards"
 	"main/server/socket"
 	"os"
 
@@ -30,7 +32,8 @@ func main() {
 	server.ConfigureRoutes(app)
 	handler.AddDummyDataHandler()
 	handler.StartCron()
-	handler.AddDummyUsers()
+	rewards.AddPlayerLevel()
+	services.AddDummyUsers()
 
 	if err := app.Run(os.Getenv("PORT")); err != nil {
 		log.Print(err)

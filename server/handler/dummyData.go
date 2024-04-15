@@ -7,8 +7,6 @@ import (
 	"log"
 	"main/server/db"
 	"main/server/model"
-	"main/server/request"
-	"main/server/services"
 	"main/server/utils"
 )
 
@@ -26,13 +24,10 @@ func AddDummyDataHandler() {
 		filePath  string
 		dataPtr   interface{}
 	}{
-		{"level_rewards", "server/dummyData/level_rewards.json", &[]model.LevelRewards{}},
+		// {"level_rewards", "server/dummyData/level_rewards.json", &[]model.LevelRewards{}},
 		{"daily_rewards", "server/dummyData/dailyRewards.json", &[]model.DailyRewards{}},
 		{"shops", "server/dummyData/shop.json", &[]model.Shop{}},
 		{"special_offers", "server/dummyData/specialOffer.json", &[]model.SpecialOffer{}},
-		// {"race_rewards", "server/dummyData/rewards.json", &[]model.RaceRewards{}},
-		// {"reward_data", "server/dummyData/collectables_rewards.json", &[]model.RewardData{}},
-		// {"arena_level_perks", "server/dummyData/arenaPerks.json", &[]model.ArenaLevelPerks{}},
 	}
 
 	fmt.Println("dummy handler")
@@ -44,27 +39,7 @@ func AddDummyDataHandler() {
 	}
 
 }
-func AddDummyUsers() {
-	filePath := "server/dummyData/dummyUsers.json"
-	if !utils.TableIsEmpty("users") {
-		Data, err := ReadJSONFile(filePath)
-		if err != nil {
-			log.Fatal(err)
-		}
 
-		var modelType []request.SigupRequest
-		err = json.Unmarshal(Data, &modelType)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("   ", modelType)
-
-		for _, item := range modelType {
-			services.AddDummyUsers(item)
-		}
-	}
-
-}
 func addtoDb(filePath string, modelType interface{}) {
 
 	Data, err := ReadJSONFile(filePath)
@@ -79,10 +54,10 @@ func addtoDb(filePath string, modelType interface{}) {
 
 	fmt.Println("adding data to DB function")
 	switch slice := modelType.(type) {
-	case *[]model.LevelRewards:
-		for _, item := range *slice {
-			db.CreateRecord(&item)
-		}
+	// case *[]model.LevelRewards:
+	// 	for _, item := range *slice {
+	// 		db.CreateRecord(&item)
+	// 	}
 	case *[]model.DailyRewards:
 		for _, item := range *slice {
 			db.CreateRecord(&item)
