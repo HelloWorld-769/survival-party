@@ -40,11 +40,12 @@ func StartCron() {
 			shop.GiveNewSpecialOffer()
 
 			// //Daily goal generation
-			dailygoal.DeleteAllGoals()
-			dailygoal.DailyGoalGeneration(false, nil)
+			// dailygoal.DeleteAllGoals()
+			// dailygoal.DailyGoalGeneration(false, nil)
 		}
 
-		if formattedTime == "05:01" {
+		if currentTime.Minute() == 0 && currentTime.Second() == 30 {
+			fmt.Println("new Dailygoals gnerated")
 			dailygoal.DeleteAllGoals()
 			dailygoal.DailyGoalGeneration(false, nil)
 		}

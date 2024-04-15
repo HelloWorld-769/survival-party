@@ -61,6 +61,7 @@ func SignupService(ctx *gin.Context, input request.SigupRequest) {
 	userGameStats := model.UserGameStats{
 		UserId:         userRecord.Id,
 		CurrentCoins:   10000,
+		Energy:         10,
 		CurrentGems:    10000,
 		TotalTimeSpent: 0,
 		TotalKills:     0,
@@ -314,6 +315,7 @@ func SignoutService(ctx *gin.Context, userId string) {
 
 func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 
+	var userId string
 	var accessToken string
 	//if there is no entry in db then user is doing signup with social login
 	if !db.RecordExist("users", input.Email, "email") {
@@ -359,10 +361,14 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
+		userId = userRecord.Id
 
 		userGameStats := model.UserGameStats{
 			UserId:         userRecord.Id,
 			TotalTimeSpent: 0,
+			Energy:         10,
+			CurrentCoins:   10000,
+			CurrentGems:    10000,
 			// Badges:         []int64{},
 			TotalKills: 0,
 		}
@@ -403,6 +409,10 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 			return
 		}
+		//generating daily goals for user
+		go dailygoal.DailyGoalGeneration(true, &userRecord.Id)
+		//generating level reward for user
+		go rewards.GenerateLevelReward(userRecord.Id)
 
 	} else {
 		//user is trying to log in in using social login
@@ -430,6 +440,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 				return
 			}
 		}
+		userId = user.Id
 
 		if user.DayCount == 0 {
 			user.DayCount = 1
@@ -494,8 +505,11 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 
 	fmt.Println("accessToken", accessToken)
 	response.ShowResponse(utils.LOGIN_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
-		Token string `json:"token"`
-	}{Token: "Bearer " + accessToken}, ctx)
+		Token  string `json:"token"`
+		UserId string `json:"user_id"`
+	}{Token: "Bearer " + accessToken,
+		UserId: userId,
+	}, ctx)
 }
 func CheckOtpService(ctx *gin.Context, req request.OtpRequest) {
 
