@@ -506,7 +506,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 	fmt.Println("accessToken", accessToken)
 	response.ShowResponse(utils.LOGIN_SUCCESS, utils.HTTP_OK, utils.SUCCESS, struct {
 		Token  string `json:"token"`
-		UserId string `json:"user_id"`
+		UserId string `json:"userId"`
 	}{Token: "Bearer " + accessToken,
 		UserId: userId,
 	}, ctx)

@@ -44,7 +44,7 @@ func StartCron() {
 			// dailygoal.DailyGoalGeneration(false, nil)
 		}
 
-		if currentTime.Minute() == 0 && currentTime.Second() == 30 {
+		if currentTime.Minute() == 0 || currentTime.Minute() == 30 {
 			fmt.Println("new Dailygoals gnerated")
 			dailygoal.DeleteAllGoals()
 			dailygoal.DailyGoalGeneration(false, nil)

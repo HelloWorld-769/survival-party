@@ -103,37 +103,41 @@ func GetPlayerStatsService(ctx *gin.Context, userId string) {
 		TotalKills      int64   `json:"totalKills"`
 		Badges          []int64 `json:"badges"`
 	}
+	if dbResposne != nil {
+		var playerResponse resp
+		for _, data := range dbResposne {
+			playerResponse = resp{
+				Username:        data.Username,
+				Avatar:          data.Avatar,
+				UserId:          data.UserId,
+				XP:              data.XP,
+				XpRequired:      data.XPRequired,
+				Level:           data.Level,
+				Energy:          data.Energy,
+				TotalCoins:      data.TotalCoins,
+				CurrentCoins:    data.CurrentCoins,
+				TotalGems:       data.TotalGems,
+				CurrentGems:     data.CurrentGems,
+				CurrentTrophies: data.CurrentTrophies,
+				HighestTrophies: data.HighestTrophies,
+				MatchesPlayed:   data.MatchesWon + data.MatchesLost,
+				MatchesWon:      data.MatchesWon,
+				MatchesLost:     data.MatchesLost,
+				TotalTimeSpent:  data.TotalTimeSpent,
+				TotalKills:      data.TotalKills,
+			}
+			if data.Badge != 0 {
+				playerResponse.Badges = append(playerResponse.Badges, data.Badge)
+			} else {
+				playerResponse.Badges = []int64{}
+			}
+		}
 
-	var playerResponse resp
-	for _, data := range dbResposne {
-		playerResponse = resp{
-			Username:        data.Username,
-			Avatar:          data.Avatar,
-			UserId:          data.UserId,
-			XP:              data.XP,
-			XpRequired:      data.XPRequired,
-			Level:           data.Level,
-			Energy:          data.Energy,
-			TotalCoins:      data.TotalCoins,
-			CurrentCoins:    data.CurrentCoins,
-			TotalGems:       data.TotalGems,
-			CurrentGems:     data.CurrentGems,
-			CurrentTrophies: data.CurrentTrophies,
-			HighestTrophies: data.HighestTrophies,
-			MatchesPlayed:   data.MatchesWon + data.MatchesLost,
-			MatchesWon:      data.MatchesWon,
-			MatchesLost:     data.MatchesLost,
-			TotalTimeSpent:  data.TotalTimeSpent,
-			TotalKills:      data.TotalKills,
-		}
-		if data.Badge != 0 {
-			playerResponse.Badges = append(playerResponse.Badges, data.Badge)
-		} else {
-			playerResponse.Badges = []int64{}
-		}
+		response.ShowResponse(utils.DATA_FETCH_SUCCESS, utils.HTTP_OK, utils.SUCCESS, playerResponse, ctx)
+
+	} else {
+		response.ShowResponse(utils.USER_NOT_FOUND, utils.HTTP_NOT_FOUND, utils.FAILURE, nil, ctx)
 	}
-
-	response.ShowResponse(utils.DATA_FETCH_SUCCESS, utils.HTTP_OK, utils.SUCCESS, playerResponse, ctx)
 
 }
 
