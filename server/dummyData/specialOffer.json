@@ -1,6 +1,6 @@
 [
     {
-        "productId": "com.frimus.survivalparty.25000SpecialOffer",
+        "productId": "com.frimustechnologies.survivalparty.25000SpecialOffer",
         "coins": 500,
         "gems": 100,
         "inventory": 2,
@@ -9,7 +9,7 @@
         "isAvailable":true
     },
     {
-        "productId": "com.frimus.survivalparty.2500SpecialOffer",
+        "productId": "com.frimustechnologies.survivalparty.2500SpecialOffer",
         "coins": 300,
         "gems": 200,
         "inventory": 4,
@@ -18,7 +18,7 @@
         "isAvailable":true
     },
     {
-        "productId": "com.frimus.survivalparty.500SpecialOffer",
+        "productId": "com.frimustechnologies.survivalparty.500SpecialOffer",
         "coins": 600,
         "gems": 100,
         "inventory": 5,
