@@ -194,6 +194,26 @@ func VerifyEmail(ctx *gin.Context, tokenString string) {
 		return
 	}
 
+	var specailOfferId string
+	query = "SELECT id FROM special_offers order by created_at ASC limit 1"
+	err = db.QueryExecutor(query, &specailOfferId)
+	if err != nil {
+		return
+	}
+
+	//Giving the starter pack to the user after signup
+	//For 7 days starter pack will be valid
+	userStartPack := model.UserSpecialOffer{
+		SpecialOfferId: specailOfferId,
+		UserId:         claims.Id,
+		Purchased:      false,
+	}
+
+	err = db.CreateRecord(&userStartPack)
+	if err != nil {
+		return
+	}
+
 	err = rewards.CreateStarterDailyRewards(claims.Id)
 	if err != nil {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
@@ -401,6 +421,26 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		err = db.CreateRecord(&session)
 		if err != nil {
 			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+
+		var specailOfferId string
+		query = "SELECT id FROM special_offers order by created_at ASC limit 1"
+		err = db.QueryExecutor(query, &specailOfferId)
+		if err != nil {
+			return
+		}
+
+		//Giving the starter pack to the user after signup
+		//For 7 days starter pack will be valid
+		userStartPack := model.UserSpecialOffer{
+			SpecialOfferId: specailOfferId,
+			UserId:         userRecord.Id,
+			Purchased:      false,
+		}
+
+		err = db.CreateRecord(&userStartPack)
+		if err != nil {
 			return
 		}
 
