@@ -27,7 +27,7 @@ func GetSettingsHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")
 	if !exists {
-		response.ShowResponse("userId missing from ", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		response.ShowResponse("Incorrect username or password", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
 		return
 	}
 
@@ -52,7 +52,7 @@ func UpdateSettingsHandler(ctx *gin.Context) {
 
 	userId, exists := ctx.Get("userId")
 	if !exists {
-		response.ShowResponse("userId missing from ", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		response.ShowResponse("Incorrect username or password", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
 		return
 	}
 

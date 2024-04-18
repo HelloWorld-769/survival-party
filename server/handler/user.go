@@ -76,14 +76,14 @@ func GetPlayerStatsHandler(ctx *gin.Context) {
 func GetOtherPlayerStatsHandler(ctx *gin.Context) {
 	userId := ctx.Query("playerId")
 	if userId == "" {
-		response.ShowResponse("User id not found", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+		response.ShowResponse("No records found. Please sign up", utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 		return
 	}
 
 	user.GetPlayerStatsService(ctx, userId)
 }
 
-//Making Swagger
+// Making Swagger
 // GetNameChangeTimeLeftHandler Gets the time left for the user to change the name
 //
 // @Summary Get time left for name change

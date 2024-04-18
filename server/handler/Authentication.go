@@ -125,45 +125,6 @@ func ResetPasswordHandler(ctx *gin.Context) {
 	fmt.Println("request", ctx.Request.Body)
 
 	utils.RequestDecoding(ctx, &req)
-	fmt.Println("req", req)
-	err := utils.IsPassValid(req.Password)
-	if err != nil {
-		response.ShowResponse(err.Error(), 400, "Failure", "", ctx)
-		return
-	}
-
-	//validation Check on request body fields
-	err = validation.CheckValidation(&req)
-	if err != nil {
-		response.ShowResponse(err.Error(), 400, "Failure", "", ctx)
-		return
-	}
-
-	//call the service
-	authentication.ResetPasswordService(ctx, req)
-}
-
-// CheckOtpHandler Verifies the otp sent on email
-//
-// @Summary Verifies OTP
-// @Description Verifies the otp sent on email
-// @Tags Authentication
-// @Accept json
-// @Produce json
-// @Param loginDetails body request.OtpRequest true "Email Details"
-// @Success 200 {object} response.Success "Login successful"
-// @Failure 400 {object} response.Success "Bad request"
-// @Failure 500 {object} response.Success "Internal server error"
-// @Router /check-otp [post]
-func CheckOtpHandler(ctx *gin.Context) {
-
-	utils.SetHeader(ctx)
-
-	var req request.OtpRequest
-	fmt.Println("request", ctx.Request.Body)
-
-	utils.RequestDecoding(ctx, &req)
-	fmt.Println("req", req)
 
 	//validation Check on request body fields
 	err := validation.CheckValidation(&req)
@@ -173,8 +134,7 @@ func CheckOtpHandler(ctx *gin.Context) {
 	}
 
 	//call the service
-	authentication.CheckOtpService(ctx, req)
-
+	authentication.ResetPasswordService(ctx, req)
 }
 
 // @Summary Logout Player

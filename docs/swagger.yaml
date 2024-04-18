@@ -48,16 +48,6 @@ definitions:
             type: string
         type: object
     type: object
-  request.OtpRequest:
-    properties:
-      email:
-        type: string
-      otp:
-        type: integer
-    required:
-    - email
-    - otp
-    type: object
   request.PlayerLevelRewardCollectRequest:
     properties:
       level:
@@ -67,10 +57,13 @@ definitions:
     properties:
       email:
         type: string
+      otp:
+        type: integer
       password:
         type: string
     required:
     - email
+    - otp
     - password
     type: object
   request.SigupRequest:
@@ -176,36 +169,6 @@ paths:
       summary: Buy things
       tags:
       - Store
-  /check-otp:
-    post:
-      consumes:
-      - application/json
-      description: Verifies the otp sent on email
-      parameters:
-      - description: Email Details
-        in: body
-        name: loginDetails
-        required: true
-        schema:
-          $ref: '#/definitions/request.OtpRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Login successful
-          schema:
-            $ref: '#/definitions/response.Success'
-        "400":
-          description: Bad request
-          schema:
-            $ref: '#/definitions/response.Success'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Success'
-      summary: Verifies OTP
-      tags:
-      - Authentication
   /claim-daily-goal:
     post:
       consumes:

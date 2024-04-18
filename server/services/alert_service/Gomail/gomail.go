@@ -33,7 +33,20 @@ func generateOTP() int {
 
 func SendEmailOtpService(context *gin.Context, req request.EmailRequest) {
 
-	utils.SetHeader(context)
+	//add a check wheteer the player with request email exists or not
+	var userExists bool
+	query := "SELECT EXISTS(SELECT 1 FROM users WHERE email=?)"
+	err := db.QueryExecutor(query, &userExists, req.Users.Email)
+	if err != nil {
+
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, context)
+		return
+	}
+
+	if !userExists {
+		response.ShowResponse("No records found. Please sign up", utils.HTTP_NOT_FOUND, utils.FAILURE, nil, context)
+		return
+	}
 
 	// Create a new message
 	m := gomail.NewMessage()
@@ -57,7 +70,8 @@ func SendEmailOtpService(context *gin.Context, req request.EmailRequest) {
 	// m.Attach("/home/chicmic/Downloads/image.png")
 
 	// Settings for SMTP server
-	d := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("FROM_EMAIL"), os.Getenv("EMAIL_PASS"))
+	d := gomail.NewDialer("mail.chicmic.co.in", 587, os.Getenv("FROM_EMAIL"), os.Getenv("EMAIL_PASS"))
+	// d := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("FROM_EMAIL"), os.Getenv("EMAIL_PASS"))
 
 	// This is only needed when SSL/TLS certificate is not valid on the server.
 	// In production, this should be set to false.
@@ -137,7 +151,7 @@ func SendEmailService(link string, toEmail string) error {
 	// m.Attach("/home/chicmic/Downloads/image.png")
 
 	// Settings for SMTP server
-	d := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("FROM_EMAIL"), os.Getenv("EMAIL_PASS"))
+	d := gomail.NewDialer("mail.chicmic.co.in", 587, os.Getenv("FROM_EMAIL"), os.Getenv("EMAIL_PASS"))
 
 	// This is only needed when SSL/TLS certificate is not valid on the server.
 	// In production, this should be set to false.

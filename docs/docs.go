@@ -68,52 +68,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/check-otp": {
-            "post": {
-                "description": "Verifies the otp sent on email",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Verifies OTP",
-                "parameters": [
-                    {
-                        "description": "Email Details",
-                        "name": "loginDetails",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.OtpRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Login successful",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Success"
-                        }
-                    }
-                }
-            }
-        },
         "/claim-daily-goal": {
             "post": {
                 "description": "Claims the rewards when all daily goals are completed",
@@ -1342,21 +1296,6 @@ const docTemplate = `{
                 }
             }
         },
-        "request.OtpRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "otp"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "otp": {
-                    "type": "integer"
-                }
-            }
-        },
         "request.PlayerLevelRewardCollectRequest": {
             "type": "object",
             "properties": {
@@ -1369,11 +1308,15 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
+                "otp",
                 "password"
             ],
             "properties": {
                 "email": {
                     "type": "string"
+                },
+                "otp": {
+                    "type": "integer"
                 },
                 "password": {
                     "type": "string"

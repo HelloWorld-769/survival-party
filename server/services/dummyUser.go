@@ -74,7 +74,7 @@ func AddDummyUsers() {
 					VoicePack:      false,
 					Notifications:  false,
 					FriendRequests: false,
-					Language:       "english",
+					Language:       "English",
 				}
 
 				err = db.CreateRecord(&userSettings)

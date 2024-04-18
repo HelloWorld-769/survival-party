@@ -88,7 +88,7 @@ func GetStoreService(ctx *gin.Context, userId string) {
 	}{
 		ProductId:    specOfferRes.ProductId,
 		Name:         "Starter Pack",
-		Type:         4,
+		Type:         utils.STARTER_PACK,
 		CurrencyType: specOfferRes.CurrencyType,
 		Price:        specOfferRes.Price,
 		ExpiresAt:    int64(7 - utils.CalculateDays(specOfferRes.CreatedAt)),
@@ -112,19 +112,19 @@ func GetStoreService(ctx *gin.Context, userId string) {
 		if data.RewardType == utils.Energy {
 			res.Energy = Temp{
 				Name: "energyShopView",
-				Type: 1,
+				Type: utils.ENERGY_PACK,
 				Data: append(res.Energy.Data, data),
 			}
 		} else if data.RewardType == utils.Coins {
 			res.Coins = Temp{
 				Name: "coinShopView",
-				Type: 1,
+				Type: utils.CURRENCY_PACK,
 				Data: append(res.Coins.Data, data),
 			}
 		} else if data.RewardType == utils.Gems {
 			res.Gems = Temp{
 				Name: "gemShopView",
-				Type: 1,
+				Type: utils.GEMS_PACK,
 				Data: append(res.Gems.Data, data),
 			}
 		}

@@ -76,7 +76,7 @@ func SignupService(ctx *gin.Context, input request.SigupRequest) {
 		VoicePack:      false,
 		Notifications:  false,
 		FriendRequests: false,
-		Language:       "english",
+		Language:       "English",
 	}
 
 	err = tx.Create(&userSettings).Error
@@ -133,8 +133,8 @@ func SignupService(ctx *gin.Context, input request.SigupRequest) {
 		return
 	}
 
-	// fmt.Println("hvasdas", ctx.Request.Header.Get("Origin"))
-	link := "http://192.180.2.109:" + os.Getenv("PORT") + "/api/v1/users/email-verify?token=" + tokenString
+	// link := ctx.Request.Header.Get("Origin") + "/api/v1/users/email-verify?token=" + tokenString
+	link := os.Getenv("SERVER_ORIGIN") + "/api/v1/users/email-verify?token=" + tokenString
 
 	fmt.Println("link is", link)
 
@@ -238,6 +238,10 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 	if utils.IsEmail(input.User.Credential) {
 		err := db.FindById(&user, input.User.Credential, "email")
 		if err != nil {
+			if errors.Is(gorm.ErrRecordNotFound, err) {
+				response.ShowResponse("No records found. Please sign up", utils.HTTP_NOT_FOUND, utils.FAILURE, nil, ctx)
+				return
+			}
 			// If the player doesn't exist, return an error response.
 			response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 			return
@@ -246,6 +250,10 @@ func LoginService(ctx *gin.Context, input *request.LoginRequest) {
 	} else {
 		err := db.FindById(&user, input.User.Credential, "username")
 		if err != nil {
+			if errors.Is(gorm.ErrRecordNotFound, err) {
+				response.ShowResponse("No records found. Please sign up", utils.HTTP_NOT_FOUND, utils.FAILURE, nil, ctx)
+				return
+			}
 			// If the player doesn't exist, return an error response.
 			response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
 			return
@@ -338,7 +346,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 	var userId string
 	var accessToken string
 	//if there is no entry in db then user is doing signup with social login
-	if !db.RecordExist("users", input.Email, "email") {
+	if !db.RecordExist("users", input.Email, "email") && input.Email != "" {
 		var count int
 		query := "SELECT count(*) FROM users"
 		err := db.QueryExecutor(query, &count)
@@ -373,7 +381,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			VoicePack:      false,
 			Notifications:  false,
 			FriendRequests: false,
-			Language:       "english",
+			Language:       "English",
 		}
 
 		err = db.CreateRecord(&userSettings)
@@ -462,9 +470,10 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			err := db.QueryExecutor(query, &user, input.Email)
 			if err != nil {
 				if errors.Is(err, gorm.ErrRecordNotFound) {
-					response.ShowResponse("User not found", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+					response.ShowResponse("No records found. Please sign up", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 					return
 				}
+
 				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 				return
 			}
@@ -473,7 +482,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 			err := db.QueryExecutor(query, &user, input.Uid)
 			if err != nil {
 				if errors.Is(err, gorm.ErrRecordNotFound) {
-					response.ShowResponse("User not found", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+					response.ShowResponse("No records found. Please sign up", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 					return
 				}
 				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
@@ -551,25 +560,6 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		UserId: userId,
 	}, ctx)
 }
-func CheckOtpService(ctx *gin.Context, req request.OtpRequest) {
-
-	//check otp from restSession table corresponding to user email
-	var usersRestSession model.ResetSession
-	query := "select * from reset_sessions where user_email=?"
-	err := db.QueryExecutor(query, &usersRestSession, req.Email)
-	if err != nil {
-		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
-		return
-	}
-
-	if usersRestSession.Otp == req.Otp {
-		response.ShowResponse("OTP correct", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
-		return
-	}
-
-	response.ShowResponse("OTP Incorrect", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
-
-}
 
 func ResetPasswordService(ctx *gin.Context, req request.RestPasswordRequest) {
 
@@ -580,7 +570,40 @@ func ResetPasswordService(ctx *gin.Context, req request.RestPasswordRequest) {
 		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
 		return
 	}
-	var user model.User
+	var user *model.User
+
+	query := "SELECT * FROM users where email=?"
+	err = db.QueryExecutor(query, &user, req.Email)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+	if user == nil {
+		response.ShowResponse("No records found. Please sign up.", utils.HTTP_NOT_FOUND, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	//check the OTP
+	var exists bool
+	query = "SELECT EXISTS (SELECT * from reset_sessions where user_email= ? AND otp=?);"
+	err = db.QueryExecutor(query, &exists, req.Email, req.OTP)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	fmt.Println("Otp thing", exists)
+	if !exists {
+		response.ShowResponse("OTP Incorrect", utils.HTTP_UNAUTHORIZED, utils.FAILURE, nil, ctx)
+		return
+	}
+
+	err = utils.IsPassValid(req.Password)
+	if err != nil {
+		response.ShowResponse(err.Error(), 400, "Failure", "", ctx)
+		return
+	}
+
 	user.Password = *passwordHash
 	err = db.UpdateRecord(&user, req.Email, "email").Error
 	if err != nil {
@@ -589,9 +612,6 @@ func ResetPasswordService(ctx *gin.Context, req request.RestPasswordRequest) {
 	}
 
 	response.ShowResponse("Password Updated Successfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
-
-	// query := "UPDATE users SET password =? WHERE email = ?;"
-	// db.QueryExecutor(query, &user, passwordHash, req.Email)
 
 }
 

@@ -51,7 +51,7 @@ const (
 	SUCCESS       string = "Success"
 	ACCESS_DENIED string = "Access Denied"
 	INVALID_TOKEN string = "Token Absent or Invalid token"
-	UNAUTHORIZED  string = "Unauthorized"
+	UNAUTHORIZED  string = "Incorrect username or password"
 )
 
 const (
@@ -59,7 +59,7 @@ const (
 	LOGOUT_SUCCESS     string = "Logout successfully"
 	SIGNUP_SUCCESS     string = "Signup Success"
 	EMAIL_EXISTS       string = "Email already exists"
-	USER_NOT_FOUND     string = "User not found"
+	USER_NOT_FOUND     string = "No records found. Please sign up"
 	PASSWORD_NOT_MATCH string = "Password are not same"
 )
 
@@ -126,4 +126,17 @@ const (
 	ONE REWARD_MULTIPLIER = iota + 1
 	TWO
 	THREE
+)
+
+// Shop view type
+type VIEW_TYPE int
+
+const (
+	CURRENCY_PACK = iota + 1
+	ENERGY_PACK
+	GEMS_PACK
+	DAILY_DEALS
+	BUNDLES
+	STARTER_PACK
+	CHEST_PACK
 )

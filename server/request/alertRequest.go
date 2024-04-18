@@ -25,6 +25,7 @@ func (a *EmailRequest) Validate() error {
 type RestPasswordRequest struct {
 	Email    string `json:"email" validate:"required"`
 	Password string `json:"password" validate:"required"`
+	OTP      int    `json:"otp" validate:"required"`
 }
 
 type OtpRequest struct {

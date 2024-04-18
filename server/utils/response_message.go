@@ -7,5 +7,5 @@ const (
 // Player Respsonse
 const (
 	PLAYER_UPDATE_SUCCESS string = "User data updated successfully"
-	RECORD_NOT_FOUND      string = "Record not found"
+	RECORD_NOT_FOUND      string = "No records found. Please sign up"
 )
