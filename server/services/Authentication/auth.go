@@ -462,6 +462,83 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		//generating level reward for user
 		go rewards.GenerateLevelReward(userRecord.Id)
 
+	} else if db.RecordExist("users", input.Uid, "social_id") && input.Email != "" {
+		var user *model.User
+		var err error
+		query := "SELECT * FROM users WHERE  social_id=?"
+		err = db.QueryExecutor(query, &user, input.Uid)
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				response.ShowResponse("No records found. Please sign up", utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+		userId = user.Id
+
+		if user.DayCount == 0 {
+			user.DayCount = 1
+			err := db.UpdateRecord(&user, user.Id, "id").Error
+			if err != nil {
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
+		}
+
+		accessTokenExpirationTime := time.Now().Add(48 * time.Hour)
+		accessTokenClaims := model.Claims{
+			Id: user.Id,
+			RegisteredClaims: jwt.RegisteredClaims{
+				IssuedAt:  jwt.NewNumericDate(time.Now()),
+				ExpiresAt: jwt.NewNumericDate(accessTokenExpirationTime),
+			},
+		}
+
+		fmt.Println("accessTokenClaims", accessTokenClaims)
+		// accessToken = "asdbjasbd"
+
+		accessToken, err = token.GenerateToken(accessTokenClaims)
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_BAD_REQUEST, utils.FAILURE, nil, ctx)
+			return
+		}
+
+		fmt.Println("accessToken", accessToken)
+		if db.RecordExist("sessions", user.Id, "user_id") {
+			//update the record
+			query := "UPDATE sessions SET token=? WHERE user_id=?"
+			err := db.RawExecutor(query, accessToken, user.Id)
+			if err != nil {
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
+
+		} else {
+			session := model.Session{
+				UserId: user.Id,
+				Token:  accessToken,
+			}
+			err = db.CreateRecord(&session)
+			if err != nil {
+				response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+				return
+			}
+		}
+
+		if user.DayCount == 0 {
+
+			user.DayCount = 1
+
+		}
+		user.Email = input.Email
+
+		err = db.UpdateRecord(&user, user.Id, "id").Error
+		if err != nil {
+			response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+			return
+		}
+
 	} else {
 
 		//user is trying to log in in using social login
