@@ -47,6 +47,5 @@ func (a SocialLoginReq) Validate() error {
 	return validation.ValidateStruct(&a,
 		validation.Field(&a.Avatar, validation.Required),
 		validation.Field(&a.Uid, validation.Required),
-		validation.Field(&a.Email, validation.Required, is.Email),
 	)
 }

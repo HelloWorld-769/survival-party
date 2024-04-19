@@ -346,7 +346,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 	var userId string
 	var accessToken string
 	//if there is no entry in db then user is doing signup with social login
-	if !db.RecordExist("users", input.Email, "email") && input.Email != "" {
+	if !db.RecordExist("users", input.Email, "email") && input.Email != "" && !db.RecordExist("users", input.Uid, "social_id") {
 		var count int
 		query := "SELECT count(*) FROM users"
 		err := db.QueryExecutor(query, &count)
@@ -463,6 +463,7 @@ func SocialLoginService(ctx *gin.Context, input *request.SocialLoginReq) {
 		go rewards.GenerateLevelReward(userRecord.Id)
 
 	} else {
+
 		//user is trying to log in in using social login
 		var user *model.User
 		if input.Email != "" {
