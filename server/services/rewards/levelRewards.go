@@ -90,19 +90,23 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 	}
 
 	//add user rewards to gamestats of user
+	var res response.RewardResponse
+	res.Quantity = LevelReward.Quantity
 	switch LevelReward.RewardType {
 	case utils.Coins:
 		fmt.Println("Coins")
 		userData.CurrentCoins += LevelReward.Quantity
 		userData.TotalCoins += LevelReward.Quantity
-
+		res.RewardType = utils.Coins
 	case utils.Energy:
 		fmt.Println("Energy")
 		userData.Energy += LevelReward.Quantity
+		res.RewardType = utils.Energy
 	case utils.Gems:
 		fmt.Println("Gems")
 		userData.CurrentGems += LevelReward.Quantity
 		userData.TotalGems += LevelReward.Quantity
+		res.RewardType = utils.Gems
 
 	default:
 		fmt.Println("nothing for reward")
@@ -121,7 +125,7 @@ func PlayerLevelRewardCollect(ctx *gin.Context, userId string, req request.Playe
 		return
 	}
 
-	response.ShowResponse("reward collected successfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
+	response.ShowResponse("reward collected successfully", utils.HTTP_OK, utils.SUCCESS, res, ctx)
 
 }
 
