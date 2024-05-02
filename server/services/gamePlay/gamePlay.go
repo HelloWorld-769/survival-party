@@ -441,7 +441,7 @@ func InGameState(ctx *gin.Context) {
 				return
 			}
 
-			reward, err := ProcessDailyGoal(int64(utils.MAKE_ZOMBIE), data.UserId, &userStats)
+			reward, err := ProcessDailyGoal(int64(utils.BECAME_ZOMBIE), data.UserId, &userStats)
 			if err != nil {
 
 				fmt.Println("Error in processing the daily goal")

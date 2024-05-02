@@ -689,6 +689,12 @@ func ResetPasswordService(ctx *gin.Context, req request.RestPasswordRequest) {
 		return
 	}
 
+	query = "DELETE FROM reset_sessions WHERE  email=?"
+	err = db.RawExecutor(query, req.Email)
+	if err != nil {
+		response.ShowResponse(err.Error(), utils.HTTP_INTERNAL_SERVER_ERROR, utils.FAILURE, nil, ctx)
+		return
+	}
 	response.ShowResponse("Password Updated Successfully", utils.HTTP_OK, utils.SUCCESS, nil, ctx)
 
 }
