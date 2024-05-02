@@ -94,7 +94,7 @@ func InGameState(ctx *gin.Context) {
 			ctx.JSON(200, map[string]interface{}{
 				"ResultCode": "1",
 				"Data": map[string]interface{}{
-					"achievments": reward,
+					"achievements": reward,
 				},
 			})
 			return
@@ -247,7 +247,7 @@ func InGameState(ctx *gin.Context) {
 				ctx.JSON(200, map[string]interface{}{
 					"ResultCode": "0",
 					"Data": map[string]interface{}{
-						"achievments": reward,
+						"achievements": reward,
 					},
 				})
 				return
@@ -314,7 +314,7 @@ func InGameState(ctx *gin.Context) {
 			ctx.JSON(200, map[string]interface{}{
 				"ResultCode": "1",
 				"Data": map[string]interface{}{
-					"achievments": reward,
+					"achievements": reward,
 				},
 			})
 			return
@@ -373,7 +373,7 @@ func InGameState(ctx *gin.Context) {
 				ctx.JSON(200, map[string]interface{}{
 					"ResultCode": "1",
 					"Data": map[string]interface{}{
-						"achievments": reward,
+						"achievements": reward,
 					},
 				})
 				return
@@ -460,7 +460,7 @@ func InGameState(ctx *gin.Context) {
 				ctx.JSON(200, map[string]interface{}{
 					"ResultCode": "1",
 					"Data": map[string]interface{}{
-						"achievments": reward,
+						"achievements": reward,
 					},
 				})
 				return
