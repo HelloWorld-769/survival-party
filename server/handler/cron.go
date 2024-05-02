@@ -32,12 +32,12 @@ func StartCron() {
 
 			fmt.Println("Cron is working")
 
-			user.UpdateDayCount()
+			// user.UpdateDayCount()
 
-			rewards.UpdateDailyRewardsData()
-			//create User daily rewards (available to claim)
-			rewards.CreateUserDailyReward()
-			shop.GiveNewSpecialOffer()
+			// rewards.UpdateDailyRewardsData()
+			// //create User daily rewards (available to claim)
+			// rewards.CreateUserDailyReward()
+			// shop.GiveNewSpecialOffer()
 
 			// //Daily goal generation
 			// dailygoal.DeleteAllGoals()
@@ -45,6 +45,15 @@ func StartCron() {
 		}
 
 		if currentTime.Minute() == 0 || currentTime.Minute() == 30 {
+
+			fmt.Println("New rewards gnerated if required...")
+			user.UpdateDayCount()
+
+			rewards.UpdateDailyRewardsData()
+			//create User daily rewards (available to claim)
+			rewards.CreateUserDailyReward()
+			shop.GiveNewSpecialOffer()
+
 			fmt.Println("new Dailygoals gnerated")
 			dailygoal.DeleteAllGoals()
 			dailygoal.DailyGoalGeneration(false, nil)
