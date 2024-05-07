@@ -182,10 +182,10 @@ func GetNameChangeTimeLeftService(ctx *gin.Context, userId string) {
 		timeLeft := user.UsernameUpdatedAt.Add(time.Hour * 48)
 		fmt.Println("Time left", timeLeft)
 
-		// daysLeft = int64(timeLeft.Sub(time.Now()).Hours() / 24)
+		daysLeft := int64(timeLeft.Sub(time.Now()).Hours() / 24)
 
 		days, hours = utils.GetTimeDifference(time.Now(), timeLeft)
-		// fmt.Println("Days left", daysLeft)
+		fmt.Println("Days left", daysLeft)
 
 	}
 
